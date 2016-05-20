@@ -16,7 +16,7 @@
 \begin{frame}{Contents}
     \begin{itemize}
         \item Path finding on grid graphs
-        \item A-Star Search ($A^\star$)
+        \item A Star Search ($A^\star$)
         \item Jump Point Search ($JPS$)
         \item Jump Point Search Improvements ($JPS^+$)
         \item Bounding Boxes ($BB$)
@@ -41,7 +41,7 @@
 	
 
 	\begin{itemize}
-		\item 4-tuple $(G, s, g, h)$
+		\item 4-tuple $(G, s, g, h)$:
 		\pause
 		\begin{itemize}
 		\item[$\tikz{\path[draw=black,fill=white] (0,0) rectangle (2mm,2mm);}$] Euclidean grid graph $G$
@@ -67,16 +67,26 @@
 
 \end{frame}
 
-\begin{frame}{Problem definition}
-\end{frame}
 
-\begin{frame}{Problem definition}
-	figure
+\begin{frame}{Heuristic Function $h$}
+	\begin{minipage}{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/heuristic.png}
+	\end{minipage}%
+	\hfill%
+	\begin{minipage}{0.6\textwidth}
+		\begin{itemize}
+		\item $h(\tikz{\path[draw=black,fill=white!60!green] (0,0) rectangle (2mm,2mm);},\tikz{\path[draw=black,fill=white!60!red] (0,0) rectangle (2mm,2mm);})\leq min_{path}(\tikz{\path[draw=black,fill=white!60!green] (0,0) rectangle (2mm,2mm);},\tikz{\path[draw=black,fill=white!60!red] (0,0) rectangle (2mm,2mm);})$
+		\pause
+		\item e.g.:\\ $h(\tikz{\path[draw=black,fill=white!60!green] (0,0) rectangle (2mm,2mm);},\tikz{\path[draw=black,fill=white!60!red] (0,0) rectangle (2mm,2mm);}) = dist_{euklid}(\tikz{\path[draw=black,fill=white!60!green] (0,0) rectangle (2mm,2mm);},\tikz{\path[draw=black,fill=white!60!red] (0,0) rectangle (2mm,2mm);})$
+		\begin{itemize}
+			\item $\sqrt{27} \leq 3+3\cdot\sqrt{2}$
+		\end{itemize}
+		\end{itemize}
+	\end{minipage}
 \end{frame}
-
 
 \begin{frame}
-    \bigbox{$A^*$ search ($A^\star$)}
+    \bigbox{A Star search ($A^\star$)}
 \end{frame}
 
 
