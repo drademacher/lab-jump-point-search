@@ -62,4 +62,15 @@ nb-configuration.xml
 ##########################
 ## OS X
 ##########################
-.DS_Store
+.DS_Storepresentation/main.aux
+presentation/main.log
+presentation/main.nav
+presentation/main.out
+presentation/main.snm
+presentation/main.toc
+presentation/main.synctex.gz
+presentation/main.toc
+presentation/main.aux
+presentation/textput.log
+presentation/main.pdf
+presentation/texput.log

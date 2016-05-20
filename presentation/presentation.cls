@@ -24,7 +24,7 @@
 
 % list of optional packages
 \RequirePackage{graphicx}
-\RequirePackage{algpseudocode}
+%\RequirePackage{algpseudocode}
 \RequirePackage{changepage}
 \RequirePackage{xcolor,soul}
 \RequirePackage{url}
