@@ -216,6 +216,15 @@ Hier passen die Bilder irgendwie weder zu "weg bisher+euklid", noch zu "nimm den
 \end{frame}
 
 
+\begin{frame}
+	\begin{center}
+		JPS Strategy:\\
+		\vspace{5mm}
+		\includegraphics[width=\textwidth]{figures/jps_strategy.png}
+	\end{center}
+\end{frame}
+
+
 \begin{frame}{$JPS$: Example}
 	\begin{minipage}{0.23\textwidth}
 		\includegraphics[width=\textwidth]{figures/jps_geschnitten/1.png}
@@ -275,6 +284,31 @@ Hier passen die Bilder irgendwie weder zu "weg bisher+euklid", noch zu "nimm den
 \end{frame}
 
 
+\begin{frame}{Main ideas: Preprocessing Jump Points}
+	\begin{minipage}{0.45\textwidth}
+		Position of $\tikz{\path[draw=black,fill=yellow] (0,0) rectangle (2mm,2mm);}$:\\
+		\vspace{3mm}
+		\includegraphics[width=\textwidth]{figures/jps_geschnitten/1(yellow).png}
+	\end{minipage}%
+	\hfill%
+	\begin{minipage}{0.45\textwidth}
+		Look up table for $\tikz{\path[draw=black,fill=yellow] (0,0) rectangle (2mm,2mm);}$:\\
+		\vspace{3mm}
+		\begin{itemize}
+		\pause
+		\item[$\nearrow$] $[\ 1\ ,\ path(\tikz{\path[draw=black,fill=yellow] (0,0) rectangle (2mm,2mm);}\ ,1)=\sqrt{2}\ ]$ 
+		\pause
+		\item[$\searrow$] $[\ 2\ ,\ path(\tikz{\path[draw=black,fill=yellow] (0,0) rectangle (2mm,2mm);}\ ,2)=\sqrt{2}\ ]$
+		\item[$\swarrow$]
+		\item[$\nwarrow$]
+		\item[$\leftarrow$]
+		\item[$\rightarrow$]
+		\pause
+		\item[$\uparrow$] $[\ 3\ ,\ path(\tikz{\path[draw=black,fill=yellow] (0,0) rectangle (2mm,2mm);}\ ,3)=3\ ]$
+		\item[$\downarrow$]
+		\end{itemize}
+	\end{minipage}
+\end{frame}
 
 \begin{frame}
     \bigbox{Bounding Boxes ($BB$)}
