@@ -1,6 +1,13 @@
 \documentclass{presentation}
 
 \usepackage{tikz}
+\usepackage{pausegraphics}
+
+\newcommand{\rect}[1]{\tikz{\path[draw=black,fill=#1] (0,0) rectangle (2mm,2mm);}}
+\newcommand{\grect}{\rect{white!60!green}}
+\newcommand{\rrect}{\rect{white!60!red}}
+\newcommand{\wrect}{\rect{white}}
+\newcommand{\brect}{\rect{gray}}
 
 \input{coverpage}
 
@@ -34,20 +41,19 @@
 	\begin{minipage}{0.3\textwidth}
 
 	\includegraphics[width=\textwidth]{figures/gridgraph.png}
-	
+
 	\end{minipage}%
 	\hfill%
 	\begin{minipage}{0.6\textwidth}
-	
 
 	\begin{itemize}
 		\item 4-tuple $(G, s, g, h)$:
 		\pause
 		\begin{itemize}
-		\item[$\tikz{\path[draw=black,fill=white] (0,0) rectangle (2mm,2mm);}$] Euclidean grid graph $G$
-		\item[$\tikz{\path[draw=black,fill=white!60!green] (0,0) rectangle (2mm,2mm);}$] start node $s$
-		\item[$\tikz{\path[draw=black,fill=white!60!red] (0,0) rectangle (2mm,2mm);}$] goal node $g$
-		\item[$\tikz{\path[draw=black,fill=gray] (0,0) rectangle (2mm,2mm);}$] $\not\in G$ obstacle
+		\item[$\wrect$] Euclidean grid graph $G$
+		\item[$\grect$] start node $s$
+		\item[$\rrect$] goal node $g$
+		\item[$\brect$] $\not\in G$ obstacle
 		\pause
 		\item[$\rightarrow$] edge costs $1$
 		\item[$\nearrow$] edge costs $\sqrt{2}$
@@ -55,11 +61,11 @@
 		\item[$h$:] a heuristic function
 		\end{itemize}
 	\end{itemize}
-	
+
 	\end{minipage}
-	
+
 	\hspace{3cm}
-	
+
 	\pause
 	\begin{center}
 		Goal: shortest path from $s$ to $g$ over $G$
@@ -75,9 +81,11 @@
 	\hfill%
 	\begin{minipage}{0.6\textwidth}
 		\begin{itemize}
-		\item $h(\tikz{\path[draw=black,fill=white!60!green] (0,0) rectangle (2mm,2mm);},\tikz{\path[draw=black,fill=white!60!red] (0,0) rectangle (2mm,2mm);})\leq min_{path}(\tikz{\path[draw=black,fill=white!60!green] (0,0) rectangle (2mm,2mm);},\tikz{\path[draw=black,fill=white!60!red] (0,0) rectangle (2mm,2mm);})$
+		\item let $\grect$ and $\rrect$ be arbitrary nodes
 		\pause
-		\item e.g.:\\ $h(\tikz{\path[draw=black,fill=white!60!green] (0,0) rectangle (2mm,2mm);},\tikz{\path[draw=black,fill=white!60!red] (0,0) rectangle (2mm,2mm);}) = dist_{euklid}(\tikz{\path[draw=black,fill=white!60!green] (0,0) rectangle (2mm,2mm);},\tikz{\path[draw=black,fill=white!60!red] (0,0) rectangle (2mm,2mm);})$
+		\item $h(\grect, \rrect)\leq min_{path}(\grect,\rrect)$
+		\pause
+		\item e.g.:\\ $h(\grect, \rrect) = dist_{euklid}(\grect,\rrect)$
 		\begin{itemize}
 			\item $\sqrt{27} \leq 3+3\cdot\sqrt{2}$
 		\end{itemize}
@@ -99,50 +107,70 @@
 
 
 \begin{frame}{Main ideas: Priority Queue}
-Hier muss die Order für die Priority Queue hin. Auf das Bild würde ich dann in die lila felder die zahlen 1-8 reinschreiben, der Order nach. Man könnte zusätzlich noch Pfeile wie bei der Heuristic zeichnung reinmachen, ganz wie du das magst (immerhin sollst du den teil ja vortragen)
-Hier passen die Bilder irgendwie weder zu "weg bisher+euklid", noch zu "nimm den kürzesten weg bis her und bei gleichstand euklid". Beides würde sinn ergeben, sind aber wiedersprüche zu den bildern =( Bei JPS klappt es mit addition
-	\begin{center}
-		\includegraphics[width=0.5\textwidth]{figures/A-Stern_geschnitten(241x241)/2.png}
-	\end{center}
+    %\begin{itemize}
+    %    \item Frontier of nodes in a priority queue
+    %    \item Value of a node is cost so far + heuristic to goal node
+	%\end{itemize}
+
+
+	q = square root of 2
+	\vspace{1cm}
+
+	5q - 3q+2 - 3q+2\\
+	4q + 2 - start - 2q + 4\\
+	5q + 2 - 3q + 4 - 3q + 4
+
+	\vspace{1cm}
+	so müsste das bild aussehen (auf 1 nachkommastelle runden)
 \end{frame}
 
 
 \begin{frame}{$A^*$: Example}
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/3.png}
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/3.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/4.png}
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/4.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/5.png}
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/5.png}
 	\end{minipage}\\
+	\pause%
+
 	\vspace{2mm}
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/6.png}
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/6.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/7.png}
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/7.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/8.png}
-	\end{minipage}\\
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/8.png}
+	\end{minipage}
+	\pause%
+
 	\vspace{2mm}
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/9.png}
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/9.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/10.png}
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/10.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/11.png}
-	\end{minipage}%	
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/11.png}
+	\end{minipage}%
 \end{frame}
 
 
@@ -174,16 +202,18 @@ Hier passen die Bilder irgendwie weder zu "weg bisher+euklid", noch zu "nimm den
 		Straight Movements:\\
 		\vspace{5mm}
 		\begin{minipage}{0.3\textwidth}
-			\includegraphics[width=\textwidth]{figures/extra_geschnitten/sm(long).png}
+			\includegraphicspaused[width=\textwidth]{figures/extra_geschnitten/sm(long).png}
 		\end{minipage}%
+		\pause%
 		\hfill%
 		\begin{minipage}{0.3\textwidth}
-			\includegraphics[width=\textwidth]{figures/extra_geschnitten/sm(obstacle).png}
+			\includegraphicspaused[width=\textwidth]{figures/extra_geschnitten/sm(obstacle).png}
 		\end{minipage}%
+		\pause%
 		\hfill%
 		\begin{minipage}{0.3\textwidth}
-			\includegraphics[width=\textwidth]{figures/extra_geschnitten/sm(forced).png}
-		\end{minipage}%	
+			\includegraphicspaused[width=\textwidth]{figures/extra_geschnitten/sm(forced).png}
+		\end{minipage}%
 	\end{center}
 \end{frame}
 
@@ -202,65 +232,70 @@ Hier passen die Bilder irgendwie weder zu "weg bisher+euklid", noch zu "nimm den
 		Diagonal Movements:\\
 		\vspace{5mm}
 		\begin{minipage}{0.3\textwidth}
-			\includegraphics[width=\textwidth]{figures/extra_geschnitten/dm(obstacle).png}
+			\includegraphicspaused[width=\textwidth]{figures/extra_geschnitten/dm(obstacle).png}
 		\end{minipage}%
+		\pause%
 		\hfill%
 		\begin{minipage}{0.3\textwidth}
-			\includegraphics[width=\textwidth]{figures/extra_geschnitten/dm(forced).png}
+			\includegraphicspaused[width=\textwidth]{figures/extra_geschnitten/dm(forced).png}
 		\end{minipage}%
+		\pause%
 		\hfill%
 		\begin{minipage}{0.3\textwidth}
-			\includegraphics[width=\textwidth]{figures/extra_geschnitten/dm(jump).png}
-		\end{minipage}%	
-	\end{center}
-\end{frame}
-
-
-\begin{frame}
-	\begin{center}
-		JPS Strategy:\\
-		\vspace{5mm}
-		\includegraphics[width=\textwidth]{figures/jps_strategy.png}
+			\includegraphicspaused[width=\textwidth]{figures/extra_geschnitten/dm(jump).png}
+		\end{minipage}%
 	\end{center}
 \end{frame}
 
 
 \begin{frame}{$JPS$: Example}
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/jps_geschnitten/1.png}
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/jps_geschnitten/1.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/jps_geschnitten/2.png}
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/jps_geschnitten/2.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/jps_geschnitten/3.png}
-	\end{minipage}\\
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/jps_geschnitten/3.png}
+	\end{minipage}%
+	\pause%
+
 	\vspace{2mm}
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/jps_geschnitten/4.png}
+
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/jps_geschnitten/4.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/jps_geschnitten/5.png}
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/jps_geschnitten/5.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/jps_geschnitten/6.png}
-	\end{minipage}\\
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/jps_geschnitten/6.png}
+	\end{minipage}%
+	\pause%
+
 	\vspace{2mm}
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/jps_geschnitten/8.png}
+
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/jps_geschnitten/8.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/jps_geschnitten/9.png}
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/jps_geschnitten/9.png}
 	\end{minipage}%
+	\pause%
 	\hfill%
-	\begin{minipage}{0.23\textwidth}
-		\includegraphics[width=\textwidth]{figures/jps_geschnitten/13.png}
-	\end{minipage}%	
+	\begin{minipage}{0.20\textwidth}
+		\includegraphicspaused[width=\textwidth]{figures/jps_geschnitten/13.png}
+	\end{minipage}
 \end{frame}
 
 
@@ -284,6 +319,7 @@ Hier passen die Bilder irgendwie weder zu "weg bisher+euklid", noch zu "nimm den
 \end{frame}
 
 
+
 \begin{frame}{Main ideas: Preprocessing Jump Points}
 	\begin{minipage}{0.45\textwidth}
 		Position of $\tikz{\path[draw=black,fill=yellow] (0,0) rectangle (2mm,2mm);}$:\\
@@ -296,7 +332,7 @@ Hier passen die Bilder irgendwie weder zu "weg bisher+euklid", noch zu "nimm den
 		\vspace{3mm}
 		\begin{itemize}
 		\pause
-		\item[$\nearrow$] $[\ 1\ ,\ path(\tikz{\path[draw=black,fill=yellow] (0,0) rectangle (2mm,2mm);}\ ,1)=\sqrt{2}\ ]$ 
+		\item[$\nearrow$] $[\ 1\ ,\ path(\tikz{\path[draw=black,fill=yellow] (0,0) rectangle (2mm,2mm);}\ ,1)=\sqrt{2}\ ]$
 		\pause
 		\item[$\searrow$] $[\ 2\ ,\ path(\tikz{\path[draw=black,fill=yellow] (0,0) rectangle (2mm,2mm);}\ ,2)=\sqrt{2}\ ]$
 		\item[$\swarrow$]
@@ -310,14 +346,51 @@ Hier passen die Bilder irgendwie weder zu "weg bisher+euklid", noch zu "nimm den
 	\end{minipage}
 \end{frame}
 
+
 \begin{frame}
     \bigbox{Bounding Boxes ($BB$)}
 \end{frame}
 
 
 
+\begin{frame}{Description}
+    \begin{itemize}
+        \item Pruning technique
+        \item Prepossessing offline
+        \item A bounding box for each pair of node and direction
+
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Box}
+    \begin{itemize}
+        \item Every node $n$ with an optimal path from $s$ to $n$ through this one must be contained by the box
+        \item The box is the smallest bounding satisfying this
+        \item Special treatment on JPS
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Example}
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{figures/bounding_boxes1.png}
+    \end{center}
+\end{frame}
+
+
+\begin{frame}{Example}
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{figures/bounding_boxes2.png}
+    \end{center}
+\end{frame}
+
+
+
 \begin{frame}
     \bigbox{Defined goal}
+
+    Das können wir eigentlich weglassen
 \end{frame}
 
 
