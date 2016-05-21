@@ -107,55 +107,167 @@ Hier passen die Bilder irgendwie weder zu "weg bisher+euklid", noch zu "nimm den
 \end{frame}
 
 
-\begin{frame}{Example}
-	\begin{minipage}{0.2\textwidth}
+\begin{frame}{$A^*$: Example}
+	\begin{minipage}{0.23\textwidth}
 		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/3.png}
 	\end{minipage}%
 	\hfill%
-	\begin{minipage}{0.2\textwidth}
+	\begin{minipage}{0.23\textwidth}
 		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/4.png}
 	\end{minipage}%
 	\hfill%
-	\begin{minipage}{0.2\textwidth}
+	\begin{minipage}{0.23\textwidth}
 		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/5.png}
-	\end{minipage}%
-	\hspace{3cm}
-	\begin{minipage}{0.2\textwidth}
+	\end{minipage}\\
+	\vspace{2mm}
+	\begin{minipage}{0.23\textwidth}
 		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/6.png}
 	\end{minipage}%
 	\hfill%
-	\begin{minipage}{0.2\textwidth}
+	\begin{minipage}{0.23\textwidth}
 		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/7.png}
 	\end{minipage}%
 	\hfill%
-	\begin{minipage}{0.2\textwidth}
+	\begin{minipage}{0.23\textwidth}
 		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/8.png}
-	\end{minipage}%
-	\hspace{3cm}
-	\begin{minipage}{0.2\textwidth}
+	\end{minipage}\\
+	\vspace{2mm}
+	\begin{minipage}{0.23\textwidth}
 		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/9.png}
 	\end{minipage}%
 	\hfill%
-	\begin{minipage}{0.2\textwidth}
+	\begin{minipage}{0.23\textwidth}
 		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/10.png}
 	\end{minipage}%
 	\hfill%
-	\begin{minipage}{0.2\textwidth}
+	\begin{minipage}{0.23\textwidth}
 		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/11.png}
 	\end{minipage}%	
 \end{frame}
 
 
-\begin{frame}{Symmetric paths}
-	\begin{center}
-		\includegraphics[width=0.5\textwidth]{figures/symmetricpath.png}
-	\end{center}
-\end{frame}
-
 \begin{frame}
     \bigbox{Jump Point Search ($JPS$)}
 \end{frame}
 
+
+\begin{frame}{Main ideas: Symmetric paths}
+	\begin{center}
+		\includegraphics[width=0.5\textwidth]{figures/symmetricpath.png}\\
+		\vspace{1cm}
+		Diagonal First!
+	\end{center}
+\end{frame}
+
+
+\begin{frame}{Main ideas: Exploring Rules \& Jump Points}
+	\begin{center}
+		Straight Movements:\\
+		\vspace{5mm}
+		\includegraphics[width=0.5\textwidth]{figures/extra_geschnitten/sm.png}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}{Main ideas: Exploring Rules \& Jump Points}
+		\begin{center}
+		Straight Movements:\\
+		\vspace{5mm}
+		\begin{minipage}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{figures/extra_geschnitten/sm(long).png}
+		\end{minipage}%
+		\hfill%
+		\begin{minipage}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{figures/extra_geschnitten/sm(obstacle).png}
+		\end{minipage}%
+		\hfill%
+		\begin{minipage}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{figures/extra_geschnitten/sm(forced).png}
+		\end{minipage}%	
+	\end{center}
+\end{frame}
+
+
+\begin{frame}{Main ideas: Exploring Rules \& Jump Points}
+	\begin{center}
+		Diagonal Movements:\\
+		\vspace{5mm}
+		\includegraphics[width=0.5\textwidth]{figures/extra_geschnitten/dm.png}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}{Main ideas: Exploring Rules \& Jump Points}
+		\begin{center}
+		Diagonal Movements:\\
+		\vspace{5mm}
+		\begin{minipage}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{figures/extra_geschnitten/dm(obstacle).png}
+		\end{minipage}%
+		\hfill%
+		\begin{minipage}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{figures/extra_geschnitten/dm(forced).png}
+		\end{minipage}%
+		\hfill%
+		\begin{minipage}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{figures/extra_geschnitten/dm(jump).png}
+		\end{minipage}%	
+	\end{center}
+\end{frame}
+
+
+\begin{frame}{$JPS$: Example}
+	\begin{minipage}{0.23\textwidth}
+		\includegraphics[width=\textwidth]{figures/jps_geschnitten/1.png}
+	\end{minipage}%
+	\hfill%
+	\begin{minipage}{0.23\textwidth}
+		\includegraphics[width=\textwidth]{figures/jps_geschnitten/2.png}
+	\end{minipage}%
+	\hfill%
+	\begin{minipage}{0.23\textwidth}
+		\includegraphics[width=\textwidth]{figures/jps_geschnitten/3.png}
+	\end{minipage}\\
+	\vspace{2mm}
+	\begin{minipage}{0.23\textwidth}
+		\includegraphics[width=\textwidth]{figures/jps_geschnitten/4.png}
+	\end{minipage}%
+	\hfill%
+	\begin{minipage}{0.23\textwidth}
+		\includegraphics[width=\textwidth]{figures/jps_geschnitten/5.png}
+	\end{minipage}%
+	\hfill%
+	\begin{minipage}{0.23\textwidth}
+		\includegraphics[width=\textwidth]{figures/jps_geschnitten/6.png}
+	\end{minipage}\\
+	\vspace{2mm}
+	\begin{minipage}{0.23\textwidth}
+		\includegraphics[width=\textwidth]{figures/jps_geschnitten/8.png}
+	\end{minipage}%
+	\hfill%
+	\begin{minipage}{0.23\textwidth}
+		\includegraphics[width=\textwidth]{figures/jps_geschnitten/9.png}
+	\end{minipage}%
+	\hfill%
+	\begin{minipage}{0.23\textwidth}
+		\includegraphics[width=\textwidth]{figures/jps_geschnitten/13.png}
+	\end{minipage}%	
+\end{frame}
+
+
+\begin{frame}{$A^*$ vs. $JPS$}
+	\begin{minipage}{0.45\textwidth}
+		$A^*$:\\
+		\vspace{3mm}
+		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/11.png}
+	\end{minipage}%
+	\hfill%
+	\begin{minipage}{0.45\textwidth}
+		$JPS$:\\
+		\vspace{3mm}
+		\includegraphics[width=\textwidth]{figures/jps_geschnitten/13.png}
+	\end{minipage}
+\end{frame}
 
 
 \begin{frame}
