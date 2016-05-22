@@ -8,6 +8,7 @@
 \newcommand{\rrect}{\rect{white!60!red}}
 \newcommand{\wrect}{\rect{white}}
 \newcommand{\brect}{\rect{gray}}
+\newcommand{\lrect}{\rect{white!60!blue}}
 
 \input{coverpage}
 
@@ -82,16 +83,14 @@
 	\begin{minipage}{0.6\textwidth}
 		\begin{itemize}
 		\item $\forall (\grect\ , \rrect)\in G^2:$
-		%\item let $\grect$ and $\rrect$ be arbitrary nodes
-		%\pause
-		\item $h(\grect, \rrect)\leq dist_{G}(\grect,\rrect)$
+		\item $h(\grect\ , \rrect)\leq dist_{G}(\grect\ ,\rrect)$
 		\pause
-		\item e.g:\\ $h(\grect, \rrect) = {\color{red}dist_{grid}}(\grect,\rrect)$
-				\begin{itemize}
+		\item e.g:\\ $h(\grect\ , \rrect) = {\color{red}dist_{grid}}(\grect\ ,\rrect)$:
+		\begin{itemize}
 			\item ${\color{red}3+3\cdot\sqrt{2}}\leq 3+3\cdot\sqrt{2}$
 		\end{itemize}
 		\pause
-		\item e.g.:\\ $h(\grect, \rrect) = {\color{blue}dist_{euklid}}(\grect,\rrect)$
+		\item e.g.:\\ $h(\grect\ , \rrect) = {\color{blue}dist_{euklid}}(\grect\ ,\rrect)$:
 		\begin{itemize}
 			\item ${\color{blue}\sqrt{27}} \leq 3+3\cdot\sqrt{2}$
 		\end{itemize}
@@ -113,21 +112,21 @@
 
 
 \begin{frame}{Main ideas: Priority Queue}
-    %\begin{itemize}
-    %    \item Frontier of nodes in a priority queue
-    %    \item Value of a node is cost so far + heuristic to goal node
-	%\end{itemize}
-
-
-	q = square root of 2
-	\vspace{1cm}
-
-	5q - 3q+2 - 3q+2\\
-	4q + 2 - start - 2q + 4\\
-	5q + 2 - 3q + 4 - 3q + 4
-
-	\vspace{1cm}
-	so müsste das bild aussehen (auf 1 nachkommastelle runden)
+    	\begin{minipage}{0.3\textwidth}
+		\includegraphics[width=\textwidth]{figures/A-Stern_geschnitten(241x241)/2(priorityqueue).png}
+	\end{minipage}%
+	\hfill%
+	\begin{minipage}{0.6\textwidth}
+		\begin{itemize}
+			\item Priority Queue order:
+			\begin{itemize}
+				\item[$\geq$] $dist_G(\grect\ ,\lrect)+h(\lrect\ , \rrect)$
+			\end{itemize}
+			\pause
+			\item e.g.:\\
+			$h(\lrect\ , \rrect) = dist_{grid}(\lrect\ , \rrect)$
+		\end{itemize}
+	\end{minipage}
 \end{frame}
 
 
