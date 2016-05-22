@@ -84,16 +84,16 @@
 		\item $\forall (\grect\ , \rrect)\in G^2:$
 		%\item let $\grect$ and $\rrect$ be arbitrary nodes
 		%\pause
-		\item $h(\grect, \rrect)\leq {\color{red}min_{path}}(\grect,\rrect)$
+		\item $h(\grect, \rrect)\leq dist_{G}(\grect,\rrect)$
 		\pause
-		\item e.g:\\ $h(\grect, \rrect) = {\color{red}min_{path}}(\grect,\rrect)$
+		\item e.g:\\ $h(\grect, \rrect) = {\color{red}dist_{grid}}(\grect,\rrect)$
 				\begin{itemize}
-			\item ${\color{red}3+3\cdot\sqrt{2}}$
+			\item ${\color{red}3+3\cdot\sqrt{2}}\leq 3+3\cdot\sqrt{2}$
 		\end{itemize}
 		\pause
 		\item e.g.:\\ $h(\grect, \rrect) = {\color{blue}dist_{euklid}}(\grect,\rrect)$
 		\begin{itemize}
-			\item ${\color{blue}\sqrt{27}} \leq {\color{red}3+3\cdot\sqrt{2}}$
+			\item ${\color{blue}\sqrt{27}} \leq 3+3\cdot\sqrt{2}$
 		\end{itemize}
 		\end{itemize}
 	\end{minipage}
