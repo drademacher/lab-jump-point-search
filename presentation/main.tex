@@ -51,14 +51,14 @@
 		\pause
 		\begin{itemize}
 		\item[$\wrect$] Euclidean grid graph $G$
-		\item[$\grect$] start node $s$
-		\item[$\rrect$] goal node $g$
+		\item[$\grect$] start node $s\in G$
+		\item[$\rrect$] goal node $g\in G$
 		\item[$\brect$] $\not\in G$ obstacle
 		\pause
 		\item[$\rightarrow$] edge costs $1$
 		\item[$\nearrow$] edge costs $\sqrt{2}$
 		\pause
-		\item[$h$:] a heuristic function
+		\item[$h$:] heuristic function
 		\end{itemize}
 	\end{itemize}
 
@@ -81,13 +81,19 @@
 	\hfill%
 	\begin{minipage}{0.6\textwidth}
 		\begin{itemize}
-		\item let $\grect$ and $\rrect$ be arbitrary nodes
+		\item $\forall (\grect\ , \rrect)\in G^2:$
+		%\item let $\grect$ and $\rrect$ be arbitrary nodes
+		%\pause
+		\item $h(\grect, \rrect)\leq {\color{red}min_{path}}(\grect,\rrect)$
 		\pause
-		\item $h(\grect, \rrect)\leq min_{path}(\grect,\rrect)$
+		\item e.g:\\ $h(\grect, \rrect) = {\color{red}min_{path}}(\grect,\rrect)$
+				\begin{itemize}
+			\item ${\color{red}3+3\cdot\sqrt{2}}$
+		\end{itemize}
 		\pause
-		\item e.g.:\\ $h(\grect, \rrect) = dist_{euklid}(\grect,\rrect)$
+		\item e.g.:\\ $h(\grect, \rrect) = {\color{blue}dist_{euklid}}(\grect,\rrect)$
 		\begin{itemize}
-			\item $\sqrt{27} \leq 3+3\cdot\sqrt{2}$
+			\item ${\color{blue}\sqrt{27}} \leq {\color{red}3+3\cdot\sqrt{2}}$
 		\end{itemize}
 		\end{itemize}
 	\end{minipage}
@@ -322,7 +328,7 @@
 
 \begin{frame}{Main ideas: Preprocessing Jump Points}
 	\begin{minipage}{0.45\textwidth}
-		Position of $\tikz{\path[draw=black,fill=yellow] (0,0) rectangle (2mm,2mm);}$:\\
+		Any arbitrary node $\tikz{\path[draw=black,fill=yellow] (0,0) rectangle (2mm,2mm);}\in G$:\\
 		\vspace{3mm}
 		\includegraphics[width=\textwidth]{figures/jps_geschnitten/1(yellow).png}
 	\end{minipage}%
