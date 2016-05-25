@@ -12,7 +12,7 @@
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
-                <Menu fx:id="showMode" mnemonicParsing="false" style="-fx-font-weight: bold;" text="Edit" />
+                <Menu fx:id="showMode" mnemonicParsing="false" style="-fx-font-weight: bold; -fx-min-width: 50;" text="Edit" />
                 <Menu mnemonicParsing="false" text="Map">
                     <items>
                   <MenuItem fx:id="editMap" mnemonicParsing="false" text="Edit Map" />
@@ -53,8 +53,8 @@
             <children>
             <Button fx:id="computeButton" mnemonicParsing="false" text="Compute" />
                 <Button fx:id="playButton" mnemonicParsing="false" prefWidth="70.0" text="Start" />
-                <Button fx:id="prevButton" mnemonicParsing="false" prefWidth="70.0" text="Previous" />
                 <Button fx:id="nextButton" mnemonicParsing="false" prefWidth="70.0" text="Next" />
+                <Button fx:id="prevButton" mnemonicParsing="false" prefWidth="70.0" text="Previous" />
                 <Button fx:id="restartButton" mnemonicParsing="false" prefWidth="70.0" text="Restart" />
             </children>
             <BorderPane.margin>
