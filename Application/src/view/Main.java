@@ -1,6 +1,8 @@
 package view;
 
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -33,21 +35,32 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(p, 1200, 800));
         primaryStage.show();
 
-        // settings
-        n = (int) (((StackPane) canvas.getParent()).getWidth() / size);
-        m = (int) (((StackPane) canvas.getParent()).getHeight() / size);
-
-
-        canvas.setWidth(size * n);
-        canvas.setHeight(size * m);
+        settings(primaryStage);
 
         render();
+    }
+
+    private void settings(Stage primaryStage) {
+        final double w = ((StackPane) canvas.getParent()).getWidth();
+        final double h = ((StackPane) canvas.getParent()).getHeight();
+
+        n = (int) ((w - 1) / size);
+        m = (int) ((h -1) / size);
+
+        canvas.setWidth(size * n + 1);
+        canvas.setHeight(size * m + 1);
+
+        // fit window
+        primaryStage.setWidth(primaryStage.getWidth() - w + canvas.getWidth());
+        primaryStage.setHeight(primaryStage.getHeight() - h + canvas.getHeight());
+        primaryStage.setResizable(false);
     }
 
     private void render() {
         // full rendering of the map
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         for (int x = 0; x < n; x++) {
             for (int y = 0; y < m; y++) {
@@ -55,15 +68,12 @@ public class Main extends Application {
                 // gc.setFill(CELLS[grid.getCell(x, y)]);
 
                 // draw rect
-                gc.setFill(Color.BLACK);
-                gc.fillRect(x * size, y * size, size, size);
-
                 gc.setFill(Color.GRAY);
-                gc.fillRect(x * size, y * size, size - 1, size - 1);
+                gc.fillRect(x * size + 1, y * size + 1, size - 1, size - 1);
             }
         }
 
-        gc.clearRect(0, canvas.getHeight() - 2, canvas.getWidth(), canvas.getHeight());
-        gc.clearRect(canvas.getWidth() - 2, 0, canvas.getWidth(), canvas.getHeight());
+        // gc.clearRect(0, canvas.getHeight() - 1, canvas.getWidth(), canvas.getHeight());
+        // gc.clearRect(canvas.getWidth() - 1, 0, canvas.getWidth(), canvas.getHeight());
     }
 }
