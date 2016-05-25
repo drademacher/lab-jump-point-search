@@ -14,10 +14,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
-    public BooleanProperty editMode = new SimpleBooleanProperty();
+    public BooleanProperty editMode = new SimpleBooleanProperty(true);
 
     @FXML
     public Canvas canvas;
+    @FXML
+    private Button computeButton;
     @FXML
     private Button playButton;
     @FXML
@@ -25,12 +27,16 @@ public class Controller implements Initializable {
     @FXML
     private Button nextButton;
     @FXML
-    private Button resetButton;
+    private Button restartButton;
 
     @FXML
-    private Menu mode;
+    private Menu showMode;
+    @FXML
+    private MenuItem editMap;
     @FXML
     private MenuItem emptyMap;
+    @FXML
+    private MenuItem exampleMap;
     @FXML
     private MenuItem randomMap;
     @FXML
@@ -44,23 +50,23 @@ public class Controller implements Initializable {
         playButton.setOnAction(e -> System.out.println("TODO: play"));
         prevButton.setOnAction(e -> System.out.println("TODO: prev"));
         nextButton.setOnAction(e -> System.out.println("TODO: next"));
-        resetButton.setOnAction(e -> System.out.println("TODO: reset"));
+        restartButton.setOnAction(e -> System.out.println("TODO: reset"));
 
-        mode.setOnMenuValidation(e -> System.out.print("hi"));
-        mode.setOnAction(e -> {
-            System.out.print("hi");
+        computeButton.setOnAction(e -> {
             if (editMode.getValue()) {
                 editMode.setValue(false);
-                mode.setText("Show");
+                showMode.setText("Show");
+                computeButton.setText("Reset");
             } else {
                 editMode.setValue(true);
-                mode.setText("Edit");
+                showMode.setText("Edit");
+                computeButton.setText("Compute");
             }
         });
         playButton.disableProperty().bind(editMode);
         prevButton.disableProperty().bind(editMode);
         nextButton.disableProperty().bind(editMode);
-        resetButton.disableProperty().bind(editMode);
+        restartButton.disableProperty().bind(editMode);
 
         emptyMap.setOnAction(e -> System.out.println("nice"));
     }

@@ -1,8 +1,6 @@
 package view;
 
 import javafx.application.Application;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -10,9 +8,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+    final private Color BRIGHT = (Color) Paint.valueOf("#C0C0C0");
+    final private Color DARK = (Color) Paint.valueOf("#4D4D4D");
+    final private Color LINES = (Color) Paint.valueOf("#212121");
+
     private Canvas canvas;
     private int size = 20;
     private int n;
@@ -59,7 +62,7 @@ public class Main extends Application {
     private void render() {
         // full rendering of the map
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.BLACK);
+        gc.setFill(LINES);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         for (int x = 0; x < n; x++) {
@@ -68,7 +71,10 @@ public class Main extends Application {
                 // gc.setFill(CELLS[grid.getCell(x, y)]);
 
                 // draw rect
-                gc.setFill(Color.GRAY);
+                gc.setFill(BRIGHT);
+                if (x == 2 && y > 3) {
+                    gc.setFill(DARK);
+                }
                 gc.fillRect(x * size + 1, y * size + 1, size - 1, size - 1);
             }
         }
