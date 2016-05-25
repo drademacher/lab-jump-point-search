@@ -12,8 +12,8 @@
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
-                <Menu fx:id="showMode" mnemonicParsing="false" style="-fx-font-weight: bold; -fx-min-width: 50;" text="Edit" />
-                <Menu mnemonicParsing="false" text="Map">
+                <Menu fx:id="modeMenu" mnemonicParsing="false" style="-fx-font-weight: bold; -fx-min-width: 50;" text="Edit" />
+                <Menu fx:id="mapMenu" mnemonicParsing="false" text="Map">
                     <items>
                   <MenuItem fx:id="editMap" mnemonicParsing="false" text="Edit Map" />
                         <MenuItem fx:id="emptyMap" mnemonicParsing="false" text="Empty Map" />
@@ -23,7 +23,7 @@
                         <MenuItem fx:id="loadMap" mnemonicParsing="false" text="Load Map" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Algorithm">
+                <Menu fx:id="algoMenu" mnemonicParsing="false" text="Algorithm">
                <items>
                   <RadioMenuItem fx:id="astar" mnemonicParsing="false" selected="true" text="A-star">
                      <toggleGroup>
@@ -40,7 +40,7 @@
                   <RadioMenuItem fx:id="jpsPrune" mnemonicParsing="false" text="JPS+" toggleGroup="$pruning" />
                   <RadioMenuItem fx:id="bbPrune" mnemonicParsing="false" text="Bounding Boxes" toggleGroup="$pruning" />
                </items></Menu>
-                <Menu mnemonicParsing="false" text="Help">
+                <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem fx:id="about" mnemonicParsing="false" text="About" />
                     </items>

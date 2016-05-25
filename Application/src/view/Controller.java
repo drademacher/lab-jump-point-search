@@ -30,7 +30,16 @@ public class Controller implements Initializable {
     private Button restartButton;
 
     @FXML
-    private Menu showMode;
+    private Menu modeMenu;
+    @FXML
+    private Menu mapMenu;
+    @FXML
+    private Menu algoMenu;
+    @FXML
+    private Menu helpMenu;
+
+
+
     @FXML
     private MenuItem editMap;
     @FXML
@@ -55,18 +64,23 @@ public class Controller implements Initializable {
         computeButton.setOnAction(e -> {
             if (editMode.getValue()) {
                 editMode.setValue(false);
-                showMode.setText("Show");
+                modeMenu.setText("Show");
                 computeButton.setText("Reset");
             } else {
                 editMode.setValue(true);
-                showMode.setText("Edit");
+                modeMenu.setText("Edit");
                 computeButton.setText("Compute");
             }
         });
+
+        // binding
         playButton.disableProperty().bind(editMode);
         prevButton.disableProperty().bind(editMode);
         nextButton.disableProperty().bind(editMode);
         restartButton.disableProperty().bind(editMode);
+
+        mapMenu.disableProperty().bind(editMode.not());
+        algoMenu.disableProperty().bind(editMode.not());
 
         emptyMap.setOnAction(e -> System.out.println("nice"));
     }
