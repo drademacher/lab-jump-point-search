@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controller">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu fx:id="mode" mnemonicParsing="false" style="-fx-font-weight: bold;" text="Edit" />
+                <Menu mnemonicParsing="false" text="Map">
+                    <items>
+                        <MenuItem fx:id="emptyMap" mnemonicParsing="false" text="Empty Map" />
+                        <MenuItem fx:id="randomMap" mnemonicParsing="false" text="Random Map" />
+                  <MenuItem fx:id="genMap" mnemonicParsing="false" text="Generate Maze Map" />
+                  <MenuItem fx:id="loadMap" mnemonicParsing="false" text="Load Map" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Algorithm" />
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem fx:id="about" mnemonicParsing="false" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+   <bottom>
+      <HBox alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0" BorderPane.alignment="CENTER">
+         <children>
+                <Button fx:id="play" mnemonicParsing="false" prefWidth="70.0" text="Start" />
+                <Button fx:id="prev" mnemonicParsing="false" prefWidth="70.0" text="Previous" />
+                <Button fx:id="next" mnemonicParsing="false" prefWidth="70.0" text="Next" />
+                <Button fx:id="reset" mnemonicParsing="false" prefWidth="70.0" text="Reset" />
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </HBox>
+   </bottom>
+   <center>
+      <StackPane>
+         <children>
+            <Canvas fx:id="canvas" height="200.0" width="200.0" />
+         </children>
+      </StackPane>
+   </center>
+</BorderPane>
