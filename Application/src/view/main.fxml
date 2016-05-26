@@ -13,9 +13,10 @@
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu fx:id="modeMenu" mnemonicParsing="false" style="-fx-font-weight: bold; -fx-min-width: 50;" text="Edit" />
-                <Menu fx:id="mapMenu" mnemonicParsing="false" text="Change Map">
+                <Menu fx:id="mapMenu" mnemonicParsing="false" text="Change Grid">
                     <items>
                   <MenuItem fx:id="editMap" mnemonicParsing="false" text="Edit Map" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="emptyMap" mnemonicParsing="false" text="Empty Map" />
                   <MenuItem fx:id="exampleMap" mnemonicParsing="false" text="Example Map" />
                         <MenuItem fx:id="randomMap" mnemonicParsing="false" text="Random Map" />
@@ -32,6 +33,12 @@
                   </RadioMenuItem>
                   <RadioMenuItem fx:id="jps" mnemonicParsing="false" text="JPS" toggleGroup="$algo" />
                   <SeparatorMenuItem mnemonicParsing="false" />
+                  <RadioMenuItem mnemonicParsing="false" selected="true" text="Standard heuristic">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="heuristic" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <RadioMenuItem fx:id="noPrune" mnemonicParsing="false" selected="true" text="No pruning">
                      <toggleGroup>
                         <ToggleGroup fx:id="pruning" />
@@ -39,6 +46,8 @@
                   </RadioMenuItem>
                   <RadioMenuItem fx:id="jpsPrune" mnemonicParsing="false" text="JPS+" toggleGroup="$pruning" />
                   <RadioMenuItem fx:id="bbPrune" mnemonicParsing="false" text="Bounding Boxes" toggleGroup="$pruning" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <CheckMenuItem mnemonicParsing="false" selected="true" text="Corner Cutting" />
                </items></Menu>
                 <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
                     <items>
