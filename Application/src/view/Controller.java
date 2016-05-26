@@ -1,6 +1,7 @@
 package view;
 
 
+import grid.Parser;
 import grid.Type;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -120,21 +121,10 @@ public class Controller implements Initializable {
             fileChooser.setTitle("Open Resource File");
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("Map Files", "*.map"),
-                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
-                    new FileChooser.ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
                     new FileChooser.ExtensionFilter("All Files", "*.*"));
             File selectedFile = fileChooser.showOpenDialog(stage);
             if (selectedFile != null) {
-                try {
-                    BufferedReader br = new BufferedReader(new FileReader(selectedFile));
-                    String line = null;
-                    while ((line = br.readLine()) != null) {
-                        System.out.println(line);
-                    }
-
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                context.grid = Parser.getMap(selectedFile);
             }
 
             renderCanvas();
@@ -153,8 +143,8 @@ public class Controller implements Initializable {
         gc.setFill(Paint.valueOf("#212121"));
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        for (int x = 0; x < context.n; x++) {
-            for (int y = 0; y < context.m; y++) {
+        for (int x = 0; x < context.grid.getN(); x++) {
+            for (int y = 0; y < context.grid.getM(); y++) {
                 // change color
                 // gc.setFill(CELLS[grid.getCell(x, y)]);
 

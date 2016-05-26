@@ -28,17 +28,33 @@ public class Grid {
     }
 
     public Type getCell(int x, int y) {
+        if (x < 0 || x >= n || y < 0 || y >= m) {
+            return Type.ERROR;
+        }
+
         return grid[x][y];
     }
 
     public void setCell(int x, int y, Type type) {
+        if (x < 0 || x >= n || y < 0 || y >= m) {
+            return;
+        }
+
         grid[x][y] = type;
     }
 
     public void setEmpty() {
-        for (int x = 0; x < n; x++) {
+        for (int x = 0; x < getN(); x++) {
             for (int y = 0; y < m; y++) {
                 grid[x][y] = Type.NODE;
+            }
+        }
+    }
+
+    public void setObstacle() {
+        for (int x = 0; x < getN(); x++) {
+            for (int y = 0; y < m; y++) {
+                grid[x][y] = Type.OBSTACLE;
             }
         }
     }
@@ -48,7 +64,7 @@ public class Grid {
     }
 
     public void setRnd(double prob) {
-        for (int x = 0; x < n; x++) {
+        for (int x = 0; x < getN(); x++) {
             for (int y = 0; y < m; y++) {
                 if (context.rnd.nextDouble() > prob) {
                     grid[x][y] = Type.NODE;
@@ -66,5 +82,14 @@ public class Grid {
 
     public void setLoadFromFile() {
         // TODO: write parser
+    }
+
+    public int getN() {
+        return n;
+    }
+
+
+    public int getM() {
+        return m;
     }
 }
