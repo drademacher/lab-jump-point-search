@@ -20,7 +20,7 @@ public class Grid {
                 if (x <= 2 && y > 4) {
                     grid[x][y] = Type.OBSTACLE;
                 } else {
-                    grid[x][y] = Type.NODE;
+                    grid[x][y] = Type.FLOOR;
                 }
 
             }
@@ -46,7 +46,7 @@ public class Grid {
     public void setEmpty() {
         for (int x = 0; x < getN(); x++) {
             for (int y = 0; y < m; y++) {
-                grid[x][y] = Type.NODE;
+                grid[x][y] = Type.FLOOR;
             }
         }
     }
@@ -67,7 +67,7 @@ public class Grid {
         for (int x = 0; x < getN(); x++) {
             for (int y = 0; y < m; y++) {
                 if (context.rnd.nextDouble() > prob) {
-                    grid[x][y] = Type.NODE;
+                    grid[x][y] = Type.FLOOR;
                 } else {
                     grid[x][y] = Type.OBSTACLE;
                 }

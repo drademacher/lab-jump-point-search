@@ -44,7 +44,7 @@ public class Parser {
                 for (int x = 0; x < chars.length; x++) {
                     // chars which represent passable terrain are . G S T
                     if (chars[x] == '.' || chars[x] == 'G' || chars[x] == 'S' || chars[x] == 'T') {
-                        map.setCell(x, y, Type.NODE);
+                        map.setCell(x, y, Type.FLOOR);
                     }
                 }
 

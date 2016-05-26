@@ -13,14 +13,22 @@
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu fx:id="modeMenu" mnemonicParsing="false" style="-fx-font-weight: bold; -fx-min-width: 50;" text="Edit" />
-                <Menu fx:id="mapMenu" mnemonicParsing="false" text="Change Grid">
+                <Menu fx:id="mapMenu" mnemonicParsing="false" text="Change Map">
                     <items>
                   <MenuItem fx:id="editMap" mnemonicParsing="false" text="Edit Map" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="emptyMap" mnemonicParsing="false" text="Empty Map" />
-                  <MenuItem fx:id="exampleMap" mnemonicParsing="false" text="Example Map" />
+                  <MenuItem fx:id="exampleMap" disable="true" mnemonicParsing="false" text="Example Map" />
                         <MenuItem fx:id="randomMap" mnemonicParsing="false" text="Random Map" />
-                        <MenuItem fx:id="genMap" mnemonicParsing="false" text="Generate Maze Map" />
+                  <Menu mnemonicParsing="false" text="Map Generator">
+                    <items>
+                      <MenuItem fx:id="genMap1" mnemonicParsing="false" text="Layout 1" />
+                        <MenuItem fx:id="genMap2" mnemonicParsing="false" text="Layout 2" />
+                        <MenuItem fx:id="genMap3" mnemonicParsing="false" text="Layout 3" />
+                        <MenuItem fx:id="genMap4" mnemonicParsing="false" text="Layout 4" />
+                        <MenuItem fx:id="genMap5" mnemonicParsing="false" text="Layout 5" />
+                    </items>
+                  </Menu>
                         <MenuItem fx:id="loadMap" mnemonicParsing="false" text="Load Map" />
                     </items>
                 </Menu>

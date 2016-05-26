@@ -1,6 +1,7 @@
 package view;
 
 
+import grid.LevelBuilder;
 import grid.Parser;
 import grid.Type;
 import javafx.beans.property.BooleanProperty;
@@ -17,10 +18,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -59,7 +57,15 @@ public class Controller implements Initializable {
     @FXML
     private MenuItem randomMap;
     @FXML
-    private MenuItem genMap;
+    private MenuItem genMap1;
+    @FXML
+    private MenuItem genMap2;
+    @FXML
+    private MenuItem genMap3;
+    @FXML
+    private MenuItem genMap4;
+    @FXML
+    private MenuItem genMap5;
     @FXML
     private MenuItem loadMap;
 
@@ -109,8 +115,28 @@ public class Controller implements Initializable {
             renderCanvas();
         });
 
-        genMap.setOnAction(e -> {
-            // TODO
+        genMap1.setOnAction(e -> {
+            context.grid = new LevelBuilder(context.n, context.m, LevelBuilder.Layout.MAZE).create();
+            renderCanvas();
+        });
+
+        genMap2.setOnAction(e -> {
+            context.grid = new LevelBuilder(context.n, context.m, LevelBuilder.Layout.MAZE_WITH_ROOMS).create();
+            renderCanvas();
+        });
+
+        genMap3.setOnAction(e -> {
+            context.grid = new LevelBuilder(context.n, context.m, LevelBuilder.Layout.SINGLE_CONN_ROOMS).create();
+            renderCanvas();
+        });
+
+        genMap4.setOnAction(e -> {
+            context.grid = new LevelBuilder(context.n, context.m, LevelBuilder.Layout.LOOPED_ROOMS).create();
+            renderCanvas();
+        });
+
+        genMap5.setOnAction(e -> {
+            context.grid = new LevelBuilder(context.n, context.m, LevelBuilder.Layout.DOUBLE_CONN_ROOMS).create();
             renderCanvas();
         });
 
@@ -167,10 +193,10 @@ public class Controller implements Initializable {
 
         // TODO: trigger event here for point x, y
         // System.out.println("click " + xCell + " " + yCell);
-        if (context.grid.getCell(x, y) == Type.NODE) {
+        if (context.grid.getCell(x, y) == Type.FLOOR) {
             context.grid.setCell(x, y, Type.OBSTACLE);
         } else {
-            context.grid.setCell(x, y, Type.NODE);
+            context.grid.setCell(x, y, Type.FLOOR);
         }
         renderCanvas();
     }
