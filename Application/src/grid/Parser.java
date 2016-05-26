@@ -10,8 +10,8 @@ public class Parser {
 
     }
 
-    public static Grid getMap(File file) {
-        Grid map = null;
+    public static Map getMap(File file) {
+        Map map = null;
         int n = 0, m = 0;
 
         try {
@@ -34,7 +34,7 @@ public class Parser {
             br.readLine();
 
             // init map
-            map = new Grid(n, m);
+            map = new Map(n, m);
             map.setObstacle();
 
             int y = 0;
@@ -59,7 +59,7 @@ public class Parser {
     }
 
 
-    public static File getFile(Grid grid) {
+    public static File getFile(Map map) {
         File file = null;
 
         // TODO: reverse the file to map process

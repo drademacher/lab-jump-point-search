@@ -1,28 +1,23 @@
 package grid;
 
 
-import view.Context;
+import view.Global;
 
-public class Grid {
-    private Context context = Context.getInstance();
+public class Map {
+    private Global global = Global.getInstance();
 
     private int n;
     private int m;
     private Type[][] grid;
 
-    public Grid(int n, int m) {
+    public Map(int n, int m) {
         this.n = n;
         this.m = m;
         grid = new Type[n][m];
 
         for (int x = 0; x < n; x++) {
             for (int y = 0; y < m; y++) {
-                if (x <= 2 && y > 4) {
-                    grid[x][y] = Type.OBSTACLE;
-                } else {
                     grid[x][y] = Type.FLOOR;
-                }
-
             }
         }
     }
@@ -66,7 +61,7 @@ public class Grid {
     public void setRnd(double prob) {
         for (int x = 0; x < getN(); x++) {
             for (int y = 0; y < m; y++) {
-                if (context.rnd.nextDouble() > prob) {
+                if (global.rnd.nextDouble() > prob) {
                     grid[x][y] = Type.FLOOR;
                 } else {
                     grid[x][y] = Type.OBSTACLE;
@@ -77,7 +72,7 @@ public class Grid {
     }
 
     public void setGenerate() {
-        // TODO: import and adjust grid graph generator from spoon
+        // TODO: import and adjust map graph generator from spoon
     }
 
     public void setLoadFromFile() {

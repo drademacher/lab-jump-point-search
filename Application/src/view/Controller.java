@@ -1,7 +1,7 @@
 package view;
 
 
-import grid.LevelBuilder;
+import grid.MapGenerator;
 import grid.Parser;
 import grid.Type;
 import javafx.beans.property.BooleanProperty;
@@ -26,7 +26,7 @@ public class Controller implements Initializable {
     public BooleanProperty editMode = new SimpleBooleanProperty(true);
     @FXML
     public Canvas canvas;
-    private Context context = Context.getInstance();
+    private Global global = Global.getInstance();
     @FXML
     private Button computeButton;
     @FXML
@@ -99,44 +99,44 @@ public class Controller implements Initializable {
         algoMenu.disableProperty().bind(editMode.not());
 
 
-        // grid menu
+        // map menu
         emptyMap.setOnAction(e -> {
-            context.grid.setEmpty();
+            global.map.setEmpty();
             renderCanvas();
         });
 
         exampleMap.setOnAction(e -> {
-            context.grid.setEmpty();
+            global.map.setEmpty();
             renderCanvas();
         });
 
         randomMap.setOnAction(e -> {
-            context.grid.setRnd(0.1);
+            global.map.setRnd(0.2);
             renderCanvas();
         });
 
         genMap1.setOnAction(e -> {
-            context.grid = new LevelBuilder(context.n, context.m, LevelBuilder.Layout.MAZE).create();
+            global.map = new MapGenerator(global.n, global.m, MapGenerator.Layout.MAZE).create();
             renderCanvas();
         });
 
         genMap2.setOnAction(e -> {
-            context.grid = new LevelBuilder(context.n, context.m, LevelBuilder.Layout.MAZE_WITH_ROOMS).create();
+            global.map = new MapGenerator(global.n, global.m, MapGenerator.Layout.MAZE_WITH_ROOMS).create();
             renderCanvas();
         });
 
         genMap3.setOnAction(e -> {
-            context.grid = new LevelBuilder(context.n, context.m, LevelBuilder.Layout.SINGLE_CONN_ROOMS).create();
+            global.map = new MapGenerator(global.n, global.m, MapGenerator.Layout.SINGLE_CONN_ROOMS).create();
             renderCanvas();
         });
 
         genMap4.setOnAction(e -> {
-            context.grid = new LevelBuilder(context.n, context.m, LevelBuilder.Layout.LOOPED_ROOMS).create();
+            global.map = new MapGenerator(global.n, global.m, MapGenerator.Layout.LOOPED_ROOMS).create();
             renderCanvas();
         });
 
         genMap5.setOnAction(e -> {
-            context.grid = new LevelBuilder(context.n, context.m, LevelBuilder.Layout.DOUBLE_CONN_ROOMS).create();
+            global.map = new MapGenerator(global.n, global.m, MapGenerator.Layout.DOUBLE_CONN_ROOMS).create();
             renderCanvas();
         });
 
@@ -150,7 +150,7 @@ public class Controller implements Initializable {
                     new FileChooser.ExtensionFilter("All Files", "*.*"));
             File selectedFile = fileChooser.showOpenDialog(stage);
             if (selectedFile != null) {
-                context.grid = Parser.getMap(selectedFile);
+                global.map = Parser.getMap(selectedFile);
             }
 
             renderCanvas();
@@ -163,20 +163,24 @@ public class Controller implements Initializable {
         });
     }
 
+    public void showNiceMap() {
+        genMap4.fire();
+    }
+
     public void renderCanvas() {
-        // full rendering of the grid
+        // full rendering of the map
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Paint.valueOf("#212121"));
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        for (int x = 0; x < context.grid.getN(); x++) {
-            for (int y = 0; y < context.grid.getM(); y++) {
+        for (int x = 0; x < global.map.getN(); x++) {
+            for (int y = 0; y < global.map.getM(); y++) {
                 // change color
-                // gc.setFill(CELLS[grid.getCell(x, y)]);
+                // gc.setFill(CELLS[map.getCell(x, y)]);
 
                 // draw rect
-                gc.setFill(context.grid.getCell(x, y).getColor());
-                gc.fillRect(x * context.size + 1, y * context.size + 1, context.size - 1, context.size - 1);
+                gc.setFill(global.map.getCell(x, y).getColor());
+                gc.fillRect(x * global.size + 1, y * global.size + 1, global.size - 1, global.size - 1);
             }
         }
 
@@ -185,18 +189,18 @@ public class Controller implements Initializable {
     }
 
     private void canvasClicked(double xReal, double yReal) {
-        final int x = (int) (xReal / context.size);
-        final int y = (int) (yReal / context.size);
-        if (xReal % context.size == 0 || yReal % context.size == 0) {
+        final int x = (int) (xReal / global.size);
+        final int y = (int) (yReal / global.size);
+        if (xReal % global.size == 0 || yReal % global.size == 0) {
             return;
         }
 
         // TODO: trigger event here for point x, y
         // System.out.println("click " + xCell + " " + yCell);
-        if (context.grid.getCell(x, y) == Type.FLOOR) {
-            context.grid.setCell(x, y, Type.OBSTACLE);
+        if (global.map.getCell(x, y) == Type.FLOOR) {
+            global.map.setCell(x, y, Type.OBSTACLE);
         } else {
-            context.grid.setCell(x, y, Type.FLOOR);
+            global.map.setCell(x, y, Type.FLOOR);
         }
         renderCanvas();
     }

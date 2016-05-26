@@ -1,7 +1,7 @@
 package grid;
 
 
-import view.Context;
+import view.Global;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +16,7 @@ import static grid.Type.ROOM;
  * builder pattern class to generate level maps source:
  */
 
-public class LevelBuilder {
+public class MapGenerator {
     // layout types
     public enum Layout {
         MAZE, MAZE_WITH_ROOMS, SINGLE_CONN_ROOMS, LOOPED_ROOMS, DOUBLE_CONN_ROOMS
@@ -49,7 +49,7 @@ public class LevelBuilder {
      * @param layout
      *            the layout
      */
-    public LevelBuilder(int n, int m, Layout layout) {
+    public MapGenerator(int n, int m, Layout layout) {
         n = n - (n + 1) % 2;
         m = m - (m + 1) % 2;
         this.n = n;
@@ -130,7 +130,7 @@ public class LevelBuilder {
      * internal function which generated a random number of rooms the limit is
      * just an upper bound and its not expected to be reached
      */
-    private LevelBuilder genRooms(int limit) {
+    private MapGenerator genRooms(int limit) {
         // set room flag
         hasRooms = true;
 
@@ -417,19 +417,19 @@ public class LevelBuilder {
     /**
      * function which is called finally to make a Map from a MapBuilder
      */
-    public Grid create() {
-        Grid grid = new Grid(Context.getInstance().n, Context.getInstance().m);
-        grid.setObstacle();
+    public Map create() {
+        Map map = new Map(Global.getInstance().n, Global.getInstance().m);
+        map.setObstacle();
 
         for (int x = 0; x < n; x++) {
             for (int y = 0; y < m; y++) {
-                if (map[x][y].getType() == OBSTACLE) {
-                    grid.setCell(x, y, OBSTACLE);
+                if (this.map[x][y].getType() == OBSTACLE) {
+                    map.setCell(x, y, OBSTACLE);
                 } else {
-                    grid.setCell(x, y, Type.FLOOR);
+                    map.setCell(x, y, Type.FLOOR);
                 }
             }
         }
-        return grid;
+        return map;
     }
 }

@@ -1,6 +1,6 @@
 package view;
 
-import grid.Grid;
+import grid.Map;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,7 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    private Context context = Context.getInstance();
+    private Global global = Global.getInstance();
 
     private Canvas canvas;
 
@@ -34,6 +34,7 @@ public class Main extends Application {
 
         settings(primaryStage);
 
+        ctrl.showNiceMap();
         ctrl.renderCanvas();
     }
 
@@ -41,12 +42,12 @@ public class Main extends Application {
         final double w = ((StackPane) canvas.getParent()).getWidth();
         final double h = ((StackPane) canvas.getParent()).getHeight();
 
-        context.n = (int) ((w - 1) / context.size);
-        context.m = (int) ((h -1) / context.size);
-        context.grid = new Grid(context.n, context.m);
+        global.n = (int) ((w - 1) / global.size);
+        global.m = (int) ((h -1) / global.size);
+        global.map = new Map(global.n, global.m);
 
-        canvas.setWidth(context.size * context.n + 1);
-        canvas.setHeight(context.size * context.m + 1);
+        canvas.setWidth(global.size * global.n + 1);
+        canvas.setHeight(global.size * global.m + 1);
 
         // fit window
         primaryStage.setWidth(primaryStage.getWidth() - w + canvas.getWidth());
