@@ -9,6 +9,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -83,5 +84,20 @@ public class Controller implements Initializable {
         algoMenu.disableProperty().bind(editMode.not());
 
         emptyMap.setOnAction(e -> System.out.println("nice"));
+
+
+        // canvas clicking fun
+        canvas.setOnMouseClicked((MouseEvent e) -> {
+            final int size = 20;
+            final int x = (int) (e.getX() / size);
+            final int y = (int) (e.getY() / size);
+            if (e.getX() % size == 0 || e.getY() % size == 0) {
+                return;
+            }
+
+            // TODO: trigger event here for point x, y
+            System.out.println("TODO: clicked " + x + " " + y);
+
+        });
     }
 }
