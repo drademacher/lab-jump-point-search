@@ -4,9 +4,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public enum Type {
-    FLOOR(Paint.valueOf("#C0C0C0")),
-    ROOM (Paint.valueOf("#C0C0C0")),
-    OBSTACLE (Paint.valueOf("#4D4D4D")),
+    FLOOR(Paint.valueOf("#E8E8E8")),
+    ROOM (Paint.valueOf("#D9D9D9")),
+    OBSTACLE (Paint.valueOf("#7D7D7D")),
     ERROR (Paint.valueOf("#FF0000"));
 
     private Color color;
