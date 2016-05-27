@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.canvas.*?>
@@ -66,18 +67,24 @@
         </MenuBar>
     </top>
     <bottom>
-        <HBox alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0" BorderPane.alignment="CENTER">
-            <children>
-            <Button fx:id="computeButton" mnemonicParsing="false" text="Compute" />
-                <Button fx:id="playButton" mnemonicParsing="false" prefWidth="70.0" text="Start" />
-                <Button fx:id="nextButton" mnemonicParsing="false" prefWidth="70.0" text="Next" />
-                <Button fx:id="prevButton" mnemonicParsing="false" prefWidth="70.0" text="Previous" />
-                <Button fx:id="restartButton" mnemonicParsing="false" prefWidth="70.0" text="Restart" />
-            </children>
-            <BorderPane.margin>
-                <Insets />
-            </BorderPane.margin>
-        </HBox>
+      <StackPane prefHeight="33.0" prefWidth="600.0">
+         <children>
+              <HBox alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0">
+                  <children>
+                  <Button fx:id="computeButton" mnemonicParsing="false" text="Compute" />
+                      <Button fx:id="playButton" mnemonicParsing="false" prefWidth="70.0" text="Start" />
+                      <Button fx:id="nextButton" mnemonicParsing="false" prefWidth="70.0" text="Next" />
+                      <Button fx:id="prevButton" mnemonicParsing="false" prefWidth="70.0" text="Previous" />
+                      <Button fx:id="restartButton" mnemonicParsing="false" prefWidth="70.0" text="Restart" />
+                  </children>
+              </HBox>
+            <HBox alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0" visible="false">
+               <children>
+                  <Button mnemonicParsing="false" prefWidth="70.0" text="Finish" />
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
     </bottom>
     <center>
         <StackPane>
