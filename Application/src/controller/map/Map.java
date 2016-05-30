@@ -8,8 +8,10 @@ public class Map {
     private Field[][]       grid;
     private PathCoordinate  startPoint;
     private Coordinate      goalPoint;
+    // TODO: paloka macht isSetStartPoint und isSetGoalPoint methoden
 
     public Map(int xDim, int yDim){
+        //Todo: x und y >0;
         this.grid   = new Field[xDim][yDim];
         for(int x=0;x<xDim;x++){
             for(int y=0;y<yDim;y++){

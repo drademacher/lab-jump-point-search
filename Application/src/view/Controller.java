@@ -1,7 +1,9 @@
 package view;
 
 
+import controller.map.FieldType;
 import controller.map.MapFactory;
+import controller.map.NotAFieldException;
 import grid.MapGenerator;
 import grid.Parser;
 import grid.Type;
@@ -114,32 +116,33 @@ public class Controller implements Initializable {
         });
 
         randomMap.setOnAction(e -> {
-            global.map.setRnd(0.2);
+            //global.map.setRnd(0.2);
+            global.map  = MapFactory.createRandomMap(global.n, global.m, 0.2);
             renderCanvas();
         });
 
         genMap1.setOnAction(e -> {
-            global.map = new MapGenerator(global.n, global.m, MapGenerator.Layout.MAZE).create();
+            global.map  = MapFactory.createMazeMap(global.n, global.m);
             renderCanvas();
         });
 
         genMap2.setOnAction(e -> {
-            global.map = new MapGenerator(global.n, global.m, MapGenerator.Layout.MAZE_WITH_ROOMS).create();
+            global.map  = MapFactory.createMazeWithRoomsMap(global.n, global.m);
             renderCanvas();
         });
 
         genMap3.setOnAction(e -> {
-            global.map = new MapGenerator(global.n, global.m, MapGenerator.Layout.SINGLE_CONN_ROOMS).create();
+            global.map  = MapFactory.createSingleConnRoomsMap(global.n, global.m);
             renderCanvas();
         });
 
         genMap4.setOnAction(e -> {
-            global.map = new MapGenerator(global.n, global.m, MapGenerator.Layout.LOOPED_ROOMS).create();
+            global.map  = MapFactory.createLoopedRoomsMap(global.n, global.m);
             renderCanvas();
         });
 
         genMap5.setOnAction(e -> {
-            global.map = new MapGenerator(global.n, global.m, MapGenerator.Layout.DOUBLE_CONN_ROOMS).create();
+            global.map  = MapFactory.createDoubleConnRoomsMap(global.n, global.m);
             renderCanvas();
         });
 
@@ -167,7 +170,7 @@ public class Controller implements Initializable {
     }
 
     public void showNiceMap() {
-        genMap4.fire();
+        exampleMap.fire();
     }
 
     public void renderCanvas() {
@@ -176,13 +179,17 @@ public class Controller implements Initializable {
         gc.setFill(Paint.valueOf("#212121"));
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        for (int x = 0; x < global.map.getN(); x++) {
-            for (int y = 0; y < global.map.getM(); y++) {
+        for (int x = 0; x < global.n; x++) {
+            for (int y = 0; y < global.m; y++) {
                 // change color
                 // gc.setFill(CELLS[map.getCell(x, y)]);
 
                 // draw rect
-                gc.setFill(global.map.getCell(x, y).getColor());
+                try {
+                    gc.setFill(global.map.getField(x, y).getColor());
+                } catch (NotAFieldException e) {
+                    // should not happen
+                }
                 gc.fillRect(x * global.size + 1, y * global.size + 1, global.size - 1, global.size - 1);
             }
         }
@@ -200,11 +207,13 @@ public class Controller implements Initializable {
 
         // TODO: trigger event here for point x, y
         // System.out.println("click " + xCell + " " + yCell);
-        if (global.map.getCell(x, y) == Type.FLOOR) {
-            global.map.setCell(x, y, Type.OBSTACLE);
-        } else {
-            global.map.setCell(x, y, Type.FLOOR);
-        }
+        try {
+            if (global.map.getField(x, y).getFieldType().equals(FieldType.GRID_POINT)) {
+                global.map.setObstacle(x, y);
+            } else {
+                global.map.setField(x, y);
+            }
+        } catch (Exception e) { }
         renderCanvas();
     }
 

@@ -1,8 +1,9 @@
 package grid;
 
 
+import controller.map.NotAFieldException;
 import view.Global;
-
+import controller.map.Map;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -419,17 +420,22 @@ public class MapGenerator {
      */
     public Map create() {
         Map map = new Map(Global.getInstance().n, Global.getInstance().m);
-        map.setObstacle();
 
-        for (int x = 0; x < n; x++) {
-            for (int y = 0; y < m; y++) {
-                if (this.map[x][y].getType() == OBSTACLE) {
-                    map.setCell(x, y, OBSTACLE);
-                } else {
-                    map.setCell(x, y, Type.FLOOR);
+        try {
+            for (int x = 0; x < n; x++) {
+                for (int y = 0; y < m; y++) {
+
+                    if (this.map[x][y].getType() == FLOOR || this.map[x][y].getType() == ROOM) {
+                        map.setField(x, y);
+                    } else {
+                        map.setObstacle(x, y);
+                    }
                 }
             }
+        } catch (NotAFieldException e) {
+            // should not happen
         }
+
         return map;
     }
 }

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import controller.map.Map;
+import controller.map.NotAFieldException;
 
 public class Parser {
     private Parser() {
@@ -35,7 +37,6 @@ public class Parser {
 
             // init map
             map = new Map(n, m);
-            map.setObstacle();
 
             int y = 0;
             while ((line = br.readLine()) != null) {
@@ -44,7 +45,9 @@ public class Parser {
                 for (int x = 0; x < chars.length; x++) {
                     // chars which represent passable terrain are . G S T
                     if (chars[x] == '.' || chars[x] == 'G' || chars[x] == 'S') {
-                        map.setCell(x, y, Type.FLOOR);
+                        map.setField(x, y);
+                    } else {
+                        map.setObstacle(x, y);
                     }
                 }
 
@@ -53,6 +56,8 @@ public class Parser {
 
         } catch (IOException e1) {
             e1.printStackTrace();
+        } catch (NotAFieldException e) {
+            e.printStackTrace();
         }
 
         return map;
