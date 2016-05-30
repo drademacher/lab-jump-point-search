@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     private Global global = Global.getInstance();
-
+    private Controller ctrl;
     private Canvas canvas;
 
 
@@ -24,35 +24,63 @@ public class Main extends Application {
         // load stuff
         FXMLLoader fxmlLoader = new FXMLLoader();
         BorderPane p = fxmlLoader.load(getClass().getResource("main.fxml").openStream());
-        Controller ctrl = fxmlLoader.getController();
+        ctrl = fxmlLoader.getController();
         this.canvas = ctrl.canvas;
 
         // initialize stage
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(p, 1200, 800));
+
+        primaryStage.setScene(new Scene(p));
+        // primaryStage.setMaximized();
         primaryStage.show();
 
         settings(primaryStage);
 
-        ctrl.showNiceMap();
+        // ctrl.showNiceMap();
         ctrl.renderCanvas();
     }
 
     private void settings(Stage primaryStage) {
-        final double w = ((StackPane) canvas.getParent()).getWidth();
-        final double h = ((StackPane) canvas.getParent()).getHeight();
-
-        global.n = (int) ((w - 1) / global.size);
-        global.m = (int) ((h -1) / global.size);
-        global.map = new Map(global.n, global.m);
-
-        canvas.setWidth(global.size * global.n + 1);
-        canvas.setHeight(global.size * global.m + 1);
-
         // fit window
-        primaryStage.setWidth(primaryStage.getWidth() - w + canvas.getWidth());
-        primaryStage.setHeight(primaryStage.getHeight() - h + canvas.getHeight());
-        primaryStage.setResizable(false);
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(600);
+        // System.out.print(primaryStage.getMaxHeight());
+
+        primaryStage.setTitle("Visualization of Various Shortest Path Algorithms on Grid Graphs");
+        // primaryStage.setWidth(primaryStage.getWidth() - w + canvas.getWidth());
+        // primaryStage.setHeight(primaryStage.getHeight() - h + canvas.getHeight());
+
+        primaryStage.widthProperty().addListener((obs, prev, next) -> {
+            final double w = ((StackPane) canvas.getParent()).getWidth();
+            final double new_w = w + next.doubleValue() - prev.doubleValue() - 1;
+
+            global.n = (int) (new_w / global.size);
+            canvas.setWidth(global.size * global.n + 1);
+            global.map = new Map(global.n, global.m);
+            ctrl.renderCanvas();
+        });
+
+        primaryStage.heightProperty().addListener((obs, prev, next) -> {
+            final double h = ((StackPane) canvas.getParent()).getHeight();
+            final double new_h = h + next.doubleValue() - prev.doubleValue() - 1;
+
+            global.m = (int) (new_h / global.size);
+            canvas.setHeight(global.size * global.m + 1);
+            global.map = new Map(global.n, global.m);
+            ctrl.renderCanvas();
+        });
+
+        // global.map = new Map(global.n, global.m);
+        // primaryStage.setMinHeight(500);
+
+        primaryStage.setWidth(1200);
+        primaryStage.setHeight(800);
+
+        System.out.print("second");
+
+
+
+        System.out.println(global.n);
+        // primaryStage.setResizable(false);
     }
 
 
