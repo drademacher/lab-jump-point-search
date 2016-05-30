@@ -43,22 +43,22 @@ public class MapFactory {
     }
 
     public static Map createMazeMap(int n, int m) {
-        return new MapGenerator(n, m, MapGenerator.Layout.MAZE).create();
+        return new MapGenerator().genMaze(n, m);
     }
 
     public static Map createMazeWithRoomsMap(int n, int m) {
-        return new MapGenerator(n, m, MapGenerator.Layout.MAZE_WITH_ROOMS).create();
+        return new MapGenerator().genMazeWithRooms(n, m);
     }
 
     public static Map createSingleConnRoomsMap(int n, int m) {
-        return new MapGenerator(n, m, MapGenerator.Layout.SINGLE_CONN_ROOMS).create();
+        return new MapGenerator().genSingleConnRooms(n, m);
     }
 
     public static Map createLoopedRoomsMap(int n, int m) {
-        return new MapGenerator(n, m, MapGenerator.Layout.LOOPED_ROOMS).create();
+        return new MapGenerator().genLoopedRooms(n, m);
     }
 
     public static Map createDoubleConnRoomsMap(int n, int m) {
-        return new MapGenerator(n, m, MapGenerator.Layout.DOUBLE_CONN_ROOMS).create();
+        return new MapGenerator().genDoubleConnRooms(n, m);
     }
 }

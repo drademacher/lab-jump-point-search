@@ -18,18 +18,10 @@ import static grid.Type.ROOM;
  */
 
 public class MapGenerator {
-    // layout types
-    public enum Layout {
-        MAZE, MAZE_WITH_ROOMS, SINGLE_CONN_ROOMS, LOOPED_ROOMS, DOUBLE_CONN_ROOMS
-    };
-
     // class constants
-    int ROOM_LIMIT = 300;
-    final int[][] NEIGHS_ALL = new int[][] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
-    final int[][] NEIGHS_ODD = new int[][] { { 2, 0 }, { -2, 0 }, { 0, 2 }, { 0, -2 } };
-
-    // setting vars
-    private boolean hasRooms = false, hasFloor = true;
+    private int ROOM_LIMIT = 300;
+    private final int[][] NEIGHS_ALL = new int[][] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+    // final int[][] NEIGHS_ODD = new int[][] { { 2, 0 }, { -2, 0 }, { 0, 2 }, { 0, -2 } };
 
     // class members
     private int n;
@@ -40,91 +32,118 @@ public class MapGenerator {
     private int roomNum = 0;
     private ArrayList<int[]> floors;
 
-    /**
-     * constuctor
-     *
-     * @param n
-     *            the width
-     * @param m
-     *            the height
-     * @param layout
-     *            the layout
-     */
-    public MapGenerator(int n, int m, Layout layout) {
-        n = n - (n + 1) % 2;
-        m = m - (m + 1) % 2;
-        this.n = n;
-        this.m = m;
+    private void init(int n, int m) {
         map = new Cell[n][m];
+
         for (int x = 0; x < n; x++) {
             for (int y = 0; y < m; y++) {
                 map[x][y] = new Cell(x, y);
             }
         }
 
+        // design choice! ignore the last row / column if its even in the algorithm
+        this.n = n - (n + 1) % 2;
+        this.m = m - (m + 1) % 2;
+
         // get random object
         rnd = new Random();
+    }
 
-        switch (layout) {
-            case MAZE:
-                // gen maze with no dead ends at first
-                genFloors(ccFromNoRooms());
+    public Map genMaze(int n, int m) {
+        // init structure
+        init(n, m);
 
-                break;
-            case MAZE_WITH_ROOMS:
-                // gen rooms
-                genRooms(5);
-
-                // gen maze with no dead ends at first
-                genFloors(ccFromAllRooms());
-
-                break;
-
-            case SINGLE_CONN_ROOMS:
-                // gen rooms
-                genRooms(ROOM_LIMIT);
-
-                // gen maze with no dead ends at first
-                genFloors(ccFromAllRooms());
-                clearDeadends();
-
-                break;
-
-            case LOOPED_ROOMS:
-                // gen rooms
-                genRooms(ROOM_LIMIT);
-
-                // gen maze with no dead ends at first
-                genFloors(ccFromAllRooms());
-                clearDeadends();
-
-                // add another maze for loops
-                genFloors(ccFromEndRooms());
-
-                // remove the dead ends finally
-                clearDeadends();
-
-                break;
-            case DOUBLE_CONN_ROOMS:
-                // gen rooms
-                genRooms(ROOM_LIMIT);
-
-                // gen maze with no dead ends at first
-                genFloors(ccFromAllRooms());
-                clearDeadends();
-
-                // add another maze for loops
-                genFloors(ccFromAllRooms());
-
-                // remove the dead ends finally
-                clearDeadends();
-
-                break;
-        }
+        // gen maze with no dead ends at first
+        genFloors(ccFromNoRooms());
 
         // complete floors computation for all layouts
-        // (every layout so far has floors)
         completeFloors();
+
+        return create();
+    }
+
+
+    public Map genMazeWithRooms(int n, int m) {
+        // init structure
+        init(n, m);
+
+        // gen rooms
+        genRooms(5);
+
+        // gen maze with no dead ends at first
+        genFloors(ccFromAllRooms());
+
+        // complete floors computation for all layouts
+        completeFloors();
+
+        return create();
+    }
+
+
+    public Map genSingleConnRooms(int n, int m) {
+        // init structure
+        init(n, m);
+
+        // gen rooms
+        genRooms(ROOM_LIMIT);
+
+        // gen maze with no dead ends at first
+        genFloors(ccFromAllRooms());
+        clearDeadends();
+
+        // complete floors computation for all layouts
+        completeFloors();
+
+        return create();
+    }
+
+
+    public Map genLoopedRooms(int n, int m) {
+        // init structure
+        init(n, m);
+
+        // gen rooms
+        genRooms(ROOM_LIMIT);
+
+        // gen maze with no dead ends at first
+        genFloors(ccFromAllRooms());
+        clearDeadends();
+
+        // add another maze for loops
+        genFloors(ccFromEndRooms());
+
+        // remove the dead ends finally
+        clearDeadends();
+
+        // complete floors computation for all layouts
+        completeFloors();
+
+        return create();
+    }
+
+
+
+    public Map genDoubleConnRooms(int n, int m) {
+        // init structure
+        init(n, m);
+
+        // gen rooms
+        genRooms(ROOM_LIMIT);
+
+        // gen maze with no dead ends at first
+        genFloors(ccFromAllRooms());
+        clearDeadends();
+
+        // add another maze for loops
+        genFloors(ccFromAllRooms());
+
+        // remove the dead ends finally
+        clearDeadends();
+
+        // complete floors computation for all layouts
+        completeFloors();
+
+        return create();
     }
 
     /**
@@ -132,9 +151,6 @@ public class MapGenerator {
      * just an upper bound and its not expected to be reached
      */
     private MapGenerator genRooms(int limit) {
-        // set room flag
-        hasRooms = true;
-
         // init room super array
         rooms = new Room[limit];
 
@@ -394,9 +410,6 @@ public class MapGenerator {
      * internal helper function
      */
     private void completeFloors() {
-        // set floor flag
-        hasFloor = true;
-
         // create new array
         floors = new ArrayList<>();
 
@@ -418,12 +431,12 @@ public class MapGenerator {
     /**
      * function which is called finally to make a Map from a MapBuilder
      */
-    public Map create() {
+    private Map create() {
         Map map = new Map(Global.getInstance().n, Global.getInstance().m);
 
         try {
-            for (int x = 0; x < n; x++) {
-                for (int y = 0; y < m; y++) {
+            for (int x = 0; x < Global.getInstance().n; x++) {
+                for (int y = 0; y < Global.getInstance().m; y++) {
 
                     if (this.map[x][y].getType() == FLOOR || this.map[x][y].getType() == ROOM) {
                         map.setField(x, y);
