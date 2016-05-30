@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controller">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu fx:id="modeMenu" mnemonicParsing="false" style="-fx-font-weight: bold; -fx-min-width: 50;" text="Edit" />
+                <Menu fx:id="mapMenu" mnemonicParsing="false" text="Change Map">
+                    <items>
+                  <MenuItem fx:id="editMap" mnemonicParsing="false" text="Edit Map" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="emptyMap" mnemonicParsing="false" text="Empty Map" />
+                  <MenuItem fx:id="exampleMap" disable="true" mnemonicParsing="false" text="Example Map" />
+                        <MenuItem fx:id="randomMap" mnemonicParsing="false" text="Random Map" />
+                  <Menu mnemonicParsing="false" text="Map Generator">
+                    <items>
+                      <MenuItem fx:id="genMap1" mnemonicParsing="false" text="Layout 1" />
+                        <MenuItem fx:id="genMap2" mnemonicParsing="false" text="Layout 2" />
+                        <MenuItem fx:id="genMap3" mnemonicParsing="false" text="Layout 3" />
+                        <MenuItem fx:id="genMap4" mnemonicParsing="false" text="Layout 4" />
+                        <MenuItem fx:id="genMap5" mnemonicParsing="false" text="Layout 5" />
+                    </items>
+                  </Menu>
+                        <MenuItem fx:id="loadMap" mnemonicParsing="false" text="Load Map" />
+                    </items>
+                </Menu>
+                <Menu fx:id="algoMenu" mnemonicParsing="false" text="Change Algorithm">
+               <items>
+                  <RadioMenuItem fx:id="astar" mnemonicParsing="false" selected="true" text="A-star">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="algo" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem fx:id="jps" mnemonicParsing="false" text="JPS" toggleGroup="$algo" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <RadioMenuItem mnemonicParsing="false" selected="true" text="Standard heuristic">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="heuristic" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <RadioMenuItem fx:id="noPrune" mnemonicParsing="false" selected="true" text="No pruning">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="pruning" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem fx:id="jpsPrune" mnemonicParsing="false" text="JPS+" toggleGroup="$pruning" />
+                  <RadioMenuItem fx:id="bbPrune" mnemonicParsing="false" text="Bounding Boxes" toggleGroup="$pruning" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <CheckMenuItem mnemonicParsing="false" selected="true" text="Corner Cutting" />
+               </items></Menu>
+                <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem fx:id="about" mnemonicParsing="false" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <bottom>
+      <StackPane prefHeight="33.0" prefWidth="600.0">
+         <children>
+              <HBox alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0">
+                  <children>
+                  <Button fx:id="computeButton" mnemonicParsing="false" text="Compute" />
+                      <Button fx:id="playButton" mnemonicParsing="false" prefWidth="70.0" text="Start" />
+                      <Button fx:id="nextButton" mnemonicParsing="false" prefWidth="70.0" text="Next" />
+                      <Button fx:id="prevButton" mnemonicParsing="false" prefWidth="70.0" text="Previous" />
+                      <Button fx:id="restartButton" mnemonicParsing="false" prefWidth="70.0" text="Restart" />
+                  </children>
+              </HBox>
+            <HBox alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0" visible="false">
+               <children>
+                  <Button mnemonicParsing="false" prefWidth="70.0" text="Finish" />
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+    </bottom>
+    <center>
+        <StackPane>
+            <children>
+                <Canvas fx:id="canvas" height="200.0" width="200.0" />
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>
