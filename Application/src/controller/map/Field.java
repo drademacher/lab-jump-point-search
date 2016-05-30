@@ -1,7 +1,8 @@
-package controller.grid;
+package controller.map;
 
 import controller.direction.Direction;
 import controller.direction.NonDirection;
+import javafx.scene.paint.Color;
 
 /**
  * Created by paloka on 24.05.16.
@@ -32,5 +33,9 @@ public abstract class Field extends PathCoordinate {
 
     public Direction getArrivalDirection(){
         return new NonDirection();
+    }
+
+    public Color getColor(){
+        return getFieldType().getColor();
     }
 }

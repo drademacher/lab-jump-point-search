@@ -1,15 +1,15 @@
-package controller.grid;
+package controller.map;
 
 /**
  * Created by paloka on 25.05.16.
  */
-public class Grid {
+public class Map {
 
     private Field[][]       grid;
     private PathCoordinate  startPoint;
     private Coordinate      goalPoint;
 
-    public Grid(int xDim, int yDim){
+    public Map(int xDim, int yDim){
         this.grid   = new Field[xDim][yDim];
         for(int x=0;x<xDim;x++){
             for(int y=0;y<yDim;y++){

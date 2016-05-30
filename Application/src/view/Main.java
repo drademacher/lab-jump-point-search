@@ -1,6 +1,6 @@
 package view;
 
-import grid.Map;
+import controller.map.Map;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

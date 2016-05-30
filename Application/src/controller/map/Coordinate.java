@@ -1,4 +1,4 @@
-package controller.grid;
+package controller.map;
 
 /**
  * Created by paloka on 25.05.16.

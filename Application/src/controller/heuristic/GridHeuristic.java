@@ -1,6 +1,6 @@
 package controller.heuristic;
 
-import controller.grid.Coordinate;
+import controller.map.Coordinate;
 
 /**
  * Created by paloka on 27.05.16.

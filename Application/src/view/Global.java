@@ -1,6 +1,6 @@
 package view;
 
-import grid.Map;
+import controller.map.Map;
 
 import java.util.Random;
 

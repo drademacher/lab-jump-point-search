@@ -1,4 +1,4 @@
-package controller.grid;
+package controller.map;
 
 import controller.heuristic.GridHeuristic;
 

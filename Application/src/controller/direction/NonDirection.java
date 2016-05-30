@@ -1,6 +1,6 @@
 package controller.direction;
 
-import controller.grid.Coordinate;
+import controller.map.Coordinate;
 
 import java.util.LinkedList;
 import java.util.List;

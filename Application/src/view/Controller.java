@@ -1,6 +1,7 @@
 package view;
 
 
+import controller.map.MapFactory;
 import grid.MapGenerator;
 import grid.Parser;
 import grid.Type;
@@ -101,12 +102,14 @@ public class Controller implements Initializable {
 
         // map menu
         emptyMap.setOnAction(e -> {
-            global.map.setEmpty();
+            //global.map.createEmptyMap();
+            global.map  = MapFactory.createEmptyMap(global.n, global.m);
             renderCanvas();
         });
 
         exampleMap.setOnAction(e -> {
-            global.map.setEmpty();
+            //global.map.setEmpty();
+            global.map  = MapFactory.createExampleMap(global.n, global.m);
             renderCanvas();
         });
 

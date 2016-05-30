@@ -1,4 +1,4 @@
-package controller.grid;
+package controller.map;
 
 /**
  * Created by paloka on 25.05.16.
@@ -6,6 +6,6 @@ package controller.grid;
 
 public class NotAFieldException extends Exception {
     NotAFieldException(int x, int y){
-        super("Field ("+x+","+y+") does not exist in grid");
+        super("Field ("+x+","+y+") does not exist in map");
     }
 }
