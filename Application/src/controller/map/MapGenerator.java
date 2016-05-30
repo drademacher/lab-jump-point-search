@@ -1,16 +1,15 @@
-package grid;
+package controller.map;
 
 
-import controller.map.NotAFieldException;
 import view.Global;
-import controller.map.Map;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-import static grid.Type.FLOOR;
-import static grid.Type.OBSTACLE;
-import static grid.Type.ROOM;
+import static controller.map.Type.FLOOR;
+import static controller.map.Type.OBSTACLE;
+import static controller.map.Type.ROOM;
 
 
 /**
@@ -26,18 +25,20 @@ public class MapGenerator {
     // class members
     private int n;
     private int m;
-    private Cell[][] map;
+    private Field[][] map;
+    private boolean[][] room;
     private Random rnd;
     private Room[] rooms;
     private int roomNum = 0;
     private ArrayList<int[]> floors;
 
     private void init(int n, int m) {
-        map = new Cell[n][m];
+        map = new Field[n][m];
+        room = new boolean[n][m];
 
         for (int x = 0; x < n; x++) {
             for (int y = 0; y < m; y++) {
-                map[x][y] = new Cell(x, y);
+                map[x][y] = new ObstaclePointField(x, y);
             }
         }
 
@@ -48,6 +49,20 @@ public class MapGenerator {
         // get random object
         rnd = new Random();
     }
+
+    private boolean isFloor(int x, int y) {
+        return map[x][y].getFieldType().equals(FieldType.GRID_POINT) && !room[x][y];
+    }
+
+    private boolean isRoom(int x, int y) {
+        return map[x][y].getFieldType().equals(FieldType.GRID_POINT) && room[x][y];
+    }
+
+    private boolean isObstacle(int x, int y) {
+        return map[x][y].getFieldType().equals(FieldType.OBSTACLE_POINT);
+    }
+
+
 
     public Map genMaze(int n, int m) {
         // init structure
@@ -196,7 +211,8 @@ public class MapGenerator {
     private void setNewRoom(int xStart, int xLen, int yStart, int yLen) {
         for (int x = xStart; x < xStart + xLen; x++) {
             for (int y = yStart; y < yStart + yLen; y++) {
-                map[x][y].setType(FLOOR);
+                map[x][y] = new GridPointField(x, y);
+                room[x][y] = true;
             }
         }
     }
@@ -214,7 +230,7 @@ public class MapGenerator {
                 }
 
 
-                if (map[xStart + i][yStart + j].getType() != Type.OBSTACLE) {
+                if (!isObstacle(xStart + i, yStart + j)) {
                     return false;
                 }
             }
@@ -229,9 +245,9 @@ public class MapGenerator {
      *
      * @return
      */
-    private DisjointSet<Cell> ccFromAllRooms() {
+    private DisjointSet<Field> ccFromAllRooms() {
         // create connected compontents
-        DisjointSet<Cell> cc = new DisjointSet<>();
+        DisjointSet<Field> cc = new DisjointSet<>();
 
         for (int i = 0; i < roomNum; i++) {
             cc.makeSet(map[rooms[i].getXStart()][rooms[i].getYStart()]);
@@ -255,9 +271,9 @@ public class MapGenerator {
      *
      * @return
      */
-    private DisjointSet<Cell> ccFromEndRooms() {
+    private DisjointSet<Field> ccFromEndRooms() {
         // add for rooms which only one floor connection a connected component
-        DisjointSet<Cell> cc = new DisjointSet<>();
+        DisjointSet<Field> cc = new DisjointSet<>();
 
         for (int i = 0; i < roomNum; i++) {
             // declare variables
@@ -267,18 +283,18 @@ public class MapGenerator {
             // check if room only has one floor connection
             int count = 0;
             for (int x = 0; x < xLen; x++) {
-                if (map[xStart + x][yStart - 1].getType() == FLOOR)
+                if (isFloor(xStart + x, yStart - 1))
                     count++;
 
-                if (map[xStart + x][yStart + yLen].getType() == FLOOR)
+                if (isFloor(xStart + x, yStart + yLen))
                     count++;
             }
 
             for (int y = 0; y < yLen; y++) {
-                if (map[xStart - 1][yStart + y].getType() == FLOOR)
+                if (isFloor(xStart - 1, yStart + y))
                     count++;
 
-                if (map[xStart + xLen][yStart + y].getType() == FLOOR)
+                if (isFloor(xStart + xLen, yStart + y))
                     count++;
             }
 
@@ -308,7 +324,7 @@ public class MapGenerator {
      *
      * @return
      */
-    private DisjointSet<Cell> ccFromNoRooms() {
+    private DisjointSet<Field> ccFromNoRooms() {
         return new DisjointSet<>();
     }
 
@@ -320,21 +336,22 @@ public class MapGenerator {
      *
      * @return
      */
-    private void genFloors(DisjointSet<Cell> cc) {
+    private void genFloors(DisjointSet<Field> cc) {
         ArrayList<int[]> q = new ArrayList<>();
 
         for (int i = 1; i < n; i += 2) {
             for (int j = 1; j < m; j += 2) {
                 // fill in fixed cells on odd / odd coordinates
-                if (map[i][j].getType() == OBSTACLE) {
-                    map[i][j].setType(FLOOR);
+                if (isObstacle(i, j)) {
+                    map[i][j] = new GridPointField(i, j);
+                    room[i][j] = false;
                     cc.makeSet(map[i][j]);
                 }
 
                 // queue neighbours when one corner is not a room
-                if (i + 2 < n && map[i+1][j].getType() != ROOM)
+                if (i + 2 < n && !isRoom(i+1, j))
                     q.add(new int[] { i, j, i + 2, j });
-                if (j + 2 < m && map[i][j+1].getType() != ROOM)
+                if (j + 2 < m && !isRoom(i, j+1))
                     q.add(new int[] { i, j, i, j + 2 });
             }
         }
@@ -358,7 +375,8 @@ public class MapGenerator {
 
             // merge two components by adding a connector
             cc.union(map[x1][y1], map[x2][y2]);
-            map[(x1 + x2) / 2][(y1 + y2) / 2].setType(FLOOR);
+            map[(x1 + x2) / 2][(y1 + y2) / 2] = new GridPointField((x1 + x2) / 2, (y1 + y2) / 2);
+            room[(x1 + x2) / 2][(y1 + y2) / 2] = false;
         }
     }
 
@@ -379,13 +397,13 @@ public class MapGenerator {
             // dead end iff 3 neighbours are walls
             for (int x = 0; x < n; x++) {
                 for (int y = 0; y < m; y++) {
-                    if (map[x][y].getType() == OBSTACLE) {
+                    if (isObstacle(x, y)) {
                         continue;
                     }
 
                     count = 0;
                     for (int j = 0; j < 4; j++) {
-                        if (map[x + NEIGHS_ALL[j][0]][y + NEIGHS_ALL[j][1]].getType() == OBSTACLE)
+                        if (isObstacle(x + NEIGHS_ALL[j][0], y + NEIGHS_ALL[j][1]))
                             count++;
                     }
 
@@ -399,8 +417,10 @@ public class MapGenerator {
             // remove dead ends
             for (int x = 0; x < n; x++) {
                 for (int y = 0; y < m; y++) {
-                    if (deadend[x][y])
-                        map[x][y].setType(OBSTACLE);
+                    if (deadend[x][y]) {
+                        map[x][y] = new ObstaclePointField(x, y);
+                        room[x][y] = false;
+                    }
                 }
             }
         }
@@ -416,7 +436,7 @@ public class MapGenerator {
         // fill in all the floor cells
         for (int i = 1; i < n; i += 2) {
             for (int j = 1; j < m; j += 2) {
-                if (map[i][j].getType() == FLOOR) {
+                if (isFloor(i, j)) {
                     floors.add(new int[] { i, j });
                 }
             }
@@ -438,7 +458,7 @@ public class MapGenerator {
             for (int x = 0; x < Global.getInstance().n; x++) {
                 for (int y = 0; y < Global.getInstance().m; y++) {
 
-                    if (this.map[x][y].getType() == FLOOR || this.map[x][y].getType() == ROOM) {
+                    if (isFloor(x, y) || isRoom(x, y)) {
                         map.setField(x, y);
                     } else {
                         map.setObstacle(x, y);

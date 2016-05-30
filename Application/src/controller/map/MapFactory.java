@@ -1,6 +1,5 @@
 package controller.map;
 
-import grid.MapGenerator;
 import view.Global;
 
 /**

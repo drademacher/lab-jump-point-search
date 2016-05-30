@@ -1,5 +1,7 @@
-package grid;
+package controller.map;
 
+
+import controller.map.Type;
 
 public class Cell {
     private int x;

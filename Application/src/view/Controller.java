@@ -4,7 +4,7 @@ package view;
 import controller.map.FieldType;
 import controller.map.MapFactory;
 import controller.map.NotAFieldException;
-import grid.Parser;
+import controller.map.Parser;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;

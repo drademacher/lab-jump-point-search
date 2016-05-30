@@ -1,4 +1,4 @@
-package grid;
+package controller.map;
 
 import java.util.ArrayList;
 import java.util.Collections;

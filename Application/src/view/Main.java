@@ -42,7 +42,8 @@ public class Main extends Application {
     private void settings(Stage primaryStage) {
         // fit window
         primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+        // TODO: setting min height to 600 causing the buttons to disappear
+        primaryStage.setMinHeight(700);
         // System.out.print(primaryStage.getMaxHeight());
 
         primaryStage.setTitle("Visualization of Various Shortest Path Algorithms on Grid Graphs");
@@ -69,18 +70,8 @@ public class Main extends Application {
             ctrl.renderCanvas();
         });
 
-        // global.map = new Map(global.n, global.m);
-        // primaryStage.setMinHeight(500);
-
         primaryStage.setWidth(1200);
         primaryStage.setHeight(800);
-
-        System.out.print("second");
-
-
-
-        System.out.println(global.n);
-        // primaryStage.setResizable(false);
     }
 
 
