@@ -1,0 +1,131 @@
+\documentclass[11pt]{scrartcl}
+% Sprachunterstützung
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+	
+\usepackage{fullpage} % all 4 margins 1.5 cm
+\usepackage{parskip} % No indent after paragraph
+\usepackage{floatflt}
+\usepackage[hidelinks]{hyperref} % Urls
+\usepackage[section]{placeins} % damit floats nicht in andere Sections rutschen
+\usepackage{float} % für \begin{figure}[H] um figureposition exakt zu erzwingen. h! reicht meistens auch schon
+\usepackage{enumitem} % Grundlegende Listen an eigene Bedürfnisse anpassen - z.B. a), b), 1), 2) bei enumerate
+\usepackage{amsmath,amssymb,amstext,textcomp,amsthm,mathtools,cancel} % Mathematik
+\usepackage{graphicx} % pdf, png, jpg
+\usepackage{wrapfig} % Umlauf um Bilder
+\usepackage{stmaryrd} % Für Blitz
+\usepackage{bbm} % Für Doublestroke in Zahlen
+\usepackage{xcolor} % für keywordstyle=\color{blue}
+\usepackage{listings}
+\lstset{%language=Java,
+	frame=tb, % draw a frame at the top and bottom of the code block
+	numbers=left, % display line numbers on the left
+	tabsize=4, % tab space width
+	showstringspaces=false, % don't mark spaces in strings
+	commentstyle=\color{green}, % comment color
+	keywordstyle=\color{blue}, % keyword color
+	stringstyle=\color{red}, % string color
+	basicstyle=\footnotesize\ttfamily,
+	breaklines=true
+}
+
+\usepackage{tikz}
+\def\doubleline#1#2#3#4#5#6{
+	\begin{scope}%[shift={#1}, rotate=#2]
+		\draw (#1+#5,#2+#6) -- (#3+#5,#4+#6);
+		\draw (#1-#5,#2-#6) -- (#3-#5,#4-#6);
+	\end{scope}
+}
+
+% Table of Contents and Todos:
+\usepackage{tocloft} % Eigene Table of Contents
+
+\newlistof{comments}{list}{List of Comments and Todos}
+\newcommand{\Com}[3][]{
+	\ifthenelse{\boolean{publish}}
+	{ % TRUE
+	}
+	{ % FALSE
+		\refstepcounter{comments}
+		\par\noindent \textcolor{orange}{#2 [}#1: #3\textcolor{orange}{]} \hyperlink{page.3}{$\uparrow$}
+		\addcontentsline{list}{comments}{\protect\numberline{\thecomments}Comment (#2): #1}\par
+	}
+}
+\newcommand{\Todo}[3][]{
+	\ifthenelse{\boolean{publish}}
+	{ % TRUE
+	}
+	{ % FALSE
+	\refstepcounter{comments}
+	\par\noindent \textcolor{red}{TODO #2 [}#1: #3\textcolor{red}{]} \hyperlink{page.3}{$\uparrow$}
+	\addcontentsline{list}{comments}{\protect\numberline{\thecomments}Todo (#2): #1}\par
+	}
+}
+
+
+% Teilbereiche mit if-Anweisungen 
+\usepackage{ifthen} % Für if Verzweigungen
+\newboolean{short} % Deklaration
+\setboolean{short}{false} % Zuweisung
+\newboolean{publish} % Deklaration
+\setboolean{publish}{false} % Zuweisung
+\newcommand{\pretrue}{\par\raisebox{-3px}{\rule{\linewidth}{0.4pt}}\\This part is shortened. To see the longer version set the boolean variable \texttt{short} to \texttt{false}.\\\raisebox{10px}{\rule{\linewidth}{0.4pt}}\par}
+
+
+% Theoreme:
+\begingroup
+\makeatletter
+\@for\theoremstyle:=definition,remark,plain\do{%
+	\expandafter\g@addto@macro\csname th@\theoremstyle\endcsname{%
+		\addtolength\thm@preskip\parskip
+	}%
+}
+\endgroup
+\theoremstyle{plain} % recommended for theorems, corollaries, lemmas, propositions, conjectures, criteria, and (possibly; depends on the subject area) algorithms.
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{thesis}[theorem]{Thesis}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition} % recommended for definitions, conditions, problems, examples and exercises
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{game}{Game}
+\newtheorem*{example}{Example}
+
+
+% Befehle speziell für Crypto:
+\renewcommand{\Game}[2]{G_{#1}^{\mathit{#2}}} % Games
+\newcommand{\random}{\includegraphics[width=0.25cm]{img/random}}
+\newcommand{\adv}[2]{\textnormal{adv}_{#1}^{\mathit{#2}}} % Advantage
+\newcommand{\prob}{\textnormal{prob}} % Probability
+\renewcommand{\succ}[2]{\textnormal{succ}_{#1}^{\mathit{#2}}} % Success
+\newcommand{\Enc}[2]{\textnormal{Enc}_{#1}^{\mathit{#2}}} % Encrypt
+\newcommand{\Dec}[2]{\textnormal{Dec}_{#1}^{\mathit{#2}}} % Decrypt
+\newcommand{\Verify}[2]{\textnormal{Verify}_{#1}^{\mathit{#2}}} % Verify
+\newcommand{\Sign}[2]{\textnormal{Sign}_{#1}^{\mathit{#2}}} % Create MAC
+\newcommand{\KeyGen}{\textnormal{KeyGen}} % KeyGen
+\newcommand{\Gen}{\textnormal{Gen}} % Gen
+\newcommand{\oracle}[1]{\mathcal{O}_{\textnormal{#1}}} % Oracle
+\newcommand{\randomly}{\stackrel{\random}{\leftarrow}}
+\renewcommand{\mod}{\textnormal{ mod }}
+
+\begin{document}
+	\title{Lab}
+	\author{Patrick Loka}
+	\maketitle
+	\tableofcontents
+	\newpage
+	
+	\ifthenelse{\boolean{publish}}
+	{ %TRUE
+	}
+	{ %FALSE
+		\listofcomments\label{list_of_comments}
+		\newpage
+	}
+	
+	\newpage
+	
+\end{document}
