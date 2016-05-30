@@ -25,9 +25,8 @@ public class RightDownDirection extends Direction {
     @Override
     public List<Coordinate> getNeighborsInSubdirections(int x, int y) {
         List<Coordinate> neighbors  = new LinkedList<>();
-        neighbors.add(new Coordinate(x+1,y));
-        neighbors.add(new Coordinate(x,y-1));
-        return null;
+        //Todo: find out subdirections neighbors
+        return neighbors;
     }
 
     @Override
