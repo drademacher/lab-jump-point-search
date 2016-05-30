@@ -4,19 +4,16 @@ package view;
 import controller.map.FieldType;
 import controller.map.MapFactory;
 import controller.map.NotAFieldException;
-import grid.MapGenerator;
 import grid.Parser;
-import grid.Type;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -26,51 +23,103 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
-    public BooleanProperty editMode = new SimpleBooleanProperty(true);
-    @FXML
-    public Canvas canvas;
+    public BooleanProperty editModeBool = new SimpleBooleanProperty(true);
     private Global global = Global.getInstance();
+
+
+    @FXML
+    private ToggleGroup pruning;
+
+    @FXML
+    private MenuItem editMap;
+
+    @FXML
+    private MenuItem loadMap;
+
+    @FXML
+    private Menu mapMenu;
+
+    @FXML
+    private MenuItem about;
+
     @FXML
     private Button computeButton;
+
     @FXML
-    private Button playButton;
+    private MenuItem emptyMap;
+
     @FXML
     private Button prevButton;
+
     @FXML
-    private Button nextButton;
+    private RadioMenuItem noPrune;
+
     @FXML
     private Button restartButton;
 
     @FXML
-    private Menu modeMenu;
+    // TODO: make this private
+    public Canvas canvas;
+
     @FXML
-    private Menu mapMenu;
+    private MenuItem genMap5;
+
     @FXML
     private Menu algoMenu;
+
+    @FXML
+    private MenuItem genMap4;
+
+    @FXML
+    private HBox visMode;
+
+    @FXML
+    private HBox setMode;
+
+    @FXML
+    private MenuItem genMap1;
+
+    @FXML
+    private ToggleGroup heuristic;
+
     @FXML
     private Menu helpMenu;
 
-
-    @FXML
-    private MenuItem editMap;
-    @FXML
-    private MenuItem emptyMap;
-    @FXML
-    private MenuItem exampleMap;
-    @FXML
-    private MenuItem randomMap;
-    @FXML
-    private MenuItem genMap1;
-    @FXML
-    private MenuItem genMap2;
     @FXML
     private MenuItem genMap3;
+
     @FXML
-    private MenuItem genMap4;
+    private MenuItem genMap2;
+
     @FXML
-    private MenuItem genMap5;
+    private RadioMenuItem jps;
+
     @FXML
-    private MenuItem loadMap;
+    private Button playButton;
+
+    @FXML
+    private RadioMenuItem jpsPrune;
+
+    @FXML
+    private Button nextButton;
+
+    @FXML
+    private RadioMenuItem bbPrune;
+
+    @FXML
+    private MenuItem exampleMap;
+
+    @FXML
+    private MenuItem randomMap;
+
+    @FXML
+    private HBox editMode;
+
+    @FXML
+    private ToggleGroup algo;
+
+    @FXML
+    private RadioMenuItem astar;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -81,25 +130,23 @@ public class Controller implements Initializable {
         restartButton.setOnAction(e -> System.out.println("TODO: reset"));
 
         computeButton.setOnAction(e -> {
-            if (editMode.getValue()) {
-                editMode.setValue(false);
-                modeMenu.setText("Show");
+            if (editModeBool.getValue()) {
+                editModeBool.setValue(false);
                 computeButton.setText("Reset");
             } else {
-                editMode.setValue(true);
-                modeMenu.setText("Edit");
+                editModeBool.setValue(true);
                 computeButton.setText("Compute");
             }
         });
 
         // bindings for buttons and menu
-        playButton.disableProperty().bind(editMode);
-        prevButton.disableProperty().bind(editMode);
-        nextButton.disableProperty().bind(editMode);
-        restartButton.disableProperty().bind(editMode);
+        playButton.disableProperty().bind(editModeBool);
+        prevButton.disableProperty().bind(editModeBool);
+        nextButton.disableProperty().bind(editModeBool);
+        restartButton.disableProperty().bind(editModeBool);
 
-        mapMenu.disableProperty().bind(editMode.not());
-        algoMenu.disableProperty().bind(editMode.not());
+        mapMenu.disableProperty().bind(editModeBool.not());
+        algoMenu.disableProperty().bind(editModeBool.not());
 
 
         // map menu
@@ -145,6 +192,14 @@ public class Controller implements Initializable {
             global.map  = MapFactory.createDoubleConnRoomsMap(global.n, global.m);
             renderCanvas();
         });
+
+
+        // jps+ and a star cannot be combined!
+        jpsPrune.disableProperty().bind(jps.selectedProperty().not());
+        astar.setOnAction(e -> {
+            jpsPrune.setSelected(false);
+        });
+
 
         loadMap.setOnAction(e -> {
             Stage stage = (Stage) canvas.getScene().getWindow();
