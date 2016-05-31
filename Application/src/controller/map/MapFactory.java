@@ -42,22 +42,52 @@ public class MapFactory {
     }
 
     public static Map createMazeMap(int n, int m) {
-        return new MapGenerator().genMaze(n, m);
+        try {
+            return new MapGenerator().genMaze(n, m);
+        } catch (NotAFieldException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static Map createMazeWithRoomsMap(int n, int m) {
-        return new MapGenerator().genMazeWithRooms(n, m);
+        try {
+            return new MapGenerator().genMazeWithRooms(n, m);
+        } catch (NotAFieldException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static Map createSingleConnRoomsMap(int n, int m) {
-        return new MapGenerator().genSingleConnRooms(n, m);
+        try {
+            return new MapGenerator().genSingleConnRooms(n, m);
+        } catch (NotAFieldException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static Map createLoopedRoomsMap(int n, int m) {
-        return new MapGenerator().genLoopedRooms(n, m);
+        try {
+            return new MapGenerator().genLoopedRooms(n, m);
+        } catch (NotAFieldException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static Map createDoubleConnRoomsMap(int n, int m) {
-        return new MapGenerator().genDoubleConnRooms(n, m);
+        try {
+            return new MapGenerator().genDoubleConnRooms(n, m);
+        } catch (NotAFieldException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

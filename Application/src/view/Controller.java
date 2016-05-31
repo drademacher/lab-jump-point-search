@@ -248,9 +248,6 @@ public class Controller implements Initializable {
                 gc.fillRect(x * global.size + 1, y * global.size + 1, global.size - 1, global.size - 1);
             }
         }
-
-        // gc.clearRect(0, canvas.getHeight() - 1, canvas.getWidth(), canvas.getHeight());
-        // gc.clearRect(canvas.getWidth() - 1, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     private void canvasClicked(double xReal, double yReal) {

@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
     private Global global = Global.getInstance();
     private Controller ctrl;
-    private Canvas canvas;
+
 
 
     public static void main(String[] args) {
@@ -25,7 +25,8 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader();
         BorderPane p = fxmlLoader.load(getClass().getResource("main.fxml").openStream());
         ctrl = fxmlLoader.getController();
-        this.canvas = ctrl.canvas;
+
+        GridCanvas.getInstance().setCanvas(ctrl.canvas);
 
         // initialize stage
 
@@ -36,7 +37,8 @@ public class Main extends Application {
         settings(primaryStage);
 
         // ctrl.showNiceMap();
-        ctrl.renderCanvas();
+
+        GridCanvas.getInstance().renderCanvas();
     }
 
     private void settings(Stage primaryStage) {
@@ -50,28 +52,34 @@ public class Main extends Application {
         // primaryStage.setWidth(primaryStage.getWidth() - w + canvas.getWidth());
         // primaryStage.setHeight(primaryStage.getHeight() - h + canvas.getHeight());
 
+        // TODO: make this dependend on xSizeVis not on actuall map size
         primaryStage.widthProperty().addListener((obs, prev, next) -> {
-            final double w = ((StackPane) canvas.getParent()).getWidth();
+            final double w = ((StackPane) ctrl.canvas.getParent()).getWidth();
             final double new_w = w + next.doubleValue() - prev.doubleValue() - 1;
 
-            global.n = (int) (new_w / global.size);
-            canvas.setWidth(global.size * global.n + 1);
-            global.map = new Map(global.n, global.m);
-            ctrl.renderCanvas();
+            global.xSizeVis = (int) (new_w / global.size);
+            ctrl.canvas.setWidth(global.size * global.xSizeVis + 1);
+
+            GridCanvas.getInstance().renderCanvas();
         });
 
         primaryStage.heightProperty().addListener((obs, prev, next) -> {
-            final double h = ((StackPane) canvas.getParent()).getHeight();
+            final double h = ((StackPane) ctrl.canvas.getParent()).getHeight();
             final double new_h = h + next.doubleValue() - prev.doubleValue() - 1;
 
-            global.m = (int) (new_h / global.size);
-            canvas.setHeight(global.size * global.m + 1);
-            global.map = new Map(global.n, global.m);
-            ctrl.renderCanvas();
+            global.ySizeVis = (int) (new_h / global.size);
+            ctrl.canvas.setHeight(global.size * global.ySizeVis + 1);
+
+            GridCanvas.getInstance().renderCanvas();
         });
 
         primaryStage.setWidth(1200);
         primaryStage.setHeight(800);
+
+        global.n = global.xSizeVis;
+        global.m = global.ySizeVis;
+
+        global.map = new Map(global.n, global.m);
     }
 
 
