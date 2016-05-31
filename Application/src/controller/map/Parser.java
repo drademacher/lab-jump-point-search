@@ -30,7 +30,7 @@ public class Parser {
             // line 3 is width n
             line = br.readLine();
             n = Integer.valueOf(line.substring(6));
-            // System.out.print(n + " " + m);
+            System.out.print(n + " " + m);
 
             // skip line 4
             br.readLine();

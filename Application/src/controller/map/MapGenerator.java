@@ -1,15 +1,9 @@
 package controller.map;
 
 
-import view.Global;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-
-import static controller.map.Type.FLOOR;
-import static controller.map.Type.OBSTACLE;
-import static controller.map.Type.ROOM;
 
 
 /**

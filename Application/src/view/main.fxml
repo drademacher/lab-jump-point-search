@@ -17,7 +17,7 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="emptyMap" mnemonicParsing="false" text="Empty Map" />
                   <MenuItem fx:id="exampleMap" mnemonicParsing="false" text="Example Map" />
-                        <MenuItem fx:id="randomMap" mnemonicParsing="false" text="Random Map" />
+                        <MenuItem fx:id="randomMap" mnemonicParsing="false" text="Random Obstacles" />
                   <Menu mnemonicParsing="false" text="Map Generator">
                     <items>
                       <MenuItem fx:id="genMap1" mnemonicParsing="false" text="Maze" />

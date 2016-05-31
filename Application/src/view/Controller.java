@@ -3,18 +3,15 @@ package view;
 
 import controller.map.FieldType;
 import controller.map.MapFactory;
-import controller.map.NotAFieldException;
 import controller.map.Parser;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -22,10 +19,11 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static view.Constant.defaultXDim;
+import static view.Constant.defaultYDim;
+
 public class Controller implements Initializable {
     public BooleanProperty editModeBool = new SimpleBooleanProperty(true);
-    private Global global = Global.getInstance();
-
 
     @FXML
     private ToggleGroup pruning;
@@ -151,45 +149,45 @@ public class Controller implements Initializable {
 
         // map menu
         emptyMap.setOnAction(e -> {
-            //global.map.createEmptyMap();
-            global.map  = MapFactory.createEmptyMap(global.n, global.m);
+            //map.createEmptyMap();
+            // map = MapFactory.createEmptyMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         exampleMap.setOnAction(e -> {
-            //global.map.setEmpty();
-            global.map  = MapFactory.createExampleMap(global.n, global.m);
+            //map.setEmpty();
+            // map = MapFactory.createExampleMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         randomMap.setOnAction(e -> {
-            //global.map.setRnd(0.2);
-            global.map  = MapFactory.createRandomMap(global.n, global.m, 0.2);
+            //map.setRnd(0.2);
+            // map = MapFactory.createRandomMap(defaultXDim, defaultYDim, 0.2);
             renderCanvas();
         });
 
         genMap1.setOnAction(e -> {
-            global.map  = MapFactory.createMazeMap(global.n, global.m);
+            // map = MapFactory.createMazeMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         genMap2.setOnAction(e -> {
-            global.map  = MapFactory.createMazeWithRoomsMap(global.n, global.m);
+            // map = MapFactory.createMazeWithRoomsMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         genMap3.setOnAction(e -> {
-            global.map  = MapFactory.createSingleConnRoomsMap(global.n, global.m);
+            // map = MapFactory.createSingleConnRoomsMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         genMap4.setOnAction(e -> {
-            global.map  = MapFactory.createLoopedRoomsMap(global.n, global.m);
+            // map = MapFactory.createLoopedRoomsMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         genMap5.setOnAction(e -> {
-            global.map  = MapFactory.createDoubleConnRoomsMap(global.n, global.m);
+            // map = MapFactory.createDoubleConnRoomsMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
@@ -211,7 +209,7 @@ public class Controller implements Initializable {
                     new FileChooser.ExtensionFilter("All Files", "*.*"));
             File selectedFile = fileChooser.showOpenDialog(stage);
             if (selectedFile != null) {
-                global.map = Parser.getMap(selectedFile);
+                // map = Parser.getMap(selectedFile);
             }
 
             renderCanvas();
@@ -224,48 +222,26 @@ public class Controller implements Initializable {
         });
     }
 
-    public void showNiceMap() {
-        exampleMap.fire();
-    }
-
     public void renderCanvas() {
-        // full rendering of the map
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Paint.valueOf("#212121"));
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        for (int x = 0; x < global.n; x++) {
-            for (int y = 0; y < global.m; y++) {
-                // change color
-                // gc.setFill(CELLS[map.getCell(x, y)]);
-
-                // draw rect
-                try {
-                    gc.setFill(global.map.getField(x, y).getColor());
-                } catch (NotAFieldException e) {
-                    // should not happen
-                }
-                gc.fillRect(x * global.size + 1, y * global.size + 1, global.size - 1, global.size - 1);
-            }
-        }
+        // GridCanvas.getInstance().renderCanvas();
     }
 
     private void canvasClicked(double xReal, double yReal) {
-        final int x = (int) (xReal / global.size);
-        final int y = (int) (yReal / global.size);
-        if (xReal % global.size == 0 || yReal % global.size == 0) {
+        final int x = (int) (xReal / Constant.size);
+        final int y = (int) (yReal / Constant.size);
+        if (xReal % Constant.size == 0 || yReal % Constant.size == 0) {
             return;
         }
 
         // TODO: trigger event here for point x, y
         // System.out.println("click " + xCell + " " + yCell);
-        try {
-            if (global.map.getField(x, y).getFieldType().equals(FieldType.GRID_POINT)) {
-                global.map.setObstacle(x, y);
-            } else {
-                global.map.setField(x, y);
-            }
-        } catch (Exception e) { }
+//        try {
+//            if (map.getField(x, y).getFieldType().equals(FieldType.GRID_POINT)) {
+//                map.setObstacle(x, y);
+//            } else {
+//                map.setField(x, y);
+//            }
+//        } catch (Exception e) { }
         renderCanvas();
     }
 

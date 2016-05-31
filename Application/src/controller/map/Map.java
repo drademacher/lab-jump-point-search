@@ -5,6 +5,8 @@ package controller.map;
  */
 public class Map {
 
+    private int xDim;
+    private int yDim;
     private Field[][]       grid;
     private PathCoordinate  startPoint;
     private Coordinate      goalPoint;
@@ -12,12 +14,24 @@ public class Map {
 
     public Map(int xDim, int yDim){
         //Todo: x und y >0;
+
+        this.xDim = xDim;
+        this.yDim = yDim;
+
         this.grid   = new Field[xDim][yDim];
         for(int x=0;x<xDim;x++){
             for(int y=0;y<yDim;y++){
                 grid[x][y]  = new GridPointField(x,y);
             }
         }
+    }
+
+    public int getxDim() {
+        return xDim;
+    }
+
+    public int getyDim() {
+        return yDim;
     }
 
     public Field getField(int x, int y) throws NotAFieldException {
