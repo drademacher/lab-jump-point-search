@@ -70,24 +70,24 @@
          <children>
               <HBox fx:id="visMode" alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0" visible="false">
                   <children>
-                  <Button fx:id="computeButton" mnemonicParsing="false" text="Compute" />
+                  <Button fx:id="setModeStart" mnemonicParsing="false" text="New Start and Goal" />
                       <Button fx:id="playButton" mnemonicParsing="false" prefWidth="70.0" text="Start" />
                       <Button fx:id="nextButton" mnemonicParsing="false" prefWidth="70.0" text="Next" />
                       <Button fx:id="prevButton" mnemonicParsing="false" prefWidth="70.0" text="Previous" />
-                      <Button fx:id="restartButton" mnemonicParsing="false" prefWidth="70.0" text="Restart" />
+                      <Button fx:id="restartButton" mnemonicParsing="false" prefWidth="70.0" text="Go back" />
                   </children>
               </HBox>
             <HBox fx:id="setMode" alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0" visible="false">
                <children>
-                  <Button mnemonicParsing="false" text="Adjust Settings" />
+                  <Button fx:id="editModeStart" mnemonicParsing="false" text="Adjust Settings" />
                   <Button mnemonicParsing="false" text="Set Start" />
                   <Button mnemonicParsing="false" text="Set Goal" />
-                  <Button mnemonicParsing="false" prefWidth="70.0" text="Find Path" />
+                  <Button fx:id="setModeFinish" mnemonicParsing="false" prefWidth="70.0" text="Find Path" />
                </children>
             </HBox>
             <HBox fx:id="editMode" alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0">
                <children>
-                  <Button mnemonicParsing="false" text="Settings adjusted" />
+                  <Button fx:id="editModeFinish" mnemonicParsing="false" text="Settings adjusted" />
                </children>
             </HBox>
          </children>

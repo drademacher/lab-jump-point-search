@@ -1,17 +1,19 @@
 package view;
 
 
-import controller.map.FieldType;
-import controller.map.MapFactory;
-import controller.map.Parser;
+import controller.map.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -19,11 +21,16 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static view.Constant.defaultXDim;
-import static view.Constant.defaultYDim;
+import static view.Consts.defaultXDim;
+import static view.Consts.defaultYDim;
 
 public class Controller implements Initializable {
-    public BooleanProperty editModeBool = new SimpleBooleanProperty(true);
+    public BooleanProperty editMapBool = new SimpleBooleanProperty(false);
+
+    private Map map;
+
+    private int xSizeVis;
+    private int ySizeVis;
 
     @FXML
     private ToggleGroup pruning;
@@ -56,8 +63,7 @@ public class Controller implements Initializable {
     private Button restartButton;
 
     @FXML
-    // TODO: make this private
-    public Canvas canvas;
+    private Canvas canvas;
 
     @FXML
     private MenuItem genMap5;
@@ -119,6 +125,19 @@ public class Controller implements Initializable {
     @FXML
     private RadioMenuItem astar;
 
+    @FXML
+    private Button editModeStart;
+
+    @FXML
+    private Button editModeFinish;
+
+    @FXML
+    private Button setModeStart;
+
+    @FXML
+    private Button setModeFinish;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // buttons
@@ -127,67 +146,102 @@ public class Controller implements Initializable {
         nextButton.setOnAction(e -> System.out.println("TODO: next"));
         restartButton.setOnAction(e -> System.out.println("TODO: reset"));
 
-        computeButton.setOnAction(e -> {
-            if (editModeBool.getValue()) {
-                editModeBool.setValue(false);
-                computeButton.setText("Reset");
-            } else {
-                editModeBool.setValue(true);
-                computeButton.setText("Compute");
-            }
+        // bindings for buttons and menu
+//        playButton.disableProperty().bind(editModeBool);
+//        prevButton.disableProperty().bind(editModeBool);
+//        nextButton.disableProperty().bind(editModeBool);
+//        restartButton.disableProperty().bind(editModeBool);
+
+
+        mapMenu.disableProperty().bind(editMode.visibleProperty().not());
+        algoMenu.disableProperty().bind(editMode.visibleProperty().not());
+
+        editModeFinish.setOnAction(e -> {
+            // do the visuals
+            editMode.setVisible(false);
+            setMode.setVisible(true);
+
+            // stop edit mode
+            editMapBool.setValue(false);
         });
 
-        // bindings for buttons and menu
-        playButton.disableProperty().bind(editModeBool);
-        prevButton.disableProperty().bind(editModeBool);
-        nextButton.disableProperty().bind(editModeBool);
-        restartButton.disableProperty().bind(editModeBool);
-
-        mapMenu.disableProperty().bind(editModeBool.not());
-        algoMenu.disableProperty().bind(editModeBool.not());
+        editModeStart.setOnAction(e -> {
+            // do the visuals
+            setMode.setVisible(false);
+            editMode.setVisible(true);
 
 
-        // map menu
+            // TODO: remove all processing
+        });
+
+        setModeFinish.setOnAction(e -> {
+            // do the visuals
+            setMode.setVisible(false);
+            visMode.setVisible(true);
+        });
+
+        setModeStart.setOnAction(e -> {
+            // do the visuals
+            visMode.setVisible(false);
+            setMode.setVisible(true);
+
+        });
+
+
+
+        // action stuff here
+        canvas.setOnMouseClicked((MouseEvent e) -> {
+            canvasClicked(e.getX(), e.getY());
+        });
+    }
+
+    public void postLoad() {
+        menuSettings();
+        canvasSettings();
+    }
+
+    private void menuSettings() {
+        editMap.setOnAction(e -> {
+            editMapBool.setValue(true);
+        });
+
         emptyMap.setOnAction(e -> {
-            //map.createEmptyMap();
-            // map = MapFactory.createEmptyMap(defaultXDim, defaultYDim);
+            map = MapFactory.createEmptyMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         exampleMap.setOnAction(e -> {
-            //map.setEmpty();
-            // map = MapFactory.createExampleMap(defaultXDim, defaultYDim);
+            map = MapFactory.createExampleMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         randomMap.setOnAction(e -> {
-            //map.setRnd(0.2);
-            // map = MapFactory.createRandomMap(defaultXDim, defaultYDim, 0.2);
+            map = MapFactory.createRandomMap(defaultXDim, defaultYDim, 0.2);
             renderCanvas();
         });
 
         genMap1.setOnAction(e -> {
-            // map = MapFactory.createMazeMap(defaultXDim, defaultYDim);
+            map = MapFactory.createMazeMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         genMap2.setOnAction(e -> {
-            // map = MapFactory.createMazeWithRoomsMap(defaultXDim, defaultYDim);
+            map = MapFactory.createMazeWithRoomsMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         genMap3.setOnAction(e -> {
-            // map = MapFactory.createSingleConnRoomsMap(defaultXDim, defaultYDim);
+            map = MapFactory.createSingleConnRoomsMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         genMap4.setOnAction(e -> {
-            // map = MapFactory.createLoopedRoomsMap(defaultXDim, defaultYDim);
+            map = MapFactory.createLoopedRoomsMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
         genMap5.setOnAction(e -> {
-            // map = MapFactory.createDoubleConnRoomsMap(defaultXDim, defaultYDim);
+            map = MapFactory.createDoubleConnRoomsMap(defaultXDim, defaultYDim);
             renderCanvas();
         });
 
@@ -209,39 +263,101 @@ public class Controller implements Initializable {
                     new FileChooser.ExtensionFilter("All Files", "*.*"));
             File selectedFile = fileChooser.showOpenDialog(stage);
             if (selectedFile != null) {
-                // map = Parser.getMap(selectedFile);
+                map = Parser.getMap(selectedFile);
             }
 
             renderCanvas();
         });
-
-
-        // action stuff here
-        canvas.setOnMouseClicked((MouseEvent e) -> {
-            canvasClicked(e.getX(), e.getY());
-        });
     }
 
+    private void canvasSettings() {
+        // change listener for width change of the windows
+        ChangeListener<Number> widthListener = (obs, prev, next) -> {
+            final double w = ((StackPane) canvas.getParent()).getWidth();
+            final double new_w = w + next.doubleValue() - prev.doubleValue() - 1;
+
+            xSizeVis = (int) (new_w / Consts.size);
+            if (xSizeVis > map.getxDim()) {
+                xSizeVis = map.getxDim();
+            }
+            canvas.setWidth(Consts.size * xSizeVis + 1);
+
+            renderCanvas();
+        };
+
+        // change listener for height change of the windows
+        ChangeListener<Number> heightListener = (obs, prev, next) -> {
+            final double h = ((StackPane) canvas.getParent()).getHeight();
+            final double new_h = h + next.doubleValue() - prev.doubleValue() - 1;
+
+            ySizeVis = (int) (new_h / Consts.size);
+            if (ySizeVis > map.getyDim()) {
+                ySizeVis = map.getyDim();
+            }
+            canvas.setHeight(Consts.size * ySizeVis + 1);
+
+            renderCanvas();
+        };
+
+
+
+
+
+        map = new Map(defaultXDim, defaultYDim);
+
+        Stage stage = (Stage) canvas.getScene().getWindow();
+        stage.getScene().widthProperty().addListener(widthListener);
+        stage.getScene().heightProperty().addListener(heightListener);
+
+        stage.resizableProperty().set(false);
+        stage.setWidth(Consts.windowWidth);
+        stage.setHeight(Consts.windowHeight);
+        stage.resizableProperty().set(true);
+    }
+
+
+
     public void renderCanvas() {
-        // GridCanvas.getInstance().renderCanvas();
+        // full rendering of the map
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Paint.valueOf("#212121"));
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        for (int x = 0; x < map.getxDim(); x++) {
+            for (int y = 0; y < map.getyDim(); y++) {
+                // change color
+                // gc.setFill(CELLS[map.getCell(x, y)]);
+
+                // draw rect
+                try {
+                    gc.setFill(map.getField(x, y).getColor());
+                } catch (NotAFieldException e) {
+                    // should not happen
+                }
+                gc.fillRect(x * Consts.size + 1, y * Consts.size + 1, Consts.size - 1, Consts.size - 1);
+            }
+        }
     }
 
     private void canvasClicked(double xReal, double yReal) {
-        final int x = (int) (xReal / Constant.size);
-        final int y = (int) (yReal / Constant.size);
-        if (xReal % Constant.size == 0 || yReal % Constant.size == 0) {
+        final int x = (int) (xReal / Consts.size);
+        final int y = (int) (yReal / Consts.size);
+        if (xReal % Consts.size == 0 || yReal % Consts.size == 0) {
             return;
         }
 
         // TODO: trigger event here for point x, y
-        // System.out.println("click " + xCell + " " + yCell);
-//        try {
-//            if (map.getField(x, y).getFieldType().equals(FieldType.GRID_POINT)) {
-//                map.setObstacle(x, y);
-//            } else {
-//                map.setField(x, y);
-//            }
-//        } catch (Exception e) { }
+        try {
+            // obstacle editing only in edit mode
+            if (editMapBool.getValue()) {
+                if (map.getField(x, y).getFieldType().equals(FieldType.GRID_POINT)) {
+                    map.setObstacle(x, y);
+                } else {
+                    map.setField(x, y);
+                }
+            }
+        } catch (Exception e) {
+        }
         renderCanvas();
     }
 

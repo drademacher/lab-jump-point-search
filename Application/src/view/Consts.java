@@ -2,10 +2,10 @@ package view;
 
 import java.util.Random;
 
-public class Constant {
+public class Consts {
     public static final Random rand = new Random();
 
-    public static final int size = 12;
+    public static final int size = 15;
 
     public static final int windowWidth = 1200;
     public static final int windowHeight = 800;
@@ -18,7 +18,7 @@ public class Constant {
      * and so on. Thus, the caller should be prevented from constructing objects of
      * this class, by declaring this private constructor.
      */
-    private Constant() {
+    private Consts() {
         //this prevents even the native class from
         //calling this constructor as well :
         throw new AssertionError();

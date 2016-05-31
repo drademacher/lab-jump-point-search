@@ -1,8 +1,6 @@
 package controller.map;
 
-import view.Constant;
-
-import java.util.Random;
+import view.Consts;
 
 /**
  * Created by paloka on 30.05.16.
@@ -33,7 +31,7 @@ public class MapFactory {
         try {
             for (int x = 0; x < n; x++) {
                 for (int y = 0; y < m; y++) {
-                    if (Constant.rand.nextDouble() <= prob) {
+                    if (Consts.rand.nextDouble() <= prob) {
                         //Todo: implement random singelton to obmit global
                         map.setObstacle(x, y);
                     }
