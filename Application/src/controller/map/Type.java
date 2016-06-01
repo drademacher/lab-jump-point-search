@@ -1,4 +1,4 @@
-package grid;
+package controller.map;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;

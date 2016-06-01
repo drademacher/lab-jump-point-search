@@ -1,18 +1,23 @@
 package view;
 
 import controller.map.Map;
+import controller.map.NotAFieldException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    private Global global = Global.getInstance();
-
+    // private Controller ctrl;
     private Canvas canvas;
+    private Map map;
+
 
 
     public static void main(String[] args) {
@@ -21,39 +26,29 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // load stuff
+        // load FXML and put it on the scene
         FXMLLoader fxmlLoader = new FXMLLoader();
-        BorderPane p = fxmlLoader.load(getClass().getResource("main.fxml").openStream());
+        Scene scene = new Scene(fxmlLoader.load(getClass().getResource("main.fxml").openStream()));
         Controller ctrl = fxmlLoader.getController();
-        this.canvas = ctrl.canvas;
 
-        // initialize stage
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(p, 1200, 800));
+        // stage settings
+        primaryStage.setTitle("Visualization of Various Shortest Path Algorithms on Grid Graphs");
+        primaryStage.setScene(scene);
+        primaryStage.setMinWidth(800);
+        // primaryStage.setWidth(Consts.windowWidth);
+        primaryStage.setMinHeight(700);
+        // primaryStage.setHeight(Consts.windowHeight);
+
+        // show stage
         primaryStage.show();
 
-        settings(primaryStage);
 
-        ctrl.showNiceMap();
-        ctrl.renderCanvas();
+        ctrl.postLoad();
+        // ctrl.renderCanvas();
+
+
     }
 
-    private void settings(Stage primaryStage) {
-        final double w = ((StackPane) canvas.getParent()).getWidth();
-        final double h = ((StackPane) canvas.getParent()).getHeight();
-
-        global.n = (int) ((w - 1) / global.size);
-        global.m = (int) ((h -1) / global.size);
-        global.map = new Map(global.n, global.m);
-
-        canvas.setWidth(global.size * global.n + 1);
-        canvas.setHeight(global.size * global.m + 1);
-
-        // fit window
-        primaryStage.setWidth(primaryStage.getWidth() - w + canvas.getWidth());
-        primaryStage.setHeight(primaryStage.getHeight() - h + canvas.getHeight());
-        primaryStage.setResizable(false);
-    }
 
 
 }
