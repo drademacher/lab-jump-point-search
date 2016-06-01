@@ -11,7 +11,8 @@ public class Consts {
     public static final int windowHeight = 800;
 
     public static final int defaultXDim = windowWidth / size - 2;
-    public static final int defaultYDim = windowHeight / size - 2;
+    // TODO: 66 pixels are used up by the GUI - no idea how to fix it for real
+    public static final int defaultYDim = (windowHeight - 66) / size - 2;
 
     /**
      * The caller references the constants using <tt>Consts.EMPTY_STRING</tt>,

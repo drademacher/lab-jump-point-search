@@ -346,7 +346,6 @@ public class Controller implements Initializable {
             return;
         }
 
-        // TODO: trigger event here for point x, y
         try {
             // obstacle editing only in edit mode
             if (editMapBool.getValue()) {

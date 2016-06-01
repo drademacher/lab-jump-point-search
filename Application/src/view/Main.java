@@ -26,13 +26,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        // load FXML and put it on the scene
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        Scene scene = new Scene(fxmlLoader.load(getClass().getResource("main.fxml").openStream()));
+        Controller ctrl = fxmlLoader.getController();
 
         // stage settings
-        Scene scene = new Scene(new Group());
         primaryStage.setTitle("Visualization of Various Shortest Path Algorithms on Grid Graphs");
         primaryStage.setScene(scene);
-        // TODO: setting min height to 600 causing the buttons to disappear
         primaryStage.setMinWidth(800);
         // primaryStage.setWidth(Consts.windowWidth);
         primaryStage.setMinHeight(700);
@@ -41,10 +42,6 @@ public class Main extends Application {
         // show stage
         primaryStage.show();
 
-        // load FXML and put it on the scene
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        scene.setRoot(fxmlLoader.load(getClass().getResource("main.fxml").openStream()));
-        Controller ctrl = fxmlLoader.getController();
 
         ctrl.postLoad();
         // ctrl.renderCanvas();
