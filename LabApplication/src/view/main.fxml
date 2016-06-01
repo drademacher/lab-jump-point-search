@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ViewHolder">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <Menu mnemonicParsing="false" text="New">
+                        <items>
+                            <MenuItem fx:id="emptyMap" mnemonicParsing="false" text="Empty Map" />
+                            <MenuItem fx:id="randomMap" mnemonicParsing="false" text="Random Map" />
+                        </items>
+                    </Menu>
+                    <MenuItem fx:id="open" mnemonicParsing="false" text="Open" />
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <bottom>
+
+    </bottom>
+    <center>
+        <StackPane>
+            <children>
+                <Canvas fx:id="map" />
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>
