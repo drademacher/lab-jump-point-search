@@ -20,7 +20,7 @@ class MapVisualisation {
         this.xDim   = xDim;
         this.yDim   = yDim;
         this.mapVisualisation    = new FieldVisualisation[xDim][yDim];
-        for(FieldVisualisation[] row:mapVisualisation)  Arrays.fill(row, fieldVisualisation);
+        for(FieldVisualisation[] col:mapVisualisation)  Arrays.fill(col, fieldVisualisation);
     }
 
 

@@ -20,7 +20,7 @@ class Map implements MapFacade {
         this.yDim   = yDim;
         this.map    = new boolean[xDim][yDim];
         if(areFieldsPassable){
-            for(boolean[] row:map)  Arrays.fill(row,true);
+            for(boolean[] col:map)  Arrays.fill(col,true);
         }
     }
 

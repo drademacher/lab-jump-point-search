@@ -14,7 +14,7 @@
                             <MenuItem fx:id="randomMapMenuItem" mnemonicParsing="false" text="Random Map" />
                         </items>
                     </Menu>
-                    <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open" />
+                    <MenuItem fx:id="openMapMenuItem" mnemonicParsing="false" text="Open" />
                 </Menu>
             </menus>
         </MenuBar>

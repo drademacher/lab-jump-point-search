@@ -1,5 +1,7 @@
 package application;
 
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import map.MapController;
 import exception.InvalideCoordinateException;
 import exception.MapInitialisationException;
@@ -11,6 +13,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -20,10 +23,12 @@ import java.util.ResourceBundle;
 public class ApplicationController implements Initializable {
 
     @FXML
-    private MenuItem emptyMapMenuItem, randomMapMenuItem, openMenuItem;
+    private MenuItem emptyMapMenuItem, randomMapMenuItem, openMapMenuItem;
 
     @FXML
     private Canvas mapCanvas;
+
+    private Stage primaryStage;
 
     private MapController mapController = new MapController();
 
@@ -33,9 +38,12 @@ public class ApplicationController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.primaryStage   = (Stage) resources.getObject(null);
+
         //Init Menu
         initEmptyMapMenuItem();
         initRandomMapMenuItem();
+        initOpenMapMenuItem();
 
         //Init Map
         initMapCanvas();
@@ -61,6 +69,25 @@ public class ApplicationController implements Initializable {
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: randomMapMenuItem.setOnAction - MapInitialisationException
+            }
+        });
+    }
+
+    private void initOpenMapMenuItem(){
+        openMapMenuItem.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Resource File");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Map Files", "*.map"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*"));
+            File selectedFile = fileChooser.showOpenDialog(this.primaryStage);
+            if (selectedFile != null) {
+                try {
+                    renderMap(mapVisualisationFactory.createMapVisualisation(mapController.loadMap(selectedFile)));
+                } catch (MapInitialisationException e) {
+                    e.printStackTrace();
+                    //Todo: openMapMenuItem.setOnAction - MapInitialisationException
+                }
             }
         });
     }

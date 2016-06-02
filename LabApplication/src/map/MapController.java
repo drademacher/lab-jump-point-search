@@ -3,6 +3,8 @@ package map;
 import exception.InvalideCoordinateException;
 import exception.MapInitialisationException;
 
+import java.io.File;
+
 public class MapController {
 
     private Map map;
@@ -18,6 +20,11 @@ public class MapController {
 
     public MapFacade setRandomMap(int xDim, int yDim, double pPassable) throws MapInitialisationException {
         this.map    = mapFactory.createRandomMap(xDim,yDim,pPassable);
+        return this.map;
+    }
+
+    public MapFacade loadMap(File file) throws MapInitialisationException {
+        this.map    = mapFactory.loadMap(file);
         return this.map;
     }
 

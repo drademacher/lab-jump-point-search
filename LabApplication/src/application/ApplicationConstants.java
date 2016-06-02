@@ -5,9 +5,9 @@ package application;
  */
 abstract class ApplicationConstants {
     //Todo: Depend field size on Zoom lvl in ApplicationController
-    static final int FIELD_SIZE = 15;
+    static final int FIELD_SIZE = 2;
 
     //Todo: Window dimension?
-    static final int WINDOW_WIDTH = 1200;
-    static final int WINDOW_HEIGHT = 800;
+    static final int WINDOW_WIDTH   = 1200;
+    static final int WINDOW_HEIGHT  = 800;
 }
