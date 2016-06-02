@@ -1,4 +1,4 @@
-package model.map;
+package map;
 
 import exception.InvalideCoordinateException;
 import exception.MapInitialisationException;
@@ -8,7 +8,7 @@ import java.util.Arrays;
 /**
  * Created by paloka on 01.06.16.
  */
-public class Map {
+class Map implements MapFacade {
 
     private final boolean[][] map;
     private int xDim;
@@ -27,20 +27,23 @@ public class Map {
 
     /* ------- Getter & Setter ------- */
 
+    @Override
     public int getXDim() {
         return xDim;
     }
 
+    @Override
     public int getYDim() {
         return yDim;
     }
 
+    @Override
     public boolean isPassable(int x, int y) throws InvalideCoordinateException {
         isValideCoordinate(x,y);
         return map[x][y];
     }
 
-    public void switchPassable(int x, int y) throws InvalideCoordinateException {
+    void switchPassable(int x, int y) throws InvalideCoordinateException {
         isValideCoordinate(x,y);
         map[x][y]   = !map[x][y];
     }

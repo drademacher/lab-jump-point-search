@@ -1,15 +1,15 @@
-package model.visualisation;
+package application;
 
 import exception.InvalideCoordinateException;
 import exception.MapInitialisationException;
-import model.map.Map;
+import map.MapFacade;
 
 /**
  * Created by paloka on 01.06.16.
  */
-public class MapVisualisationFactory {
+class MapVisualisationFactory {
 
-    public static MapVisualisation createMapVisualisation(Map map) {
+    MapVisualisation createMapVisualisation(MapFacade map) {
         MapVisualisation mapVisualisation = null;
         try {
             mapVisualisation = new MapVisualisation(map.getXDim(),map.getYDim(), FieldVisualisation.GRID_POINT);

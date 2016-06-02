@@ -1,4 +1,4 @@
-package view;
+package application;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +17,8 @@ public class Main extends Application {
         Scene scene = new Scene(fxmlLoader.load(getClass().getResource("main.fxml").openStream()));
         primaryStage.setTitle("Visualization of Various Shortest Path Algorithms on Grid Graphs");
         primaryStage.setScene(scene);
-        primaryStage.setWidth(ViewConstants.WINDOW_WIDTH);
-        primaryStage.setHeight(ViewConstants.WINDOW_HEIGHT);
+        primaryStage.setWidth(ApplicationConstants.WINDOW_WIDTH);
+        primaryStage.setHeight(ApplicationConstants.WINDOW_HEIGHT);
         primaryStage.show();
     }
 }

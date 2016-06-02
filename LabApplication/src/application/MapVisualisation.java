@@ -1,4 +1,4 @@
-package model.visualisation;
+package application;
 
 import exception.InvalideCoordinateException;
 import exception.MapInitialisationException;
@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * Created by paloka on 02.06.16.
  */
-public class MapVisualisation {
+class MapVisualisation {
 
     private FieldVisualisation[][] mapVisualisation;
     private int xDim;
@@ -26,15 +26,15 @@ public class MapVisualisation {
 
     /* ------- Getter & Setter ------- */
 
-    public int getXDim() {
+    int getXDim() {
         return xDim;
     }
 
-    public int getYDim() {
+    int getYDim() {
         return yDim;
     }
 
-    public Color getColor(int x, int y) throws InvalideCoordinateException {
+    Color getColor(int x, int y) throws InvalideCoordinateException {
         isValideCoordinate(x,y);
         return mapVisualisation[x][y].getColor();
     }

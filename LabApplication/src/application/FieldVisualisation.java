@@ -1,4 +1,4 @@
-package model.visualisation;
+package application;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -6,7 +6,7 @@ import javafx.scene.paint.Paint;
 /**
  * Created by paloka on 01.06.16.
  */
-public enum FieldVisualisation {
+enum FieldVisualisation {
     GOAL_POINT("#D4A190"),
     GRID_POINT("#E8E8E8"),
     JUMP_POINT("#90C3D4"),
@@ -20,7 +20,7 @@ public enum FieldVisualisation {
         color = (Color) Paint.valueOf(paint);
     }
 
-    public Color getColor() {
+    Color getColor() {
         return color;
     }
 }
