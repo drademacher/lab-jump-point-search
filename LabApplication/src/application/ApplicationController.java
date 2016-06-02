@@ -1,8 +1,5 @@
 package application;
 
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import map.MapController;
 import exception.InvalideCoordinateException;
 import exception.MapInitialisationException;
 import javafx.fxml.FXML;
@@ -12,6 +9,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.util.Pair;
+import map.MapController;
 
 import java.io.File;
 import java.net.URL;
@@ -34,6 +35,8 @@ public class ApplicationController implements Initializable {
 
     private MapVisualisationFactory mapVisualisationFactory = new MapVisualisationFactory();
 
+    private DialogExecuter dialogExecuter = new DialogExecuter();
+
     /* ------- Initialisation ------- */
 
     @Override
@@ -51,9 +54,9 @@ public class ApplicationController implements Initializable {
 
     private void initEmptyMapMenuItem(){
         emptyMapMenuItem.setOnAction(event -> {
+            Pair<Integer,Integer> pair   = dialogExecuter.executeEmptyMapDialoge();
             try {
-                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setEmptyMap(10,5)));
-                //Todo: Set dimenstion of empty Map in Gui
+                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setEmptyMap(pair.getKey(),pair.getValue())));
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: emptyMapMenuItem.setOnAction - MapInitialisationException
