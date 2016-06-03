@@ -13,6 +13,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import map.MapController;
+import util.Tupel2;
+import util.Tupel3;
 
 import java.io.File;
 import java.net.URL;
@@ -54,9 +56,9 @@ public class ApplicationController implements Initializable {
 
     private void initEmptyMapMenuItem(){
         emptyMapMenuItem.setOnAction(event -> {
-            Pair<Integer,Integer> pair   = dialogExecuter.executeEmptyMapDialoge();
+            Tupel2<Integer,Integer> params    = dialogExecuter.executeEmptyMapDialoge();
             try {
-                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setEmptyMap(pair.getKey(),pair.getValue())));
+                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setEmptyMap(params.getArg1(),params.getArg2())));
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: emptyMapMenuItem.setOnAction - MapInitialisationException
@@ -66,9 +68,9 @@ public class ApplicationController implements Initializable {
 
     private void initRandomMapMenuItem(){
         randomMapMenuItem.setOnAction(event -> {
+            Tupel3<Integer,Integer,Double> params   = dialogExecuter.executeRandomMapDialoge();
             try{
-                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setRandomMap(10,5,0.8)));
-                //Todo: Set dimenstion and probability of random Map in Gui
+                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setRandomMap(params.getArg1(),params.getArg2(),params.getArg3())));
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: randomMapMenuItem.setOnAction - MapInitialisationException
