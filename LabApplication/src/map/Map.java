@@ -1,6 +1,6 @@
 package map;
 
-import exception.InvalideCoordinateException;
+import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
 
 import java.util.Arrays;
@@ -38,12 +38,12 @@ class Map implements MapFacade {
     }
 
     @Override
-    public boolean isPassable(int x, int y) throws InvalideCoordinateException {
+    public boolean isPassable(int x, int y) throws InvalidCoordinateException {
         isValideCoordinate(x,y);
         return map[x][y];
     }
 
-    void switchPassable(int x, int y) throws InvalideCoordinateException {
+    void switchPassable(int x, int y) throws InvalidCoordinateException {
         isValideCoordinate(x,y);
         map[x][y]   = !map[x][y];
     }
@@ -51,7 +51,7 @@ class Map implements MapFacade {
 
     /* ------- Helper ------- */
 
-    private void isValideCoordinate(int x, int y) throws InvalideCoordinateException {
-        if(x<0||y<0||x>=xDim||y>=yDim) throw new InvalideCoordinateException(x,y);
+    private void isValideCoordinate(int x, int y) throws InvalidCoordinateException {
+        if(x<0||y<0||x>=xDim||y>=yDim) throw new InvalidCoordinateException(x,y);
     }
 }

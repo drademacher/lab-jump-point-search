@@ -1,6 +1,6 @@
 package map;
 
-import exception.InvalideCoordinateException;
+import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
 import util.RandomUtil;
 
@@ -23,9 +23,9 @@ class MapFactory {
                 if (RandomUtil.getRandomDouble() < pPassable) {
                     try {
                         map.switchPassable(x, y);
-                    } catch (InvalideCoordinateException e) {
+                    } catch (InvalidCoordinateException e) {
                         e.printStackTrace();
-                        //Todo: MapFactory.createRandomMap - InvalideCoordinateException
+                        //Todo: MapFactory.createRandomMap - InvalidCoordinateException
                     }
                 }
             }

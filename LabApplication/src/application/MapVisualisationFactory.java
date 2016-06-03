@@ -1,6 +1,6 @@
 package application;
 
-import exception.InvalideCoordinateException;
+import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
 import map.MapFacade;
 
@@ -21,9 +21,9 @@ class MapVisualisationFactory {
             for(int y=0;y<map.getYDim();y++){
                 try {
                     if(!map.isPassable(x,y)) mapVisualisation.setFieldVisualisation(x,y,FieldVisualisation.OBSTACLE_POINT);
-                } catch (InvalideCoordinateException e) {
+                } catch (InvalidCoordinateException e) {
                     e.printStackTrace();
-                    //Todo: MapVisualisationFactory.createMapVisualisation - InvalideCoordinateException
+                    //Todo: MapVisualisationFactory.createMapVisualisation - InvalidCoordinateException
                 }
             }
         }

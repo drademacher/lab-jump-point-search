@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class DialogExecuter {
 
-    Tupel2<Integer,Integer> executeEmptyMapDialoge(){
+    Tupel2<Integer,Integer> executeEmptyMapDialog(){
         ButtonType confirmButton  = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         Map<String,TextField> fields    = new LinkedHashMap<>();
         fields.put("xDim",new IntegerTextField().setWidth(55));
@@ -32,7 +32,7 @@ public class DialogExecuter {
         });
     }
 
-    Tupel3<Integer,Integer,Double> executeRandomMapDialoge(){
+    Tupel3<Integer,Integer,Double> executeRandomMapDialog(){
         ButtonType confirmButton  = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         Map<String,TextField> fields    = new LinkedHashMap<>();
         fields.put("xDim", new IntegerTextField().setWidth(55));

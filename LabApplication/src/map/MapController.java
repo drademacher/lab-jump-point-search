@@ -1,6 +1,6 @@
 package map;
 
-import exception.InvalideCoordinateException;
+import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
 
 import java.io.File;
@@ -31,7 +31,7 @@ public class MapController {
 
     /* ------- Map Operations ------- */
 
-    public MapFacade switchPassable(int x, int y) throws InvalideCoordinateException {
+    public MapFacade switchPassable(int x, int y) throws InvalidCoordinateException {
         this.map.switchPassable(x,y);
         return this.map;
     }

@@ -1,6 +1,6 @@
 package application;
 
-import exception.InvalideCoordinateException;
+import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,7 +11,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import map.MapController;
 import util.Tupel2;
 import util.Tupel3;
@@ -19,6 +18,8 @@ import util.Tupel3;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static application.ApplicationConstants.ZOOM_FACTOR;
 
 /**
  * Created by paloka on 01.06.16.
@@ -32,6 +33,8 @@ public class ApplicationController implements Initializable {
     private Canvas mapCanvas;
 
     private Stage primaryStage;
+    private MapVisualisation mapVisualisationHolder;
+    private int fieldSize   = 10;
 
     private MapController mapController = new MapController();
 
@@ -56,7 +59,7 @@ public class ApplicationController implements Initializable {
 
     private void initEmptyMapMenuItem(){
         emptyMapMenuItem.setOnAction(event -> {
-            Tupel2<Integer,Integer> params    = dialogExecuter.executeEmptyMapDialoge();
+            Tupel2<Integer,Integer> params    = dialogExecuter.executeEmptyMapDialog();
             try {
                 renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setEmptyMap(params.getArg1(),params.getArg2())));
             } catch (MapInitialisationException e) {
@@ -68,7 +71,7 @@ public class ApplicationController implements Initializable {
 
     private void initRandomMapMenuItem(){
         randomMapMenuItem.setOnAction(event -> {
-            Tupel3<Integer,Integer,Double> params   = dialogExecuter.executeRandomMapDialoge();
+            Tupel3<Integer,Integer,Double> params   = dialogExecuter.executeRandomMapDialog();
             try{
                 renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setRandomMap(params.getArg1(),params.getArg2(),params.getArg3())));
             } catch (MapInitialisationException e) {
@@ -99,14 +102,21 @@ public class ApplicationController implements Initializable {
 
     private void initMapCanvas(){
         mapCanvas.setOnMouseClicked((MouseEvent event) -> {
-            int x   = new Double((event.getX() -1) / ApplicationConstants.FIELD_SIZE).intValue();
-            int y   = new Double((event.getY() -2) / ApplicationConstants.FIELD_SIZE).intValue();
+            int x   = new Double((event.getX() -1) / this.fieldSize).intValue();
+            int y   = new Double((event.getY() -2) / this.fieldSize).intValue();
             try{
                 renderMap(mapVisualisationFactory.createMapVisualisation(mapController.switchPassable(x,y)));
-            } catch (InvalideCoordinateException e) {
+            } catch (InvalidCoordinateException e) {
                 e.printStackTrace();
-                //Todo: mapCanvas.setOnMouseClicked - InvalideCoordinateException
+                //Todo: mapCanvas.setOnMouseClicked - InvalidCoordinateException
             }
+        });
+
+        mapCanvas.setOnScroll(event -> {
+            System.out.println(event.toString());
+            if(event.getDeltaY()>0)                 this.fieldSize  += ZOOM_FACTOR;
+            if(event.getDeltaY()<0 && fieldSize>2)  this.fieldSize  -= ZOOM_FACTOR;
+            renderMap(this.mapVisualisationHolder);
         });
     }
 
@@ -114,9 +124,10 @@ public class ApplicationController implements Initializable {
     /* ------- Helper ------- */
 
     private void renderMap(MapVisualisation mapVisualisation) {
+        this.mapVisualisationHolder = mapVisualisation;
         GraphicsContext gc = mapCanvas.getGraphicsContext2D();
-        mapCanvas.setWidth(ApplicationConstants.FIELD_SIZE*mapVisualisation.getXDim() +1);
-        mapCanvas.setHeight(ApplicationConstants.FIELD_SIZE*mapVisualisation.getYDim() +1);
+        mapCanvas.setWidth(this.fieldSize*mapVisualisation.getXDim() +1);
+        mapCanvas.setHeight(this.fieldSize*mapVisualisation.getYDim() +1);
 
         gc.setFill(Paint.valueOf("#212121"));
         gc.fillRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
@@ -125,11 +136,11 @@ public class ApplicationController implements Initializable {
             for(int y=0;y<mapVisualisation.getYDim();y++){
                 try {
                     gc.setFill(mapVisualisation.getColor(x,y));
-                } catch (InvalideCoordinateException e) {
+                } catch (InvalidCoordinateException e) {
                     e.printStackTrace();
-                    //Todo: ApplicationController.renderMap - InvalideCoordinateException
+                    //Todo: ApplicationController.renderMap - InvalidCoordinateException
                 }
-                gc.fillRect(x * ApplicationConstants.FIELD_SIZE + 1, y * ApplicationConstants.FIELD_SIZE + 1, ApplicationConstants.FIELD_SIZE -1, ApplicationConstants.FIELD_SIZE - 1);
+                gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize -1, this.fieldSize - 1);
             }
         }
     }

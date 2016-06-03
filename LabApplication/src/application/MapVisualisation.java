@@ -1,6 +1,6 @@
 package application;
 
-import exception.InvalideCoordinateException;
+import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
 import javafx.scene.paint.Color;
 
@@ -34,12 +34,12 @@ class MapVisualisation {
         return yDim;
     }
 
-    Color getColor(int x, int y) throws InvalideCoordinateException {
+    Color getColor(int x, int y) throws InvalidCoordinateException {
         isValideCoordinate(x,y);
         return mapVisualisation[x][y].getColor();
     }
 
-    void setFieldVisualisation(int x, int y, FieldVisualisation fieldVisualisation) throws InvalideCoordinateException {
+    void setFieldVisualisation(int x, int y, FieldVisualisation fieldVisualisation) throws InvalidCoordinateException {
         isValideCoordinate(x,y);
         mapVisualisation[x][y]   = fieldVisualisation;
     }
@@ -47,7 +47,7 @@ class MapVisualisation {
 
     /* ------- Helper ------- */
 
-    private void isValideCoordinate(int x, int y) throws InvalideCoordinateException {
-        if(x<0||y<0||x>=xDim||y>=yDim) throw new InvalideCoordinateException(x,y);
+    private void isValideCoordinate(int x, int y) throws InvalidCoordinateException {
+        if(x<0||y<0||x>=xDim||y>=yDim) throw new InvalidCoordinateException(x,y);
     }
 }
