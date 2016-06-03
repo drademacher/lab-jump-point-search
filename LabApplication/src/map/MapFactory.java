@@ -19,7 +19,6 @@ class MapFactory {
         Map map = new Map(xDim,yDim,false);
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                //Todo: implement random singelton to obmit global
                 if (RandomUtil.getRandomDouble() < pPassable) {
                     try {
                         map.switchPassable(x, y);
@@ -53,5 +52,25 @@ class MapFactory {
         } catch(Exception e){
             throw new MapInitialisationException();
         }
+    }
+
+    public Map createMazeMap(int xDim, int yDim) throws MapInitialisationException {
+        return new Map(xDim,yDim,false);
+    }
+
+    public Map createMazeRoomMap(int xDim, int yDim) throws MapInitialisationException {
+        return new Map(xDim,yDim,false);
+    }
+
+    public Map createSingleRoomMap(int xDim, int yDim) throws MapInitialisationException {
+        return new Map(xDim,yDim,false);
+    }
+
+    public Map createDoubleRoomMap(int xDim, int yDim) throws MapInitialisationException {
+        return new Map(xDim,yDim,false);
+    }
+
+    public Map createLoopRoomMap(int xDim, int yDim) throws MapInitialisationException {
+        return new Map(xDim,yDim,false);
     }
 }

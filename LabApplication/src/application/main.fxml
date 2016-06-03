@@ -12,6 +12,11 @@
                         <items>
                             <MenuItem fx:id="emptyMapMenuItem" mnemonicParsing="false" text="Empty Map" />
                             <MenuItem fx:id="randomMapMenuItem" mnemonicParsing="false" text="Random Map" />
+                            <MenuItem fx:id="mazeMapMenuItem" mnemonicParsing="false" text="Maze" />
+                            <MenuItem fx:id="mazeRoomMapMenuItem" mnemonicParsing="false" text="Maze with Rooms" />
+                            <MenuItem fx:id="singleRoomMapMenuItem" mnemonicParsing="false" text="Single connected Rooms" />
+                            <MenuItem fx:id="doubleRoomMapMenuItem" mnemonicParsing="false" text="Double connected Rooms" />
+                            <MenuItem fx:id="loopRoomMapMenuItem" mnemonicParsing="false" text="Rooms with loops" />
                         </items>
                     </Menu>
                     <MenuItem fx:id="openMapMenuItem" mnemonicParsing="false" text="Open" />

@@ -6,10 +6,11 @@ import java.util.Random;
  * Created by paloka on 02.06.16.
  */
 public class RandomUtil {
-    //Todo: Random does not belong to ApplicationConstants
-    private static final Random RANDOM  = new Random();
+
+    private static Random RANDOM;
 
     public static double getRandomDouble(){
+        if(RANDOM==null)    RANDOM  = new Random();
         return RANDOM.nextDouble();
     }
 }

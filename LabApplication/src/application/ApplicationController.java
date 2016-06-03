@@ -12,8 +12,8 @@ import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import map.MapController;
-import util.Tupel2;
-import util.Tupel3;
+import util.Tuple2;
+import util.Tuple3;
 
 import java.io.File;
 import java.net.URL;
@@ -28,6 +28,9 @@ public class ApplicationController implements Initializable {
 
     @FXML
     private MenuItem emptyMapMenuItem, randomMapMenuItem, openMapMenuItem;
+
+    @FXML
+    private MenuItem mazeMapMenuItem, mazeRoomMapMenuItem, singleRoomMapMenuItem, doubleRoomMapMenuItem, loopRoomMapMenuItem;
 
     @FXML
     private Canvas mapCanvas;
@@ -52,6 +55,11 @@ public class ApplicationController implements Initializable {
         initEmptyMapMenuItem();
         initRandomMapMenuItem();
         initOpenMapMenuItem();
+        initMazeMapMenuItem();
+        initMazeRoomMapMenuItem();
+        initSingleRoomMapMenuItem();
+        initDoubleRoomMapMenuItem();
+        initLoopRoomMapMenuItem();
 
         //Init Map
         initMapCanvas();
@@ -59,7 +67,7 @@ public class ApplicationController implements Initializable {
 
     private void initEmptyMapMenuItem(){
         emptyMapMenuItem.setOnAction(event -> {
-            Tupel2<Integer,Integer> params    = dialogExecuter.executeEmptyMapDialog();
+            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Empty Map");
             try {
                 renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setEmptyMap(params.getArg1(),params.getArg2())));
             } catch (MapInitialisationException e) {
@@ -71,12 +79,72 @@ public class ApplicationController implements Initializable {
 
     private void initRandomMapMenuItem(){
         randomMapMenuItem.setOnAction(event -> {
-            Tupel3<Integer,Integer,Double> params   = dialogExecuter.executeRandomMapDialog();
+            Tuple3<Integer,Integer,Double> params   = dialogExecuter.executeRandomMapDialog();
             try{
                 renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setRandomMap(params.getArg1(),params.getArg2(),params.getArg3())));
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: randomMapMenuItem.setOnAction - MapInitialisationException
+            }
+        });
+    }
+
+    private void initMazeMapMenuItem(){
+        mazeMapMenuItem.setOnAction(event -> {
+            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Maze Map");
+            try {
+                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setMazeMap(params.getArg1(),params.getArg2())));
+            } catch (MapInitialisationException e) {
+                e.printStackTrace();
+                //Todo: mazeMapMenuItem.setOnAction - MapInitialisationException
+            }
+        });
+    }
+
+    private void initMazeRoomMapMenuItem(){
+        mazeRoomMapMenuItem.setOnAction(event -> {
+            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Maze Room Map");
+            try {
+                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setMazeRoomMap(params.getArg1(),params.getArg2())));
+            } catch (MapInitialisationException e) {
+                e.printStackTrace();
+                //Todo: mazeRoomMapMenuItem.setOnAction - MapInitialisationException
+            }
+        });
+    }
+
+    private void initSingleRoomMapMenuItem(){
+        singleRoomMapMenuItem.setOnAction(event -> {
+            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Single Room Map");
+            try {
+                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setSingleRoomMap(params.getArg1(),params.getArg2())));
+            } catch (MapInitialisationException e) {
+                e.printStackTrace();
+                //Todo: singleRoomMapMenuItem.setOnAction - MapInitialisationException
+            }
+        });
+    }
+
+    private void initDoubleRoomMapMenuItem(){
+        doubleRoomMapMenuItem.setOnAction(event -> {
+            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Double Room Map");
+            try {
+                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setDoubleRoomMap(params.getArg1(),params.getArg2())));
+            } catch (MapInitialisationException e) {
+                e.printStackTrace();
+                //Todo: doubleRoomMapMenuItem.setOnAction - MapInitialisationException
+            }
+        });
+    }
+
+    private void initLoopRoomMapMenuItem(){
+        loopRoomMapMenuItem.setOnAction(event -> {
+            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Loop Room Map");
+            try {
+                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setLoopRoomMap(params.getArg1(),params.getArg2())));
+            } catch (MapInitialisationException e) {
+                e.printStackTrace();
+                //Todo: loopRoomMapMenuItem.setOnAction - MapInitialisationException
             }
         });
     }
@@ -113,7 +181,7 @@ public class ApplicationController implements Initializable {
         });
 
         mapCanvas.setOnScroll(event -> {
-            System.out.println(event.toString());
+            if(event.getDeltaY()==0)                return;
             if(event.getDeltaY()>0)                 this.fieldSize  += ZOOM_FACTOR;
             if(event.getDeltaY()<0 && fieldSize>2)  this.fieldSize  -= ZOOM_FACTOR;
             renderMap(this.mapVisualisationHolder);

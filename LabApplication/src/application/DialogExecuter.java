@@ -4,8 +4,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
-import util.Tupel2;
-import util.Tupel3;
+import util.Tuple2;
+import util.Tuple3;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -16,15 +16,15 @@ import java.util.Map;
  */
 public class DialogExecuter {
 
-    Tupel2<Integer,Integer> executeEmptyMapDialog(){
+    Tuple2<Integer,Integer> executeMapDimensionDialog(String title){
         ButtonType confirmButton  = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         Map<String,TextField> fields    = new LinkedHashMap<>();
-        fields.put("xDim",new IntegerTextField().setWidth(55));
-        fields.put("yDim",new IntegerTextField().setWidth(55));
+        fields.put("xDim",new DimensionTextField().setWidth(55));
+        fields.put("yDim",new DimensionTextField().setWidth(55));
 
-        return executeDialog("New Empty Map", confirmButton, fields, dialogButton -> {
+        return executeDialog(title, confirmButton, fields, dialogButton -> {
             if (dialogButton == confirmButton) {
-                return new Tupel2<>(
+                return new Tuple2<>(
                         Integer.valueOf(fields.get("xDim").getText()),
                         Integer.valueOf(fields.get("yDim").getText()));
             }
@@ -32,16 +32,17 @@ public class DialogExecuter {
         });
     }
 
-    Tupel3<Integer,Integer,Double> executeRandomMapDialog(){
+    //Todo: can we abstract executeRandomDialog on executeMapDimensionDialog, because its just one textfield more =(
+    Tuple3<Integer,Integer,Double> executeRandomMapDialog(){
         ButtonType confirmButton  = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         Map<String,TextField> fields    = new LinkedHashMap<>();
-        fields.put("xDim", new IntegerTextField().setWidth(55));
-        fields.put("yDim", new IntegerTextField().setWidth(55));
-        fields.put("pPas", new DoubleTextField().setWidth(55));
+        fields.put("xDim", new DimensionTextField().setWidth(55));
+        fields.put("yDim", new DimensionTextField().setWidth(55));
+        fields.put("pPas", new ProbabilityTextField().setWidth(55));
 
         return executeDialog("New Random Map", confirmButton, fields, dialogButton -> {
             if (dialogButton == confirmButton) {
-                return new Tupel3<>(
+                return new Tuple3<>(
                         Integer.valueOf(fields.get("xDim").getText()),
                         Integer.valueOf(fields.get("yDim").getText()),
                         Double.valueOf(fields.get("pPas").getText()));
@@ -94,14 +95,14 @@ public class DialogExecuter {
         protected abstract boolean validate(String text);
     }
 
-    private class IntegerTextField extends ValidatedTextField {
+    private class DimensionTextField extends ValidatedTextField {
         @Override
         protected boolean validate(String text) {
             return (this.getText()+text).matches("[0-9]{0,3}");
         }
     }
 
-    private class DoubleTextField extends ValidatedTextField {
+    private class ProbabilityTextField extends ValidatedTextField {
         @Override
         protected boolean validate(String text) {
             String newText  = this.getText()+text;
