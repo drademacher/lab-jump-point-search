@@ -12,7 +12,7 @@ import static application.FieldVisualisation.*;
 /**
  * Created by paloka on 06.06.16.
  */
-public class MapVisualisationHolder {
+public class MapHolder {
 
     private MapFacade map;
 
@@ -20,7 +20,7 @@ public class MapVisualisationHolder {
     private OnMouseClickedCallback onMouseClickedCallback;
     private int fieldSize   = 20;
 
-    MapVisualisationHolder(Canvas canvas){
+    MapHolder(Canvas canvas){
         this.canvas = canvas;
 
         canvas.setOnScroll(event -> {
@@ -74,6 +74,13 @@ public class MapVisualisationHolder {
     }
 
 
+    /* ------- Getter ------- */
+
+    boolean isPassable(int x, int y) throws InvalidCoordinateException {
+        return this.map.isPassable(x,y);
+    }
+
+
     /* ------- Helper ------- */
 
     private void renderMap() {
@@ -89,11 +96,11 @@ public class MapVisualisationHolder {
             for(int y=0;y<this.map.getYDim();y++){
                 try {
                     gc.setFill(this.map.isPassable(x,y)?GRID_POINT.getColor():OBSTACLE_POINT.getColor());
+                    gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize -1, this.fieldSize - 1);
                 } catch (InvalidCoordinateException e) {
                     e.printStackTrace();
                     //Todo: ApplicationController.renderMap - InvalidCoordinateException
                 }
-                gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize -1, this.fieldSize - 1);
             }
         }
     }

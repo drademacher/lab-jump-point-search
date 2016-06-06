@@ -3,6 +3,7 @@ package util;
 /**
  * Created by paloka on 03.06.16.
  */
+//Todo: weg refactoren if possible
 public class Tuple3<A,B,C> extends Tuple2<A,B> {
 
     private C arg3;

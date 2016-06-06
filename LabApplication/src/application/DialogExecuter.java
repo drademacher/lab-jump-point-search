@@ -16,6 +16,7 @@ import java.util.Map;
  */
 public class DialogExecuter {
 
+    //Todo: Vll kann man auf die tupel verzichten, wenn man einfach callbacks übergibt, vll geht das sogar abstrahiert
     Tuple2<Integer,Integer> executeMapDimensionDialog(String title){
         ButtonType confirmButton  = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         Map<String,TextField> fields    = new LinkedHashMap<>();
