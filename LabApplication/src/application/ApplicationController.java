@@ -31,6 +31,9 @@ public class ApplicationController implements Initializable {
     private MenuItem editMapMenuItem;
 
     @FXML
+    private MenuItem runAStarMenuItem;
+
+    @FXML
     private Canvas mapCanvas;
 
     private Stage primaryStage;
@@ -46,6 +49,9 @@ public class ApplicationController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.primaryStage   = (Stage) resources.getObject(null);
 
+        //Init mapVisualisationHolder
+        this.mapVisualisationHolder = new MapVisualisationHolder(this.mapCanvas);
+
         //Init Menu
         initEmptyMapMenuItem();
         initRandomMapMenuItem();
@@ -56,9 +62,7 @@ public class ApplicationController implements Initializable {
         initLoopRoomMapMenuItem();
         initOpenMapMenuItem();
         initEditMapMenuItem();
-
-        //Init mapVisualisationHolder
-        this.mapVisualisationHolder = new MapVisualisationHolder(this.mapCanvas);
+        initRunAStarMenuItem();
     }
 
     private void initEmptyMapMenuItem(){
@@ -173,8 +177,18 @@ public class ApplicationController implements Initializable {
     }
 
     private void initEditMapMenuItem(){
-        editMapMenuItem.setOnAction(event -> {
-            setEditMapMode();
+        editMapMenuItem.setOnAction(event -> setEditMapMode());
+    }
+
+    private void initRunAStarMenuItem(){
+        runAStarMenuItem.setOnAction(event -> {
+            setSetStartGoalMode((xStart,yStart,xGoal,yGoal) -> {
+                System.out.println(xStart);
+                System.out.println(yStart);
+                System.out.println(xGoal);
+                System.out.println(yGoal);
+                //Todo: Run A* here
+            });
         });
     }
 
@@ -184,11 +198,31 @@ public class ApplicationController implements Initializable {
     private void setEditMapMode(){
         this.mapVisualisationHolder.setOnMouseClickedCallback((x,y) -> {
             try {
-                this.mapVisualisationHolder.setMap(this.mapController.switchPassable(x,y));
+                this.mapVisualisationHolder.switchPassable(this.mapController.switchPassable(x,y),x,y);
             } catch (InvalidCoordinateException e) {
                 e.printStackTrace();
                 //Todo: setEditMapMode.mapConroller.switchPassable - InvalidCoordinateException
             }
         });
+        this.mapVisualisationHolder.refreshMap();
+    }
+
+    private void setSetStartGoalMode(OnStartGoalSetCallback callback){
+        this.mapVisualisationHolder.setOnMouseClickedCallback((xStart,yStart) -> {
+            this.mapVisualisationHolder.setOnMouseClickedCallback((xGoal,yGoal) -> {
+                this.mapVisualisationHolder.setGoalPoint(xGoal,yGoal);
+                this.mapVisualisationHolder.setOnMouseClickedCallback(null);
+                callback.call(xStart,yStart,xGoal,yGoal);
+            });
+            this.mapVisualisationHolder.setStartPoint(xStart,yStart);
+        });
+        this.mapVisualisationHolder.refreshMap();
+    }
+
+
+    /* ------- Callback Type ------- */
+
+    private interface OnStartGoalSetCallback {
+        void call(int xStart, int yStart, int xGoal, int yGoal);
     }
 }

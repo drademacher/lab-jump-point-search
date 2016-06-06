@@ -7,8 +7,7 @@ import javafx.scene.paint.Paint;
 import map.MapFacade;
 
 import static application.ApplicationConstants.*;
-import static application.FieldVisualisation.GRID_POINT;
-import static application.FieldVisualisation.OBSTACLE_POINT;
+import static application.FieldVisualisation.*;
 
 /**
  * Created by paloka on 06.06.16.
@@ -40,13 +39,34 @@ public class MapVisualisationHolder {
         });
     }
 
+    void refreshMap(){
+        renderMap();
+    }
+
+    void switchPassable(MapFacade map, int x, int y){
+        this.map    = map;
+        try {
+            renderField(x,y,map.isPassable(x,y)?GRID_POINT:OBSTACLE_POINT);
+        } catch (InvalidCoordinateException e) {
+            e.printStackTrace();
+            //Todo: ApplicationController.renderField - InvalidCoordinateException
+        }
+    }
+
+    void setStartPoint(int x, int y){
+        renderField(x,y,START_POINT);
+    };
+
+    void setGoalPoint(int x, int y){
+        renderField(x,y,GOAL_POINT);
+    }
 
     /* ------- Setter ------- */
+
 
     void setMap(MapFacade map){
         this.map    = map;
         //Todo: große Maps können ab einer bestimmten FIELD_SIZE nicht mehr angezeigt werden, der Versuch führt zu einer RuntimeException
-        renderMap();
     }
 
     void setOnMouseClickedCallback(OnMouseClickedCallback callback){
@@ -76,6 +96,16 @@ public class MapVisualisationHolder {
                 gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize -1, this.fieldSize - 1);
             }
         }
+    }
+
+    private void renderField(int x, int y, FieldVisualisation field) {
+        if(this.canvas==null
+                || x<0 || y<0
+                || (this.canvas.getWidth()-1)/this.fieldSize<x
+                || (this.canvas.getHeight()-1)/this.fieldSize<y) return;
+        GraphicsContext gc = this.canvas.getGraphicsContext2D();
+        gc.setFill(field.getColor());
+        gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize -1, this.fieldSize - 1);
     }
 
 

@@ -24,6 +24,9 @@
                 <Menu mnemonicParsing="false" text="Edit">
                     <MenuItem fx:id="editMapMenuItem" mnemonicParsing="false" text="Edit Map" />
                 </Menu>
+                <Menu mnemonicParsing="false" text="Run">
+                    <MenuItem fx:id="runAStarMenuItem" mnemonicParsing="false" text="A-Star" />
+                </Menu>
             </menus>
         </MenuBar>
     </top>
