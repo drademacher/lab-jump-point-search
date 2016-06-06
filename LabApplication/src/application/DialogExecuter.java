@@ -74,7 +74,7 @@ public class DialogExecuter {
     }
 
 
-    /* ------- Data Type for Dialog Fields ------- */
+    /* ------- Data Types for Dialog Fields ------- */
 
     private abstract class ValidatedTextField extends TextField{
         @Override

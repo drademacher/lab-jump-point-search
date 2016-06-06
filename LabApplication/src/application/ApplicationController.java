@@ -5,10 +5,7 @@ import exception.MapInitialisationException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import map.MapController;
@@ -18,8 +15,6 @@ import util.Tuple3;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import static application.ApplicationConstants.ZOOM_FACTOR;
 
 /**
  * Created by paloka on 01.06.16.
@@ -36,12 +31,9 @@ public class ApplicationController implements Initializable {
     private Canvas mapCanvas;
 
     private Stage primaryStage;
-    private MapVisualisation mapVisualisationHolder;
-    private int fieldSize   = 10;
+    private MapVisualisationHolder mapVisualisationHolder;
 
     private MapController mapController = new MapController();
-
-    private MapVisualisationFactory mapVisualisationFactory = new MapVisualisationFactory();
 
     private DialogExecuter dialogExecuter = new DialogExecuter();
 
@@ -61,15 +53,16 @@ public class ApplicationController implements Initializable {
         initDoubleRoomMapMenuItem();
         initLoopRoomMapMenuItem();
 
-        //Init Map
-        initMapCanvas();
+        //Init mapVisualisationHolder
+        this.mapVisualisationHolder = new MapVisualisationHolder(this.mapCanvas);
     }
 
     private void initEmptyMapMenuItem(){
         emptyMapMenuItem.setOnAction(event -> {
             Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Empty Map");
             try {
-                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setEmptyMap(params.getArg1(),params.getArg2())));
+                this.mapVisualisationHolder.setMap(mapController.setEmptyMap(params.getArg1(),params.getArg2()));
+                setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: emptyMapMenuItem.setOnAction - MapInitialisationException
@@ -81,7 +74,8 @@ public class ApplicationController implements Initializable {
         randomMapMenuItem.setOnAction(event -> {
             Tuple3<Integer,Integer,Double> params   = dialogExecuter.executeRandomMapDialog();
             try{
-                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setRandomMap(params.getArg1(),params.getArg2(),params.getArg3())));
+                this.mapVisualisationHolder.setMap(mapController.setRandomMap(params.getArg1(),params.getArg2(),params.getArg3()));
+                setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: randomMapMenuItem.setOnAction - MapInitialisationException
@@ -93,7 +87,8 @@ public class ApplicationController implements Initializable {
         mazeMapMenuItem.setOnAction(event -> {
             Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Maze Map");
             try {
-                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setMazeMap(params.getArg1(),params.getArg2())));
+                this.mapVisualisationHolder.setMap(mapController.setMazeMap(params.getArg1(),params.getArg2()));
+                setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: mazeMapMenuItem.setOnAction - MapInitialisationException
@@ -105,7 +100,8 @@ public class ApplicationController implements Initializable {
         mazeRoomMapMenuItem.setOnAction(event -> {
             Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Maze Room Map");
             try {
-                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setMazeRoomMap(params.getArg1(),params.getArg2())));
+                this.mapVisualisationHolder.setMap(mapController.setMazeRoomMap(params.getArg1(),params.getArg2()));
+                setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: mazeRoomMapMenuItem.setOnAction - MapInitialisationException
@@ -117,7 +113,8 @@ public class ApplicationController implements Initializable {
         singleRoomMapMenuItem.setOnAction(event -> {
             Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Single Room Map");
             try {
-                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setSingleRoomMap(params.getArg1(),params.getArg2())));
+                this.mapVisualisationHolder.setMap(mapController.setSingleRoomMap(params.getArg1(),params.getArg2()));
+                setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: singleRoomMapMenuItem.setOnAction - MapInitialisationException
@@ -129,7 +126,8 @@ public class ApplicationController implements Initializable {
         doubleRoomMapMenuItem.setOnAction(event -> {
             Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Double Room Map");
             try {
-                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setDoubleRoomMap(params.getArg1(),params.getArg2())));
+                this.mapVisualisationHolder.setMap(mapController.setDoubleRoomMap(params.getArg1(),params.getArg2()));
+                setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: doubleRoomMapMenuItem.setOnAction - MapInitialisationException
@@ -141,7 +139,8 @@ public class ApplicationController implements Initializable {
         loopRoomMapMenuItem.setOnAction(event -> {
             Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Loop Room Map");
             try {
-                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.setLoopRoomMap(params.getArg1(),params.getArg2())));
+                this.mapVisualisationHolder.setMap(mapController.setLoopRoomMap(params.getArg1(),params.getArg2()));
+                setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
                 //Todo: loopRoomMapMenuItem.setOnAction - MapInitialisationException
@@ -159,7 +158,8 @@ public class ApplicationController implements Initializable {
             File selectedFile = fileChooser.showOpenDialog(this.primaryStage);
             if (selectedFile != null) {
                 try {
-                    renderMap(mapVisualisationFactory.createMapVisualisation(mapController.loadMap(selectedFile)));
+                    this.mapVisualisationHolder.setMap(mapController.loadMap(selectedFile));
+                    setEditMapMode();
                 } catch (MapInitialisationException e) {
                     e.printStackTrace();
                     //Todo: openMapMenuItem.setOnAction - MapInitialisationException
@@ -168,48 +168,17 @@ public class ApplicationController implements Initializable {
         });
     }
 
-    private void initMapCanvas(){
-        mapCanvas.setOnMouseClicked((MouseEvent event) -> {
-            int x   = new Double((event.getX() -1) / this.fieldSize).intValue();
-            int y   = new Double((event.getY() -2) / this.fieldSize).intValue();
-            try{
-                renderMap(mapVisualisationFactory.createMapVisualisation(mapController.switchPassable(x,y)));
+
+    /* ------- Mode Setter ------- */
+
+    private void setEditMapMode(){
+        this.mapVisualisationHolder.setOnMouseClickedCallback((x,y) -> {
+            try {
+                this.mapVisualisationHolder.setMap(this.mapController.switchPassable(x,y));
             } catch (InvalidCoordinateException e) {
                 e.printStackTrace();
-                //Todo: mapCanvas.setOnMouseClicked - InvalidCoordinateException
+                //Todo: setEditMapMode.mapConroller.switchPassable - InvalidCoordinateException
             }
         });
-
-        mapCanvas.setOnScroll(event -> {
-            if(event.getDeltaY()==0)                return;
-            if(event.getDeltaY()>0)                 this.fieldSize  += ZOOM_FACTOR;
-            if(event.getDeltaY()<0 && fieldSize>2)  this.fieldSize  -= ZOOM_FACTOR;
-            renderMap(this.mapVisualisationHolder);
-        });
-    }
-
-
-    /* ------- Helper ------- */
-
-    private void renderMap(MapVisualisation mapVisualisation) {
-        this.mapVisualisationHolder = mapVisualisation;
-        GraphicsContext gc = mapCanvas.getGraphicsContext2D();
-        mapCanvas.setWidth(this.fieldSize*mapVisualisation.getXDim() +1);
-        mapCanvas.setHeight(this.fieldSize*mapVisualisation.getYDim() +1);
-
-        gc.setFill(Paint.valueOf("#212121"));
-        gc.fillRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
-
-        for(int x=0;x<mapVisualisation.getXDim();x++){
-            for(int y=0;y<mapVisualisation.getYDim();y++){
-                try {
-                    gc.setFill(mapVisualisation.getColor(x,y));
-                } catch (InvalidCoordinateException e) {
-                    e.printStackTrace();
-                    //Todo: ApplicationController.renderMap - InvalidCoordinateException
-                }
-                gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize -1, this.fieldSize - 1);
-            }
-        }
     }
 }
