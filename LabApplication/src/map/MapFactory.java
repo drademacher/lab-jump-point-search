@@ -32,6 +32,26 @@ class MapFactory {
         return map;
     }
 
+    public Map createMazeMap(int xDim, int yDim) throws MapInitialisationException {
+        return new Map(xDim,yDim,false);
+    }
+
+    public Map createMazeRoomMap(int xDim, int yDim) throws MapInitialisationException {
+        return new Map(xDim,yDim,false);
+    }
+
+    public Map createSingleRoomMap(int xDim, int yDim) throws MapInitialisationException {
+        return new Map(xDim,yDim,false);
+    }
+
+    public Map createDoubleRoomMap(int xDim, int yDim) throws MapInitialisationException {
+        return new Map(xDim,yDim,false);
+    }
+
+    public Map createLoopRoomMap(int xDim, int yDim) throws MapInitialisationException {
+        return new Map(xDim,yDim,false);
+    }
+
     Map loadMap(File file) throws MapInitialisationException {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -52,25 +72,5 @@ class MapFactory {
         } catch(Exception e){
             throw new MapInitialisationException();
         }
-    }
-
-    public Map createMazeMap(int xDim, int yDim) throws MapInitialisationException {
-        return new Map(xDim,yDim,false);
-    }
-
-    public Map createMazeRoomMap(int xDim, int yDim) throws MapInitialisationException {
-        return new Map(xDim,yDim,false);
-    }
-
-    public Map createSingleRoomMap(int xDim, int yDim) throws MapInitialisationException {
-        return new Map(xDim,yDim,false);
-    }
-
-    public Map createDoubleRoomMap(int xDim, int yDim) throws MapInitialisationException {
-        return new Map(xDim,yDim,false);
-    }
-
-    public Map createLoopRoomMap(int xDim, int yDim) throws MapInitialisationException {
-        return new Map(xDim,yDim,false);
     }
 }

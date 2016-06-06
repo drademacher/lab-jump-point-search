@@ -21,6 +21,9 @@
                     </Menu>
                     <MenuItem fx:id="openMapMenuItem" mnemonicParsing="false" text="Open" />
                 </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <MenuItem fx:id="editMapMenuItem" mnemonicParsing="false" text="Edit Map" />
+                </Menu>
             </menus>
         </MenuBar>
     </top>

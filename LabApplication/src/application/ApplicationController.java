@@ -22,10 +22,13 @@ import java.util.ResourceBundle;
 public class ApplicationController implements Initializable {
 
     @FXML
-    private MenuItem emptyMapMenuItem, randomMapMenuItem, openMapMenuItem;
+    private MenuItem emptyMapMenuItem, randomMapMenuItem, mazeMapMenuItem, mazeRoomMapMenuItem, singleRoomMapMenuItem, doubleRoomMapMenuItem, loopRoomMapMenuItem;
 
     @FXML
-    private MenuItem mazeMapMenuItem, mazeRoomMapMenuItem, singleRoomMapMenuItem, doubleRoomMapMenuItem, loopRoomMapMenuItem;
+    private MenuItem openMapMenuItem;
+
+    @FXML
+    private MenuItem editMapMenuItem;
 
     @FXML
     private Canvas mapCanvas;
@@ -46,12 +49,13 @@ public class ApplicationController implements Initializable {
         //Init Menu
         initEmptyMapMenuItem();
         initRandomMapMenuItem();
-        initOpenMapMenuItem();
         initMazeMapMenuItem();
         initMazeRoomMapMenuItem();
         initSingleRoomMapMenuItem();
         initDoubleRoomMapMenuItem();
         initLoopRoomMapMenuItem();
+        initOpenMapMenuItem();
+        initEditMapMenuItem();
 
         //Init mapVisualisationHolder
         this.mapVisualisationHolder = new MapVisualisationHolder(this.mapCanvas);
@@ -165,6 +169,12 @@ public class ApplicationController implements Initializable {
                     //Todo: openMapMenuItem.setOnAction - MapInitialisationException
                 }
             }
+        });
+    }
+
+    private void initEditMapMenuItem(){
+        editMapMenuItem.setOnAction(event -> {
+            setEditMapMode();
         });
     }
 

@@ -23,11 +23,6 @@ public class MapController {
         return this.map;
     }
 
-    public MapFacade loadMap(File file) throws MapInitialisationException {
-        this.map    = mapFactory.loadMap(file);
-        return this.map;
-    }
-
     public MapFacade setMazeMap(int xDim, int yDim) throws MapInitialisationException {
         this.map    = mapFactory.createMazeMap(xDim,yDim);
         return this.map;
@@ -50,6 +45,11 @@ public class MapController {
 
     public MapFacade setLoopRoomMap(int xDim, int yDim) throws MapInitialisationException {
         this.map    = mapFactory.createLoopRoomMap(xDim,yDim);
+        return this.map;
+    }
+
+    public MapFacade loadMap(File file) throws MapInitialisationException {
+        this.map    = mapFactory.loadMap(file);
         return this.map;
     }
 

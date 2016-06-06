@@ -28,6 +28,7 @@ public class MapVisualisationHolder {
             if(event.getDeltaY()==0)  return;
             if(event.getDeltaY()>0 && fieldSize+ZOOM_FACTOR<=ZOOM_MAX)  this.fieldSize  += ZOOM_FACTOR;
             if(event.getDeltaY()<0 && fieldSize-ZOOM_FACTOR>=ZOOM_MIN)  this.fieldSize  -= ZOOM_FACTOR;
+            //Todo: große Maps können ab einer bestimmten FIELD_SIZE nicht mehr angezeigt werden, der Versuch führt zu einer RuntimeException
             renderMap();
         });
 
@@ -44,6 +45,7 @@ public class MapVisualisationHolder {
 
     void setMap(MapFacade map){
         this.map    = map;
+        //Todo: große Maps können ab einer bestimmten FIELD_SIZE nicht mehr angezeigt werden, der Versuch führt zu einer RuntimeException
         renderMap();
     }
 
