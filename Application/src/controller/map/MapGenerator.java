@@ -11,25 +11,23 @@ import java.util.Random;
  */
 
 public class MapGenerator {
-    // class constants
-    private int ROOM_LIMIT = 300;
-    private final int[][] NEIGHS_ALL = new int[][] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
-    // final int[][] NEIGHS_ODD = new int[][] { { 2, 0 }, { -2, 0 }, { 0, 2 }, { 0, -2 } };
-
-    // class members
+    // TODO: remove in final version
+    // private int ROOM_LIMIT = 300;
+    private final Random RAND = new Random();
+    // TODO: keep this constant
+    private final int[][] NEIGHS_ALL = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    // TODO: remove those members
     private int n;
     private int m;
-    // private Field[][] map;
     private Map map;
-    private boolean[][] room;
-    private Random rnd;
-    private Room[] rooms;
-    private int roomNum = 0;
-    private ArrayList<int[]> floors;
+    private int[][] rooms;
+    private boolean[][] isRoom;
+
 
     private void init(int n, int m) throws NotAFieldException {
         map = new Map(n, m);
-        room = new boolean[n][m];
+        isRoom = new boolean[n][m];
+
 
         for (int x = 0; x < n; x++) {
             for (int y = 0; y < m; y++) {
@@ -41,16 +39,14 @@ public class MapGenerator {
         this.n = n - (n + 1) % 2;
         this.m = m - (m + 1) % 2;
 
-        // get random object
-        rnd = new Random();
     }
 
     private boolean isFloor(int x, int y) throws NotAFieldException {
-        return map.getField(x, y).getFieldType().equals(FieldType.GRID_POINT) && !room[x][y];
+        return map.getField(x, y).getFieldType().equals(FieldType.GRID_POINT) && !isRoom[x][y];
     }
 
     private boolean isRoom(int x, int y) throws NotAFieldException {
-        return map.getField(x, y).getFieldType().equals(FieldType.GRID_POINT) && room[x][y];
+        return map.getField(x, y).getFieldType().equals(FieldType.GRID_POINT) && isRoom[x][y];
     }
 
     private boolean isObstacle(int x, int y) throws NotAFieldException {
@@ -58,100 +54,84 @@ public class MapGenerator {
     }
 
 
-
-    public Map genMaze(int n, int m) throws NotAFieldException {
+    Map genMaze(int n, int m) throws NotAFieldException {
         // init structure
         init(n, m);
 
         // gen maze with no dead ends at first
-        genFloors(ccFromNoRooms());
-
-        // complete floors computation for all layouts
-        completeFloors();
+        genFloors(CCEmpty());
 
         return map;
     }
 
 
-    public Map genMazeWithRooms(int n, int m) throws NotAFieldException {
+    Map genMazeWithRooms(int n, int m) throws NotAFieldException {
         // init structure
         init(n, m);
 
         // gen rooms
-        genRooms(5);
+        // TODO: user input for isRoom number upper bound!
+        int roomNum = genRooms(5);
 
         // gen maze with no dead ends at first
-        genFloors(ccFromAllRooms());
-
-        // complete floors computation for all layouts
-        completeFloors();
+        genFloors(CCEachRoom(roomNum));
 
         return map;
     }
 
 
-    public Map genSingleConnRooms(int n, int m) throws NotAFieldException {
+    Map genSingleConnRooms(int n, int m) throws NotAFieldException {
         // init structure
         init(n, m);
 
         // gen rooms
-        genRooms(ROOM_LIMIT);
+        int roomNum = genRooms();
 
         // gen maze with no dead ends at first
-        genFloors(ccFromAllRooms());
-        clearDeadends();
-
-        // complete floors computation for all layouts
-        completeFloors();
+        genFloors(CCEachRoom(roomNum));
+        clearDeadEndFloors();
 
         return map;
     }
 
 
-    public Map genLoopedRooms(int n, int m) throws NotAFieldException {
+    Map genLoopedRooms(int n, int m) throws NotAFieldException {
         // init structure
         init(n, m);
 
         // gen rooms
-        genRooms(ROOM_LIMIT);
+        int roomNum = genRooms();
 
         // gen maze with no dead ends at first
-        genFloors(ccFromAllRooms());
-        clearDeadends();
+        genFloors(CCEachRoom(roomNum));
+        clearDeadEndFloors();
 
         // add another maze for loops
-        genFloors(ccFromEndRooms());
+        genFloors(CCEachDeadEndRoom(roomNum));
 
         // remove the dead ends finally
-        clearDeadends();
-
-        // complete floors computation for all layouts
-        completeFloors();
+        clearDeadEndFloors();
 
         return map;
     }
 
 
-
-    public Map genDoubleConnRooms(int n, int m) throws NotAFieldException {
+    Map genDoubleConnRooms(int n, int m) throws NotAFieldException {
         // init structure
         init(n, m);
 
         // gen rooms
-        genRooms(ROOM_LIMIT);
+        int roomNum = genRooms();
 
         // gen maze with no dead ends at first
-        genFloors(ccFromAllRooms());
-        clearDeadends();
+        genFloors(CCEachRoom(roomNum));
+        clearDeadEndFloors();
 
         // add another maze for loops
-        genFloors(ccFromAllRooms());
+        genFloors(CCEachRoom(roomNum));
 
         // remove the dead ends finally
-        clearDeadends();
-
-        // complete floors computation for all layouts
-        completeFloors();
+        clearDeadEndFloors();
 
         return map;
     }
@@ -160,29 +140,35 @@ public class MapGenerator {
      * internal function which generated a random number of rooms the limit is
      * just an upper bound and its not expected to be reached
      */
-    private MapGenerator genRooms(int limit) throws NotAFieldException {
-        // init room super array
-        rooms = new Room[limit];
+    private int genRooms() throws NotAFieldException {
+        return genRooms(n * m / 25);
+    }
+
+    private int genRooms(int limit) throws NotAFieldException {
+        // init isRoom super array
+        rooms = new int[limit][4];
 
         // declare vars
         int xLen, yLen, xStart, yStart;
 
-        // try to put up a new room in each iteration
+        int roomNum = 0;
+
+        // try to put up a new isRoom in each iteration
         for (int i = 0; i < limit; i++) {
-            // make sure to have valid room sizes
+            // make sure to have valid isRoom sizes
             // random num n transforms into 2n+1 -> odd
             do {
-                xLen = (int) (4 + 2 * rnd.nextGaussian());
+                xLen = (int) (4 + 2 * RAND.nextGaussian());
                 xLen = 2 * xLen + 1;
-                yLen = (int) (4 + 2 * rnd.nextGaussian());
+                yLen = (int) (4 + 2 * RAND.nextGaussian());
                 yLen = 2 * yLen + 1;
             } while (xLen < 4 || yLen < 4);
 
             // gen a position in the level
             // increment number if its even -> odd
-            xStart = rnd.nextInt(n - xLen);
+            xStart = RAND.nextInt(n - xLen);
             xStart = xStart + (xStart + 1) % 2;
-            yStart = rnd.nextInt(m - yLen);
+            yStart = RAND.nextInt(m - yLen);
             yStart = yStart + (yStart + 1) % 2;
 
             // check whether the position is valid
@@ -190,35 +176,30 @@ public class MapGenerator {
                 continue;
             }
 
-            // place room
-            setNewRoom(xStart, xLen, yStart, yLen);
+            // place isRoom
+            for (int x = xStart; x < xStart + xLen; x++) {
+                for (int y = yStart; y < yStart + yLen; y++) {
+                    try {
+                        map.setField(x, y);
+                    } catch (NotAFieldException e) {
+                        e.printStackTrace();
+                    }
+                    isRoom[x][y] = true;
+                }
+            }
 
-            // insert room into memory
-            rooms[roomNum] = new Room(xStart, xLen, yStart, yLen);
+            // insert isRoom into memory
+            rooms[roomNum] = new int[]{xStart, yStart, xLen, yLen};
             roomNum++;
 
         }
 
         // return updated builder object
-        return this;
-    }
-
-    private void setNewRoom(int xStart, int xLen, int yStart, int yLen) {
-        for (int x = xStart; x < xStart + xLen; x++) {
-            for (int y = yStart; y < yStart + yLen; y++) {
-                try {
-                    map.setField(x, y);
-                } catch (NotAFieldException e) {
-                    e.printStackTrace();
-                }
-                room[x][y] = true;
-            }
-        }
+        return roomNum;
     }
 
     /**
-     * helper function to check for valid room coordinates
-     *
+     * helper function to check for valid isRoom coordinates
      */
     private boolean checkRoom(int xStart, int yStart, int xLen, int yLen) throws NotAFieldException {
         // be sure to only check for odd numbers (xStart, yStart are odd)
@@ -240,24 +221,30 @@ public class MapGenerator {
     }
 
     /**
-     * create a disjoint set with a connected component for each room
-     *
-     * @return
+     * create a disjoint set with no connected components at all
      */
-    private DisjointSet<Field> ccFromAllRooms() throws NotAFieldException {
+    private DisjointSet<Field> CCEmpty() {
+        return new DisjointSet<>();
+    }
+    
+    /**
+     * create a disjoint set with a connected component for each isRoom
+     */
+    private DisjointSet<Field> CCEachRoom(int roomNum) throws NotAFieldException {
         // create connected compontents
         DisjointSet<Field> cc = new DisjointSet<>();
 
-        for (int i = 0; i < roomNum; i++) {
-            cc.makeSet(map.getField(rooms[i].getXStart(), rooms[i].getYStart()));
 
-            for (int x = rooms[i].getXStart(); x < rooms[i].getXStart() + rooms[i].getXLen(); x += 2) {
-                for (int y = rooms[i].getYStart(); y < rooms[i].getYStart() + rooms[i].getYLen(); y += 2) {
-                    if (x == rooms[i].getXStart() && y == rooms[i].getYStart())
+        for (int i = 0; i < roomNum; i++) {
+            cc.makeSet(map.getField(rooms[i][0], rooms[i][1]));
+
+            for (int x = rooms[i][0]; x < rooms[i][0] + rooms[i][2]; x += 2) {
+                for (int y = rooms[i][1]; y < rooms[i][1] + rooms[i][3]; y += 2) {
+                    if (x == rooms[i][0] && y == rooms[i][1])
                         continue;
 
                     cc.makeSet(map.getField(x, y));
-                    cc.union(map.getField(rooms[i].getXStart(), rooms[i].getYStart()), map.getField(x, y));
+                    cc.union(map.getField(rooms[i][0], rooms[i][1]), map.getField(x, y));
                 }
             }
         }
@@ -266,20 +253,19 @@ public class MapGenerator {
     }
 
     /**
-     * create a disjoint set with a connected component for each room
-     *
-     * @return
+     * create a disjoint set with a connected component for each isRoom
      */
-    private DisjointSet<Field> ccFromEndRooms() throws NotAFieldException {
+    private DisjointSet<Field> CCEachDeadEndRoom(int roomNum) throws NotAFieldException {
         // add for rooms which only one floor connection a connected component
         DisjointSet<Field> cc = new DisjointSet<>();
 
+
         for (int i = 0; i < roomNum; i++) {
             // declare variables
-            final int xStart = rooms[i].getXStart(), xLen = rooms[i].getXLen(), yStart = rooms[i].getYStart(),
-                    yLen = rooms[i].getYLen();
+            final int xStart = rooms[i][0], xLen = rooms[i][2], yStart = rooms[i][1],
+                    yLen = rooms[i][3];
 
-            // check if room only has one floor connection
+            // check if isRoom only has one floor connection
             int count = 0;
             for (int x = 0; x < xLen; x++) {
                 if (isFloor(xStart + x, yStart - 1))
@@ -297,12 +283,12 @@ public class MapGenerator {
                     count++;
             }
 
-            // skip the room on break condition
+            // skip the isRoom on break condition
             if (count > 1) {
                 continue;
             }
 
-            // create a connected component for each room
+            // create a connected component for each isRoom
             cc.makeSet(map.getField(xStart, yStart));
             for (int x = xStart; x < xStart + xLen; x += 2) {
                 for (int y = yStart; y < yStart + yLen; y += 2) {
@@ -318,22 +304,12 @@ public class MapGenerator {
         return cc;
     }
 
-    /**
-     * create a disjoint set with no connected components at all
-     *
-     * @return
-     */
-    private DisjointSet<Field> ccFromNoRooms() {
-        return new DisjointSet<>();
-    }
 
     /**
      * internal function to generate a maze around the rooms
-     *
-     * this is done by a floodfill algorithm instead of some overengineering
+     * <p>
+     * this is done by a FloodFill algorithm instead of some over engineering
      * with MST
-     *
-     * @return
      */
     private void genFloors(DisjointSet<Field> cc) throws NotAFieldException {
         ArrayList<int[]> q = new ArrayList<>();
@@ -343,20 +319,20 @@ public class MapGenerator {
                 // fill in fixed cells on odd / odd coordinates
                 if (isObstacle(i, j)) {
                     map.setField(i, j);
-                    room[i][j] = false;
+                    isRoom[i][j] = false;
                     cc.makeSet(map.getField(i, j));
                 }
 
-                // queue neighbours when one corner is not a room
-                if (i + 2 < n && !isRoom(i+1, j))
-                    q.add(new int[] { i, j, i + 2, j });
-                if (j + 2 < m && !isRoom(i, j+1))
-                    q.add(new int[] { i, j, i, j + 2 });
+                // queue neighbours when one corner is not a isRoom
+                if (i + 2 < n && !isRoom(i + 1, j))
+                    q.add(new int[]{i, j, i + 2, j});
+                if (j + 2 < m && !isRoom(i, j + 1))
+                    q.add(new int[]{i, j, i, j + 2});
             }
         }
 
         // choose connector in a random order
-        Collections.shuffle(q);
+        Collections.shuffle(q, RAND);
 
         for (int[] e : q) {
             // rename array
@@ -375,21 +351,19 @@ public class MapGenerator {
             // merge two components by adding a connector
             cc.union(map.getField(x1, y1), map.getField(x2, y2));
             map.setField((x1 + x2) / 2, (y1 + y2) / 2);
-            room[(x1 + x2) / 2][(y1 + y2) / 2] = false;
+            isRoom[(x1 + x2) / 2][(y1 + y2) / 2] = false;
         }
     }
 
     /**
      * internal function which deletes all dead ends of a maze
-     *
-     * @return
      */
-    private void clearDeadends() throws NotAFieldException {
+    private void clearDeadEndFloors() throws NotAFieldException {
         int count;
         boolean repeat = true, deadend[][];
 
         while (repeat) {
-            // fresh inits for single execution of elemination
+            // fresh init for single execution of elimination
             deadend = new boolean[n][m];
             repeat = false;
 
@@ -418,30 +392,10 @@ public class MapGenerator {
                 for (int y = 0; y < m; y++) {
                     if (deadend[x][y]) {
                         map.setObstacle(x, y);
-                        room[x][y] = false;
+                        isRoom[x][y] = false;
                     }
                 }
             }
         }
-    }
-
-    /**
-     * internal helper function
-     */
-    private void completeFloors() throws NotAFieldException {
-        // create new array
-        floors = new ArrayList<>();
-
-        // fill in all the floor cells
-        for (int i = 1; i < n; i += 2) {
-            for (int j = 1; j < m; j += 2) {
-                if (isFloor(i, j)) {
-                    floors.add(new int[] { i, j });
-                }
-            }
-        }
-
-        // spawn points is a random permuation
-        Collections.shuffle(floors);
     }
 }
