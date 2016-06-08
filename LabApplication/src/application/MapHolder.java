@@ -5,6 +5,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import map.MapFacade;
+import shortestpath.ShortestPathFacade;
+import util.Tuple2;
 
 import static application.ApplicationConstants.*;
 import static application.FieldVisualisation.*;
@@ -43,8 +45,7 @@ public class MapHolder {
         renderMap();
     }
 
-    void switchPassable(MapFacade map, int x, int y){
-        this.map    = map;
+    void switchPassable(int x, int y){
         try {
             renderField(x,y,map.isPassable(x,y)?GRID_POINT:OBSTACLE_POINT);
         } catch (InvalidCoordinateException e) {
@@ -61,7 +62,16 @@ public class MapHolder {
         renderField(x,y,GOAL_POINT);
     }
 
-    /* ------- Setter ------- */
+    void setShortestPath(ShortestPathFacade shortestPath){
+        for(Tuple2<Integer,Integer> jumpPoint:shortestPath.getJumppoints()){
+            renderField(jumpPoint.getArg1(),jumpPoint.getArg2(),JUMP_POINT);
+        }
+        for(Tuple2<Integer,Integer> visitedPoint:shortestPath.getVisitedPoints()){
+            renderField(visitedPoint.getArg1(),visitedPoint.getArg2(),VISITED_POINT);
+        }
+    }
+
+    /* ------- Getter & Setter ------- */
 
 
     void setMap(MapFacade map){
@@ -72,9 +82,6 @@ public class MapHolder {
     void setOnMouseClickedCallback(OnMouseClickedCallback callback){
         this.onMouseClickedCallback = callback;
     }
-
-
-    /* ------- Getter ------- */
 
     boolean isPassable(int x, int y) throws InvalidCoordinateException {
         return this.map.isPassable(x,y);

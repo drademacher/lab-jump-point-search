@@ -183,11 +183,7 @@ public class ApplicationController implements Initializable {
     private void initRunAStarMenuItem(){
         runAStarMenuItem.setOnAction(event -> {
             setSetStartGoalMode((xStart,yStart,xGoal,yGoal) -> {
-                System.out.println(xStart);
-                System.out.println(yStart);
-                System.out.println(xGoal);
-                System.out.println(yGoal);
-                //Todo: Run A* here
+                // Todo A*
             });
         });
     }
@@ -198,7 +194,8 @@ public class ApplicationController implements Initializable {
     private void setEditMapMode(){
         this.mapHolder.setOnMouseClickedCallback((x, y) -> {
             try {
-                this.mapHolder.switchPassable(this.mapController.switchPassable(x,y),x,y);
+                this.mapController.switchPassable(x,y);
+                this.mapHolder.switchPassable(x,y);
             } catch (InvalidCoordinateException e) {
                 e.printStackTrace();
                 //Todo: setEditMapMode.mapConroller.switchPassable - InvalidCoordinateException
