@@ -2,6 +2,9 @@ package map;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
+import shortestpath.ShortestPathAlgorithm;
+import shortestpath.ShortestPathAlgorithmFactory;
+import shortestpath.ShortestPathResult;
 
 import java.io.File;
 
@@ -9,6 +12,7 @@ public class MapController {
 
     private Map map;
     private MapFactory mapFactory = new MapFactory();
+    private ShortestPathAlgorithmFactory shortestPathAlgorithmFactory = new ShortestPathAlgorithmFactory();
 
 
     /* ------- Factory ------- */
@@ -58,5 +62,10 @@ public class MapController {
 
     public void switchPassable(int x, int y) throws InvalidCoordinateException {
         this.map.switchPassable(x,y);
+    }
+
+    public ShortestPathResult findShortestPathWithAStar(int xStart, int yStart, int xGoal, int yGoal){
+        ShortestPathAlgorithm aStar = shortestPathAlgorithmFactory.createAStar();
+        return aStar.findShortestPath(this.map,xStart,yStart,xGoal,yGoal);
     }
 }

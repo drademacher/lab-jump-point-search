@@ -183,7 +183,7 @@ public class ApplicationController implements Initializable {
     private void initRunAStarMenuItem(){
         runAStarMenuItem.setOnAction(event -> {
             setSetStartGoalMode((xStart,yStart,xGoal,yGoal) -> {
-                // Todo A*
+                this.mapHolder.setShortestPath(this.mapController.findShortestPathWithAStar(xStart,yStart,xGoal,yGoal));
             });
         });
     }

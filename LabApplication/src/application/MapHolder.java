@@ -5,7 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import map.MapFacade;
-import shortestpath.ShortestPathFacade;
+import shortestpath.ShortestPathResult;
 import util.Tuple2;
 
 import static application.ApplicationConstants.*;
@@ -62,13 +62,18 @@ public class MapHolder {
         renderField(x,y,GOAL_POINT);
     }
 
-    void setShortestPath(ShortestPathFacade shortestPath){
-        for(Tuple2<Integer,Integer> jumpPoint:shortestPath.getJumppoints()){
+    void setShortestPath(ShortestPathResult shortestPath){
+        for(Tuple2<Integer,Integer> jumpPoint:shortestPath.getOpenList()){
             renderField(jumpPoint.getArg1(),jumpPoint.getArg2(),JUMP_POINT);
         }
-        for(Tuple2<Integer,Integer> visitedPoint:shortestPath.getVisitedPoints()){
+        for(Tuple2<Integer,Integer> visitedPoint:shortestPath.getVisited()){
             renderField(visitedPoint.getArg1(),visitedPoint.getArg2(),VISITED_POINT);
         }
+        for(Tuple2<Integer,Integer> pathPoint:shortestPath.getShortestPath()){
+            renderField(pathPoint.getArg1(),pathPoint.getArg2(),PATH_POINT);
+        }
+        setStartPoint(shortestPath.getxStart(),shortestPath.getyStart());
+        setGoalPoint(shortestPath.getxGoal(),shortestPath.getyGoal());
     }
 
     /* ------- Getter & Setter ------- */
