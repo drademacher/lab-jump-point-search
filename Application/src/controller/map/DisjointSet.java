@@ -13,7 +13,7 @@
  *     Andrey Loskutov <loskutov@gmx.de> - generified interface, bug 462760
  ******************************************************************************/
 
-package grid;
+package controller.map;
 
 import java.util.HashMap;
 import java.util.Iterator;

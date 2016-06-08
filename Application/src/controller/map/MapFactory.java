@@ -1,7 +1,6 @@
 package controller.map;
 
-import grid.MapGenerator;
-import view.Global;
+import view.Consts;
 
 /**
  * Created by paloka on 30.05.16.
@@ -32,7 +31,7 @@ public class MapFactory {
         try {
             for (int x = 0; x < n; x++) {
                 for (int y = 0; y < m; y++) {
-                    if (Global.getInstance().rnd.nextDouble() <= prob) {
+                    if (Consts.rand.nextDouble() <= prob) {
                         //Todo: implement random singelton to obmit global
                         map.setObstacle(x, y);
                     }
@@ -43,22 +42,52 @@ public class MapFactory {
     }
 
     public static Map createMazeMap(int n, int m) {
-        return new MapGenerator(n, m, MapGenerator.Layout.MAZE).create();
+        try {
+            return new MapGenerator().genMaze(n, m);
+        } catch (NotAFieldException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static Map createMazeWithRoomsMap(int n, int m) {
-        return new MapGenerator(n, m, MapGenerator.Layout.MAZE_WITH_ROOMS).create();
+        try {
+            return new MapGenerator().genMazeWithRooms(n, m);
+        } catch (NotAFieldException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static Map createSingleConnRoomsMap(int n, int m) {
-        return new MapGenerator(n, m, MapGenerator.Layout.SINGLE_CONN_ROOMS).create();
+        try {
+            return new MapGenerator().genSingleConnRooms(n, m);
+        } catch (NotAFieldException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static Map createLoopedRoomsMap(int n, int m) {
-        return new MapGenerator(n, m, MapGenerator.Layout.LOOPED_ROOMS).create();
+        try {
+            return new MapGenerator().genLoopedRooms(n, m);
+        } catch (NotAFieldException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static Map createDoubleConnRoomsMap(int n, int m) {
-        return new MapGenerator(n, m, MapGenerator.Layout.DOUBLE_CONN_ROOMS).create();
+        try {
+            return new MapGenerator().genDoubleConnRooms(n, m);
+        } catch (NotAFieldException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
