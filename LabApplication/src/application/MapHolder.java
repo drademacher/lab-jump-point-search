@@ -17,6 +17,7 @@ import static application.FieldVisualisation.*;
 public class MapHolder {
 
     private MapFacade map;
+    private ShortestPathResult shortestPathResult;
 
     private Canvas canvas;
     private OnMouseClickedCallback onMouseClickedCallback;
@@ -42,6 +43,7 @@ public class MapHolder {
     }
 
     void refreshMap(){
+        this.shortestPathResult = null;
         renderMap();
     }
 
@@ -63,17 +65,8 @@ public class MapHolder {
     }
 
     void setShortestPath(ShortestPathResult shortestPath){
-        for(Tuple2<Integer,Integer> jumpPoint:shortestPath.getOpenList()){
-            renderField(jumpPoint.getArg1(),jumpPoint.getArg2(),JUMP_POINT);
-        }
-        for(Tuple2<Integer,Integer> visitedPoint:shortestPath.getVisited()){
-            renderField(visitedPoint.getArg1(),visitedPoint.getArg2(),VISITED_POINT);
-        }
-        for(Tuple2<Integer,Integer> pathPoint:shortestPath.getShortestPath()){
-            renderField(pathPoint.getArg1(),pathPoint.getArg2(),PATH_POINT);
-        }
-        setStartPoint(shortestPath.getxStart(),shortestPath.getyStart());
-        setGoalPoint(shortestPath.getxGoal(),shortestPath.getyGoal());
+        this.shortestPathResult = shortestPath;
+        renderShortestPathResult();
     }
 
     /* ------- Getter & Setter ------- */
@@ -115,6 +108,22 @@ public class MapHolder {
                 }
             }
         }
+        renderShortestPathResult();
+    }
+
+    private void renderShortestPathResult(){
+        if(shortestPathResult == null)  return;
+        for(Tuple2<Integer,Integer> jumpPoint:this.shortestPathResult.getOpenList()){
+            renderField(jumpPoint.getArg1(),jumpPoint.getArg2(),JUMP_POINT);
+        }
+        for(Tuple2<Integer,Integer> visitedPoint:this.shortestPathResult.getVisited()){
+            renderField(visitedPoint.getArg1(),visitedPoint.getArg2(),VISITED_POINT);
+        }
+        for(Tuple2<Integer,Integer> pathPoint:this.shortestPathResult.getShortestPath()){
+            renderField(pathPoint.getArg1(),pathPoint.getArg2(),PATH_POINT);
+        }
+        setStartPoint(this.shortestPathResult.getxStart(),this.shortestPathResult.getyStart());
+        setGoalPoint(this.shortestPathResult.getxGoal(),this.shortestPathResult.getyGoal());
     }
 
     private void renderField(int x, int y, FieldVisualisation field) {

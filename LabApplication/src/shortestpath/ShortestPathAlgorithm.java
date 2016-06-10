@@ -34,11 +34,11 @@ public abstract class ShortestPathAlgorithm {
                         openList.stream().map(entry -> entry.getArg1()).collect(Collectors.toList()),
                         pathPredecessors);
             }
-            openList.addAll(getOpenListCandidates(map,currentPoint).stream().filter(candidate -> pathPredecessors.get(candidate) == null).map(candidate -> new Tuple3<>(candidate, currentPoint, current.getArg3()+1/*Todo: hier kommt die heutristic rein*/)).collect(Collectors.toList()));
+            openList.addAll(getOpenListCandidates(map,currentPoint).stream().filter(candidate -> pathPredecessors.get(candidate) == null).map(candidate -> new Tuple3<>(candidate.getArg1(), currentPoint, current.getArg3()+candidate.getArg2()/*Todo: hier kommt die heutristic rein*/)).collect(Collectors.toList()));
         }
         //Todo: throw NoPathFoundException
         throw new NullPointerException("No Path");
     }
 
-    protected abstract Collection<Tuple2<Integer,Integer>> getOpenListCandidates(MapFacade map, Tuple2<Integer,Integer> point);
+    protected abstract Collection<Tuple2<Tuple2<Integer,Integer>,Double>> getOpenListCandidates(MapFacade map, Tuple2<Integer,Integer> point);
 }
