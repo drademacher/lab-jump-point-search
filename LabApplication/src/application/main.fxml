@@ -23,6 +23,15 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <MenuItem fx:id="editMapMenuItem" mnemonicParsing="false" text="Edit Map" />
+                    <Menu mnemonicParsing="false" text="Heuristic">
+                        <RadioMenuItem fx:id="zeroHeuristicMenuItem" mnemonicParsing="false" text="Zero Heuristic">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="heuristicToggleGroup"/>
+                            </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem fx:id="gridHeuristicMenuItem" mnemonicParsing="false" text="Grid Heuristic" toggleGroup="$heuristicToggleGroup" />
+                        <RadioMenuItem fx:id="euclideanHeuristicMenuItem" mnemonicParsing="false" text="Euclidean Heuristic" toggleGroup="$heuristicToggleGroup" />
+                    </Menu>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Run">
                     <MenuItem fx:id="runAStarMenuItem" mnemonicParsing="false" text="A-Star" />

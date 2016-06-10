@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import map.MapController;
@@ -31,6 +33,12 @@ public class ApplicationController implements Initializable {
     private MenuItem editMapMenuItem;
 
     @FXML
+    private ToggleGroup heuristicToggleGroup;
+
+    @FXML
+    private RadioMenuItem zeroHeuristicMenuItem, euclideanHeuristicMenuItem, gridHeuristicMenuItem;
+
+    @FXML
     private MenuItem runAStarMenuItem;
 
     @FXML
@@ -39,7 +47,7 @@ public class ApplicationController implements Initializable {
     private Stage primaryStage;
     private MapHolder mapHolder;
 
-    private MapController mapController = new MapController();
+    private MapController mapController;
 
     private DialogExecuter dialogExecuter = new DialogExecuter();
 
@@ -48,6 +56,9 @@ public class ApplicationController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.primaryStage   = (Stage) resources.getObject(null);
+
+        //Init mapController;
+        this.mapController  = new MapController();
 
         //Init mapHolder
         this.mapHolder = new MapHolder(this.mapCanvas);
@@ -62,6 +73,7 @@ public class ApplicationController implements Initializable {
         initLoopRoomMapMenuItem();
         initOpenMapMenuItem();
         initEditMapMenuItem();
+        initHeuristicToggleGroup();
         initRunAStarMenuItem();
     }
 
@@ -178,6 +190,15 @@ public class ApplicationController implements Initializable {
 
     private void initEditMapMenuItem(){
         editMapMenuItem.setOnAction(event -> setEditMapMode());
+    }
+
+    private void initHeuristicToggleGroup() {
+        heuristicToggleGroup.selectedToggleProperty().addListener((ov,oldT,newT) -> {
+            if(newT==this.zeroHeuristicMenuItem)    this.mapController.setZeroHeuristic();
+            if(newT==this.gridHeuristicMenuItem)    this.mapController.setGridHeuristic();
+            if(newT==this.euclideanHeuristicMenuItem)    this.mapController.setEuclideanHeuristic();
+        });
+        this.heuristicToggleGroup.selectToggle(gridHeuristicMenuItem);
     }
 
     private void initRunAStarMenuItem(){

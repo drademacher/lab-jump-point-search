@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public abstract class ShortestPathAlgorithm {
 
-    public ShortestPathResult findShortestPath(MapFacade map, int xStart, int yStart, int xGoal, int yGoal){
+    public ShortestPathResult findShortestPath(MapFacade map, int xStart, int yStart, int xGoal, int yGoal, Heuristic heuristic){
         Map<Tuple2<Integer,Integer>,Tuple2<Integer,Integer>> pathPredecessors   = new HashMap<>();
 
         PriorityQueue<Tuple3<Tuple2<Integer,Integer>,Tuple2<Integer,Integer>,Double>> openList = new PriorityQueue<>((p, q) -> {
@@ -34,7 +34,7 @@ public abstract class ShortestPathAlgorithm {
                         openList.stream().map(entry -> entry.getArg1()).collect(Collectors.toList()),
                         pathPredecessors);
             }
-            openList.addAll(getOpenListCandidates(map,currentPoint).stream().filter(candidate -> pathPredecessors.get(candidate) == null).map(candidate -> new Tuple3<>(candidate.getArg1(), currentPoint, current.getArg3()+candidate.getArg2()/*Todo: hier kommt die heutristic rein*/)).collect(Collectors.toList()));
+            openList.addAll(getOpenListCandidates(map,currentPoint).stream().filter(candidate -> pathPredecessors.get(candidate) == null).map(candidate -> new Tuple3<>(candidate.getArg1(), currentPoint, current.getArg3()+candidate.getArg2()+heuristic.estimateDistance(candidate.getArg1().getArg1(),candidate.getArg1().getArg2(),xGoal,yGoal))).collect(Collectors.toList()));
         }
         //Todo: throw NoPathFoundException
         throw new NullPointerException("No Path");
