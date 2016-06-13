@@ -15,7 +15,14 @@ import util.Coordinate;
 import util.Tuple2;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -27,7 +34,7 @@ public class ApplicationController implements Initializable {
     private MenuItem emptyMapMenuItem, randomMapMenuItem, mazeMapMenuItem, mazeRoomMapMenuItem, singleRoomMapMenuItem, doubleRoomMapMenuItem, loopRoomMapMenuItem;
 
     @FXML
-    private MenuItem openMapMenuItem;
+    private MenuItem openMapMenuItem, saveMapMenuItem;
 
     @FXML
     private MenuItem editMapMenuItem;
@@ -72,6 +79,7 @@ public class ApplicationController implements Initializable {
         initDoubleRoomMapMenuItem();
         initLoopRoomMapMenuItem();
         initOpenMapMenuItem();
+        initSaveMapMenuItem();
         initEditMapMenuItem();
         initHeuristicToggleGroup();
         initRunAStarMenuItem();
@@ -183,6 +191,25 @@ public class ApplicationController implements Initializable {
                 } catch (MapInitialisationException e) {
                     e.printStackTrace();
                     //Todo: openMapMenuItem.setOnAction - MapInitialisationException
+                }
+            }
+        });
+    }
+
+    private void initSaveMapMenuItem() {
+        saveMapMenuItem.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Current Map");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Map Files", "*.map"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*"));
+            File selectedFile = fileChooser.showSaveDialog(this.primaryStage);
+            if (selectedFile != null) {
+                List<String> lines = Arrays.asList("type octile", "height x", "width y", "map");
+                try {
+                    Files.write(selectedFile.toPath(), lines, Charset.forName("UTF-8"));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });

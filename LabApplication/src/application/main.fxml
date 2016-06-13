@@ -23,6 +23,7 @@
                         </items>
                     </Menu>
                     <MenuItem fx:id="openMapMenuItem" mnemonicParsing="false" text="Open"/>
+                    <MenuItem fx:id="saveMapMenuItem" mnemonicParsing="false" text="Save"/>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <MenuItem fx:id="editMapMenuItem" mnemonicParsing="false" text="Edit Map"/>
