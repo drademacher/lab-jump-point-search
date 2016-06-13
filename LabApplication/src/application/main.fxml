@@ -3,29 +3,43 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ApplicationController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ApplicationController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <Menu mnemonicParsing="false" text="New">
                         <items>
-                            <MenuItem fx:id="emptyMapMenuItem" mnemonicParsing="false" text="Empty Map" />
-                            <MenuItem fx:id="randomMapMenuItem" mnemonicParsing="false" text="Random Map" />
-                            <MenuItem fx:id="mazeMapMenuItem" mnemonicParsing="false" text="Maze" />
-                            <MenuItem fx:id="mazeRoomMapMenuItem" mnemonicParsing="false" text="Maze with Rooms" />
-                            <MenuItem fx:id="singleRoomMapMenuItem" mnemonicParsing="false" text="Single connected Rooms" />
-                            <MenuItem fx:id="doubleRoomMapMenuItem" mnemonicParsing="false" text="Double connected Rooms" />
-                            <MenuItem fx:id="loopRoomMapMenuItem" mnemonicParsing="false" text="Rooms with loops" />
+                            <MenuItem fx:id="emptyMapMenuItem" mnemonicParsing="false" text="Empty Map"/>
+                            <MenuItem fx:id="randomMapMenuItem" mnemonicParsing="false" text="Random Map"/>
+                            <MenuItem fx:id="mazeMapMenuItem" mnemonicParsing="false" text="Maze"/>
+                            <MenuItem fx:id="mazeRoomMapMenuItem" mnemonicParsing="false" text="Maze with Rooms"/>
+                            <MenuItem fx:id="singleRoomMapMenuItem" mnemonicParsing="false"
+                                      text="Single connected Rooms"/>
+                            <MenuItem fx:id="doubleRoomMapMenuItem" mnemonicParsing="false"
+                                      text="Double connected Rooms"/>
+                            <MenuItem fx:id="loopRoomMapMenuItem" mnemonicParsing="false" text="Rooms with loops"/>
                         </items>
                     </Menu>
-                    <MenuItem fx:id="openMapMenuItem" mnemonicParsing="false" text="Open" />
+                    <MenuItem fx:id="openMapMenuItem" mnemonicParsing="false" text="Open"/>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
-                    <MenuItem fx:id="editMapMenuItem" mnemonicParsing="false" text="Edit Map" />
+                    <MenuItem fx:id="editMapMenuItem" mnemonicParsing="false" text="Edit Map"/>
+                    <Menu mnemonicParsing="false" text="Heuristic">
+                        <RadioMenuItem fx:id="zeroHeuristicMenuItem" mnemonicParsing="false" text="Zero Heuristic">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="heuristicToggleGroup"/>
+                            </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem fx:id="gridHeuristicMenuItem" mnemonicParsing="false" text="Grid Heuristic"
+                                       toggleGroup="$heuristicToggleGroup"/>
+                        <RadioMenuItem fx:id="euclideanHeuristicMenuItem" mnemonicParsing="false"
+                                       text="Euclidean Heuristic" toggleGroup="$heuristicToggleGroup"/>
+                    </Menu>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Run">
-                    <MenuItem fx:id="runAStarMenuItem" mnemonicParsing="false" text="A-Star" />
+                    <MenuItem fx:id="runAStarMenuItem" mnemonicParsing="false" text="A-Star"/>
                 </Menu>
             </menus>
         </MenuBar>
@@ -36,7 +50,7 @@
     <center>
         <StackPane>
             <children>
-                <Canvas fx:id="mapCanvas" />
+                <Canvas fx:id="mapCanvas"/>
             </children>
         </StackPane>
     </center>

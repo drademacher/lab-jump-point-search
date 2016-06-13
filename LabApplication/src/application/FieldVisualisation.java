@@ -12,7 +12,8 @@ enum FieldVisualisation {
     JUMP_POINT("#90C3D4"),
     START_POINT("#A1D490"),
     OBSTACLE_POINT("#454545"),
-    VISITED_POINT("#BABABA");
+    VISITED_POINT("#BABABA"),
+    PATH_POINT("#F2F20C");
 
     private Color color;
 

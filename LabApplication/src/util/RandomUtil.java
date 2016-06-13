@@ -9,8 +9,8 @@ public class RandomUtil {
 
     private static Random RANDOM;
 
-    public static double getRandomDouble(){
-        if(RANDOM==null)    RANDOM  = new Random();
+    public static double getRandomDouble() {
+        if (RANDOM == null) RANDOM = new Random();
         return RANDOM.nextDouble();
     }
 }

@@ -17,11 +17,11 @@ import java.util.Map;
 public class DialogExecuter {
 
     //Todo: Vll kann man auf die tupel verzichten, wenn man einfach callbacks übergibt, vll geht das sogar abstrahiert
-    Tuple2<Integer,Integer> executeMapDimensionDialog(String title){
-        ButtonType confirmButton  = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-        Map<String,TextField> fields    = new LinkedHashMap<>();
-        fields.put("xDim",new DimensionTextField().setWidth(55));
-        fields.put("yDim",new DimensionTextField().setWidth(55));
+    Tuple2<Integer, Integer> executeMapDimensionDialog(String title) {
+        ButtonType confirmButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        Map<String, TextField> fields = new LinkedHashMap<>();
+        fields.put("xDim", new DimensionTextField().setWidth(55));
+        fields.put("yDim", new DimensionTextField().setWidth(55));
 
         return executeDialog(title, confirmButton, fields, dialogButton -> {
             if (dialogButton == confirmButton) {
@@ -34,9 +34,9 @@ public class DialogExecuter {
     }
 
     //Todo: can we abstract executeRandomDialog on executeMapDimensionDialog, because its just one textfield more =(
-    Tuple3<Integer,Integer,Double> executeRandomMapDialog(){
-        ButtonType confirmButton  = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-        Map<String,TextField> fields    = new LinkedHashMap<>();
+    Tuple3<Integer, Integer, Double> executeRandomMapDialog() {
+        ButtonType confirmButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        Map<String, TextField> fields = new LinkedHashMap<>();
         fields.put("xDim", new DimensionTextField().setWidth(55));
         fields.put("yDim", new DimensionTextField().setWidth(55));
         fields.put("pPas", new ProbabilityTextField().setWidth(55));
@@ -55,19 +55,19 @@ public class DialogExecuter {
 
     /* ------- DialogExecuter ------- */
 
-    private <T> T executeDialog(String title, ButtonType confirmButton, Map<String,TextField> fields, Callback<ButtonType,T> callback){
-        Dialog<T> dialog    = new Dialog<>();
+    private <T> T executeDialog(String title, ButtonType confirmButton, Map<String, TextField> fields, Callback<ButtonType, T> callback) {
+        Dialog<T> dialog = new Dialog<>();
         dialog.setTitle(title);
-        dialog.getDialogPane().getButtonTypes().addAll(confirmButton,ButtonType.CANCEL);
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButton, ButtonType.CANCEL);
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setAlignment(Pos.CENTER);
         Iterator<String> labels = fields.keySet().iterator();
-        for(int i=0;labels.hasNext();i++){
-            String label    = labels.next();
-            gridPane.add(new Label(label),0,i);
-            gridPane.add(fields.get(label),1,i);
+        for (int i = 0; labels.hasNext(); i++) {
+            String label = labels.next();
+            gridPane.add(new Label(label), 0, i);
+            gridPane.add(fields.get(label), 1, i);
         }
         dialog.getDialogPane().setContent(gridPane);
         dialog.setResultConverter(callback);
@@ -77,7 +77,7 @@ public class DialogExecuter {
 
     /* ------- Data Types for Dialog Fields ------- */
 
-    private abstract class ValidatedTextField extends TextField{
+    private abstract class ValidatedTextField extends TextField {
         @Override
         public void replaceText(int start, int end, String text) {
             if (validate(text)) super.replaceText(start, end, text);
@@ -88,7 +88,7 @@ public class DialogExecuter {
             if (validate(text)) super.replaceSelection(text);
         }
 
-        public ValidatedTextField setWidth(int width){
+        public ValidatedTextField setWidth(int width) {
             this.setPrefWidth(width);
             return this;
         }
@@ -99,16 +99,16 @@ public class DialogExecuter {
     private class DimensionTextField extends ValidatedTextField {
         @Override
         protected boolean validate(String text) {
-            return (this.getText()+text).matches("[0-9]{0,3}");
+            return (this.getText() + text).matches("[0-9]{0,3}");
         }
     }
 
     private class ProbabilityTextField extends ValidatedTextField {
         @Override
         protected boolean validate(String text) {
-            String newText  = this.getText()+text;
-            if(newText.equals("0")) return true;
-            if(newText.equals("1")) return true;
+            String newText = this.getText() + text;
+            if (newText.equals("0")) return true;
+            if (newText.equals("1")) return true;
             return newText.matches("0\\.[0-9]{0,3}");
         }
     }

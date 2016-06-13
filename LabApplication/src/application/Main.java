@@ -16,8 +16,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader fxmlLoader   = new FXMLLoader();
-        ResourceBundle bundle   = new ResourceBundle() {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        ResourceBundle bundle = new ResourceBundle() {
             @Override
             protected Object handleGetObject(String key) {
                 return primaryStage;
