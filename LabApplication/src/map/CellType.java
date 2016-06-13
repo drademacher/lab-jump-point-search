@@ -3,7 +3,7 @@ package map;
 /**
  * Created by danny on 13.06.2016.
  */
-public class CeellType {
+public class CellType {
     private int val;
 
     public void setRoom() {

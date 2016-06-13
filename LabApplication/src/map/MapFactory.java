@@ -15,7 +15,6 @@ class MapFactory {
     private final int[][] NEIGHS_ALL = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     // TODO: remove those members
     private int[][] rooms;
-    private CeellType[][] map;
 
 
     Map createEmptyMap(int xDim, int yDim) throws MapInitialisationException {
@@ -41,118 +40,104 @@ class MapFactory {
 
     public Map createMazeMap(int xDim, int yDim) throws MapInitialisationException {
         // init structure
-        initCellType(xDim, yDim);
-
-        // design choice! ignore the last row / column if its even in the algorithm
-        xDim = xDim - (xDim + 1) % 2;
-        yDim = yDim - (yDim + 1) % 2;
+        CellType[][] map = initCellType(xDim, yDim);
 
         // gen maze with no dead ends at first
-        genFloors(xDim, yDim, CCEmpty());
+        genFloors(map, CCEmpty());
 
-        return close(xDim, yDim);
+        return close(map, xDim, yDim);
     }
 
     public Map createMazeRoomMap(int xDim, int yDim) throws MapInitialisationException {
         // init structure
-        initCellType(xDim, yDim);
-
-        // design choice! ignore the last row / column if its even in the algorithm
-        xDim = xDim - (xDim + 1) % 2;
-        yDim = yDim - (yDim + 1) % 2;
+        CellType[][] map = initCellType(xDim, yDim);
 
         // gen rooms
         // TODO: user input for isRoom number upper bound!
-        int roomNum = genRooms(xDim, yDim, 5);
+        int roomNum = genRooms(map, 5);
 
         // gen maze with no dead ends at first
-        genFloors(xDim, yDim, CCEachRoom(roomNum));
+        genFloors(map, CCEachRoom(map, roomNum));
 
-        return close(xDim, yDim);
+        return close(map, xDim, yDim);
     }
 
     public Map createSingleRoomMap(int xDim, int yDim) throws MapInitialisationException {
         // init structure
-        initCellType(xDim, yDim);
-
-        // design choice! ignore the last row / column if its even in the algorithm
-        xDim = xDim - (xDim + 1) % 2;
-        yDim = yDim - (yDim + 1) % 2;
+        CellType[][] map = initCellType(xDim, yDim);
 
         // gen rooms
-        int roomNum = genRooms(xDim, yDim);
+        int roomNum = genRooms(map);
 
         // gen maze with no dead ends at first
-        genFloors(xDim, yDim, CCEachRoom(roomNum));
-        clearDeadEndFloors(xDim, yDim);
+        genFloors(map, CCEachRoom(map, roomNum));
+        clearDeadEndFloors(map);
 
-        return close(xDim, yDim);
+        return close(map, xDim, yDim);
     }
 
     public Map createDoubleRoomMap(int xDim, int yDim) throws MapInitialisationException {
         // init structure
-        initCellType(xDim, yDim);
-
-        // design choice! ignore the last row / column if its even in the algorithm
-        xDim = xDim - (xDim + 1) % 2;
-        yDim = yDim - (yDim + 1) % 2;
+        CellType[][] map = initCellType(xDim, yDim);
 
         // gen rooms
-        int roomNum = genRooms(xDim, yDim);
+        int roomNum = genRooms(map);
 
         // gen maze with no dead ends at first
-        genFloors(xDim, yDim, CCEachRoom(roomNum));
-        clearDeadEndFloors(xDim, yDim);
+        genFloors(map, CCEachRoom(map, roomNum));
+        clearDeadEndFloors(map);
 
         // add another maze for loops
-        genFloors(xDim, yDim, CCEachRoom(roomNum));
+        genFloors(map, CCEachRoom(map, roomNum));
 
         // remove the dead ends finally
-        clearDeadEndFloors(xDim, yDim);
+        clearDeadEndFloors(map);
 
-        return close(xDim, yDim);
+        return close(map, xDim, yDim);
     }
 
     public Map createLoopRoomMap(int xDim, int yDim) throws MapInitialisationException {
         // init structure
-        initCellType(xDim, yDim);
+        CellType[][] map = initCellType(xDim, yDim);
 
+        // gen rooms
+        int roomNum = genRooms(map);
+
+        // gen maze with no dead ends at first
+        genFloors(map, CCEachRoom(map, roomNum));
+        clearDeadEndFloors(map);
+
+        // add another maze for loops
+        genFloors(map, CCEachDeadEndRoom(map, roomNum));
+
+        // remove the dead ends finally
+        clearDeadEndFloors(map);
+
+        return close(map, xDim, yDim);
+    }
+
+
+    private CellType[][] initCellType(int xDim, int yDim)  {
         // design choice! ignore the last row / column if its even in the algorithm
         xDim = xDim - (xDim + 1) % 2;
         yDim = yDim - (yDim + 1) % 2;
 
-        // gen rooms
-        int roomNum = genRooms(xDim, yDim);
-
-        // gen maze with no dead ends at first
-        genFloors(xDim, yDim, CCEachRoom(roomNum));
-        clearDeadEndFloors(xDim, yDim);
-
-        // add another maze for loops
-        genFloors(xDim, yDim, CCEachDeadEndRoom(roomNum));
-
-        // remove the dead ends finally
-        clearDeadEndFloors(xDim, yDim);
-
-        return close(xDim, yDim);
-    }
-
-
-    private void initCellType(int xDim, int yDim)  {
-        map = new CeellType[xDim][yDim];
+        CellType[][] map = new CellType[xDim][yDim];
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                map[x][y] = new CeellType();
+                map[x][y] = new CellType();
                 map[x][y].setObstacle();
             }
         }
+
+        return map;
     }
 
-    private Map close(int xDim, int yDim) throws MapInitialisationException {
-        Map res = new Map(xDim, yDim, true);
-        for (int x = 0; x < xDim; x++) {
-            for (int y = 0; y < yDim; y++) {
-                if (map[x][y].isObstacle()) try {
+    private Map close(CellType[][] map, int xDim, int yDim) throws MapInitialisationException {
+        Map res = new Map(xDim, yDim, false);
+        for (int x = 0; x < map.length; x++) {
+            for (int y = 0; y < map[0].length; y++) {
+                if (!map[x][y].isObstacle()) try {
                     res.switchPassable(x, y);
                 } catch (InvalidCoordinateException e) {
                     // TODO: no idea
@@ -167,11 +152,11 @@ class MapFactory {
      * internal function which generated a random number of rooms the limit is
      * just an upper bound and its not expected to be reached
      */
-    private int genRooms(int xDim, int yDim) {
-        return genRooms(xDim, yDim, xDim * yDim / 25);
+    private int genRooms(CellType[][] map) {
+        return genRooms(map, map.length * map[0].length / 25);
     }
 
-    private int genRooms(int xDim, int yDim, int limit) {
+    private int genRooms(CellType[][] map, int limit) {
         // init isRoom super array
         rooms = new int[limit][4];
 
@@ -193,13 +178,13 @@ class MapFactory {
 
             // gen a position in the level
             // increment number if its even -> odd
-            xStart = RandomUtil.getRandomInteger(xDim - xLen);
+            xStart = RandomUtil.getRandomInteger(map.length - xLen);
             xStart = xStart + (xStart + 1) % 2;
-            yStart = RandomUtil.getRandomInteger(yDim - yLen);
+            yStart = RandomUtil.getRandomInteger(map[0].length - yLen);
             yStart = yStart + (yStart + 1) % 2;
 
             // check whether the position is valid
-            if (!checkRoom(xDim, yDim, xStart, yStart, xLen, yLen)) {
+            if (!checkRoom(map, xStart, yStart, xLen, yLen)) {
                 continue;
             }
 
@@ -223,11 +208,11 @@ class MapFactory {
     /**
      * helper function to check for valid isRoom coordinates
      */
-    private boolean checkRoom(int xDim, int yDim, int xStart, int yStart, int xLen, int yLen) {
+    private boolean checkRoom(CellType[][] map, int xStart, int yStart, int xLen, int yLen) {
         // be sure to only check for odd numbers (xStart, yStart are odd)
         for (int i = 0; i <= xLen; i += 2) {
             for (int j = 0; j <= yLen; j += 2) {
-                if (xStart + i < 0 || xStart + i >= xDim - 1 || yStart + j < 0 || yStart + j >= yDim - 1) {
+                if (xStart + i < 0 || xStart + i >= map.length - 1 || yStart + j < 0 || yStart + j >= map[0].length - 1) {
                     return false;
                 }
 
@@ -245,16 +230,16 @@ class MapFactory {
     /**
      * create a disjoint set with no connected components at all
      */
-    private DisjointSet<CeellType> CCEmpty() {
+    private DisjointSet<CellType> CCEmpty() {
         return new DisjointSet<>();
     }
 
     /**
      * create a disjoint set with a connected component for each isRoom
      */
-    private DisjointSet<CeellType> CCEachRoom(int roomNum) {
+    private DisjointSet<CellType> CCEachRoom(CellType[][] map, int roomNum) {
         // create connected compontents
-        DisjointSet<CeellType> cc = new DisjointSet<>();
+        DisjointSet<CellType> cc = new DisjointSet<>();
 
 
         for (int i = 0; i < roomNum; i++) {
@@ -277,9 +262,9 @@ class MapFactory {
     /**
      * create a disjoint set with a connected component for each isRoom
      */
-    private DisjointSet<CeellType> CCEachDeadEndRoom(int roomNum) {
+    private DisjointSet<CellType> CCEachDeadEndRoom(CellType[][] map, int roomNum) {
         // add for rooms which only one floor connection a connected component
-        DisjointSet<CeellType> cc = new DisjointSet<>();
+        DisjointSet<CellType> cc = new DisjointSet<>();
 
 
         for (int i = 0; i < roomNum; i++) {
@@ -333,11 +318,11 @@ class MapFactory {
      * this is done by a FloodFill algorithm instead of some over engineering
      * with MST
      */
-    private void genFloors(int xDim, int yDim, DisjointSet<CeellType> cc) {
+    private void genFloors(CellType[][] map, DisjointSet<CellType> cc) {
         ArrayList<int[]> q = new ArrayList<>();
 
-        for (int i = 1; i < xDim; i += 2) {
-            for (int j = 1; j < yDim; j += 2) {
+        for (int i = 1; i < map.length; i += 2) {
+            for (int j = 1; j < map[0].length; j += 2) {
                 // fill in fixed cells on odd / odd coordinates
                 if (map[i][j].isObstacle()) {
                     map[i][j].setFloor();
@@ -345,9 +330,9 @@ class MapFactory {
                 }
 
                 // queue neighbours when one corner is not a isRoom
-                if (i + 2 < xDim && !map[i+1][j].isRoom())
+                if (i + 2 < map.length && !map[i+1][j].isRoom())
                     q.add(new int[]{i, j, i + 2, j});
-                if (j + 2 < yDim && !map[i][j + 1].isRoom())
+                if (j + 2 < map[0].length && !map[i][j + 1].isRoom())
                     q.add(new int[]{i, j, i, j + 2});
             }
         }
@@ -378,18 +363,18 @@ class MapFactory {
     /**
      * internal function which deletes all dead ends of a maze
      */
-    private void clearDeadEndFloors(int xDim, int yDim) {
+    private void clearDeadEndFloors(CellType[][] map) {
         int count;
         boolean repeat = true, deadend[][];
 
         while (repeat) {
             // fresh init for single execution of elimination
-            deadend = new boolean[xDim][yDim];
+            deadend = new boolean[map.length][map[0].length];
             repeat = false;
 
             // dead end iff 3 neighbours are walls
-            for (int x = 0; x < xDim; x++) {
-                for (int y = 0; y < yDim; y++) {
+            for (int x = 0; x < map.length; x++) {
+                for (int y = 0; y < map[0].length; y++) {
                     if (map[x][y].isObstacle()) {
                         continue;
                     }
@@ -408,8 +393,8 @@ class MapFactory {
             }
 
             // remove dead ends
-            for (int x = 0; x < xDim; x++) {
-                for (int y = 0; y < yDim; y++) {
+            for (int x = 0; x < map.length; x++) {
+                for (int y = 0; y < map[0].length; y++) {
                     if (deadend[x][y]) {
                         map[x][y].setObstacle();
                     }
