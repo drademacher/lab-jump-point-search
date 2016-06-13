@@ -11,19 +11,17 @@ import javafx.scene.control.ToggleGroup;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import map.MapController;
+import map.MapFacade;
 import util.Coordinate;
 import util.Tuple2;
-import util.Tuple3;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -198,6 +196,7 @@ public class ApplicationController implements Initializable {
     }
 
     private void initSaveMapMenuItem() {
+        // TODO: map access by a getter on MapHolder - is this the right way to do??
         saveMapMenuItem.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Current Map");
@@ -206,10 +205,24 @@ public class ApplicationController implements Initializable {
                     new FileChooser.ExtensionFilter("All Files", "*.*"));
             File selectedFile = fileChooser.showSaveDialog(this.primaryStage);
             if (selectedFile != null) {
-                List<String> lines = Arrays.asList("type octile", "height x", "width y", "map");
+                MapFacade map = mapHolder.getMap();
+                ArrayList<String> lines = new ArrayList<>();
+                lines.addAll(Arrays.asList("type octile", "height " + map.getYDim(), "width " + map.getXDim(), "map"));
+                String line;
+
                 try {
+                    for (int y = 0; y < map.getYDim(); y++) {
+                        line = "";
+                        for (int x = 0; x < map.getXDim(); x++) {
+                            line = line + (map.isPassable(new Coordinate(x, y)) ? "." : "T");
+                        }
+                        lines.add(line);
+                    }
+
                     Files.write(selectedFile.toPath(), lines, Charset.forName("UTF-8"));
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InvalidCoordinateException e) {
                     e.printStackTrace();
                 }
             }

@@ -77,6 +77,11 @@ public class MapHolder {
         //Todo: große Maps können ab einer bestimmten FIELD_SIZE nicht mehr angezeigt werden, der Versuch führt zu einer RuntimeException
     }
 
+    MapFacade getMap() {
+        // TODO: getter nur fürs speichern benutzt
+        return map;
+    }
+
     void setOnMouseClickedCallback(OnMouseClickedCallback callback) {
         this.onMouseClickedCallback = callback;
     }
@@ -137,7 +142,7 @@ public class MapHolder {
     }
 
 
-    /* ------- Callback CeellType ------- */
+    /* ------- Callback Type ------- */
 
     interface OnMouseClickedCallback {
         void call(Coordinate coordinate);
