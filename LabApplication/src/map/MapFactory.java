@@ -8,14 +8,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Created by paloka on 01.06.16.
- */
 class MapFactory {
     private final int[][] NEIGHS_ALL = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    // TODO: remove those members
-    private int[][] rooms;
-
 
     Map createEmptyMap(int xDim, int yDim) throws MapInitialisationException {
         return new Map(xDim, yDim, true);
@@ -38,7 +32,7 @@ class MapFactory {
         return map;
     }
 
-    public Map createMazeMap(int xDim, int yDim) throws MapInitialisationException {
+    Map createMazeMap(int xDim, int yDim) throws MapInitialisationException {
         // init structure
         CellType[][] map = initCellType(xDim, yDim);
 
@@ -48,47 +42,48 @@ class MapFactory {
         return close(map, xDim, yDim);
     }
 
-    public Map createMazeRoomMap(int xDim, int yDim) throws MapInitialisationException {
+    Map createMazeRoomMap(int xDim, int yDim) throws MapInitialisationException {
         // init structure
         CellType[][] map = initCellType(xDim, yDim);
 
         // gen rooms
         // TODO: user input for isRoom number upper bound!
-        int roomNum = genRooms(map, 5);
+        int userInput = 5;
+        ArrayList<Integer[]> rooms = genRooms(map, userInput);
 
         // gen maze with no dead ends at first
-        genFloors(map, CCEachRoom(map, roomNum));
+        genFloors(map, CCEachRoom(map, rooms));
 
         return close(map, xDim, yDim);
     }
 
-    public Map createSingleRoomMap(int xDim, int yDim) throws MapInitialisationException {
+    Map createSingleRoomMap(int xDim, int yDim) throws MapInitialisationException {
         // init structure
         CellType[][] map = initCellType(xDim, yDim);
 
         // gen rooms
-        int roomNum = genRooms(map);
+        ArrayList<Integer[]> rooms = genRooms(map);
 
         // gen maze with no dead ends at first
-        genFloors(map, CCEachRoom(map, roomNum));
+        genFloors(map, CCEachRoom(map, rooms));
         clearDeadEndFloors(map);
 
         return close(map, xDim, yDim);
     }
 
-    public Map createDoubleRoomMap(int xDim, int yDim) throws MapInitialisationException {
+    Map createDoubleRoomMap(int xDim, int yDim) throws MapInitialisationException {
         // init structure
         CellType[][] map = initCellType(xDim, yDim);
 
         // gen rooms
-        int roomNum = genRooms(map);
+        ArrayList<Integer[]> rooms = genRooms(map);
 
         // gen maze with no dead ends at first
-        genFloors(map, CCEachRoom(map, roomNum));
+        genFloors(map, CCEachRoom(map, rooms));
         clearDeadEndFloors(map);
 
         // add another maze for loops
-        genFloors(map, CCEachRoom(map, roomNum));
+        genFloors(map, CCEachRoom(map, rooms));
 
         // remove the dead ends finally
         clearDeadEndFloors(map);
@@ -96,19 +91,19 @@ class MapFactory {
         return close(map, xDim, yDim);
     }
 
-    public Map createLoopRoomMap(int xDim, int yDim) throws MapInitialisationException {
+    Map createLoopRoomMap(int xDim, int yDim) throws MapInitialisationException {
         // init structure
         CellType[][] map = initCellType(xDim, yDim);
 
         // gen rooms
-        int roomNum = genRooms(map);
+        ArrayList<Integer[]> rooms = genRooms(map);
 
         // gen maze with no dead ends at first
-        genFloors(map, CCEachRoom(map, roomNum));
+        genFloors(map, CCEachRoom(map, rooms));
         clearDeadEndFloors(map);
 
         // add another maze for loops
-        genFloors(map, CCEachDeadEndRoom(map, roomNum));
+        genFloors(map, CCEachDeadEndRoom(map, rooms));
 
         // remove the dead ends finally
         clearDeadEndFloors(map);
@@ -117,7 +112,7 @@ class MapFactory {
     }
 
 
-    private CellType[][] initCellType(int xDim, int yDim)  {
+    private CellType[][] initCellType(int xDim, int yDim) {
         // design choice! ignore the last row / column if its even in the algorithm
         xDim = xDim - (xDim + 1) % 2;
         yDim = yDim - (yDim + 1) % 2;
@@ -152,18 +147,15 @@ class MapFactory {
      * internal function which generated a random number of rooms the limit is
      * just an upper bound and its not expected to be reached
      */
-    private int genRooms(CellType[][] map) {
+    private ArrayList<Integer[]> genRooms(CellType[][] map) {
         return genRooms(map, map.length * map[0].length / 25);
     }
 
-    private int genRooms(CellType[][] map, int limit) {
-        // init isRoom super array
-        rooms = new int[limit][4];
+    private ArrayList<Integer[]> genRooms(CellType[][] map, int limit) {
+        ArrayList<Integer[]> rooms = new ArrayList<>();
 
         // declare vars
         int xLen, yLen, xStart, yStart;
-
-        int roomNum = 0;
 
         // try to put up a new isRoom in each iteration
         for (int i = 0; i < limit; i++) {
@@ -196,13 +188,11 @@ class MapFactory {
             }
 
             // insert isRoom into memory
-            rooms[roomNum] = new int[]{xStart, yStart, xLen, yLen};
-            roomNum++;
-
+            rooms.add(new Integer[]{xStart, yStart, xLen, yLen});
         }
 
         // return updated builder object
-        return roomNum;
+        return rooms;
     }
 
     /**
@@ -237,21 +227,21 @@ class MapFactory {
     /**
      * create a disjoint set with a connected component for each isRoom
      */
-    private DisjointSet<CellType> CCEachRoom(CellType[][] map, int roomNum) {
+    private DisjointSet<CellType> CCEachRoom(CellType[][] map, ArrayList<Integer[]> rooms) {
         // create connected compontents
         DisjointSet<CellType> cc = new DisjointSet<>();
 
 
-        for (int i = 0; i < roomNum; i++) {
-            cc.makeSet(map[rooms[i][0]][rooms[i][1]]);
+        for (Integer[] room : rooms) {
+            cc.makeSet(map[room[0]][room[1]]);
 
-            for (int x = rooms[i][0]; x < rooms[i][0] + rooms[i][2]; x += 2) {
-                for (int y = rooms[i][1]; y < rooms[i][1] + rooms[i][3]; y += 2) {
-                    if (x == rooms[i][0] && y == rooms[i][1])
+            for (int x = room[0]; x < room[0] + room[2]; x += 2) {
+                for (int y = room[1]; y < room[1] + room[3]; y += 2) {
+                    if (x == room[0] && y == room[1])
                         continue;
 
                     cc.makeSet(map[x][y]);
-                    cc.union(map[rooms[i][0]][rooms[i][1]], map[x][y]);
+                    cc.union(map[room[0]][room[1]], map[x][y]);
                 }
             }
         }
@@ -262,15 +252,15 @@ class MapFactory {
     /**
      * create a disjoint set with a connected component for each isRoom
      */
-    private DisjointSet<CellType> CCEachDeadEndRoom(CellType[][] map, int roomNum) {
+    private DisjointSet<CellType> CCEachDeadEndRoom(CellType[][] map, ArrayList<Integer[]> rooms) {
         // add for rooms which only one floor connection a connected component
         DisjointSet<CellType> cc = new DisjointSet<>();
 
 
-        for (int i = 0; i < roomNum; i++) {
+        for (Integer[] room : rooms) {
             // declare variables
-            final int xStart = rooms[i][0], xLen = rooms[i][2], yStart = rooms[i][1],
-                    yLen = rooms[i][3];
+            final int xStart = room[0], xLen = room[2], yStart = room[1],
+                    yLen = room[3];
 
             // check if isRoom only has one floor connection
             int count = 0;
@@ -330,7 +320,7 @@ class MapFactory {
                 }
 
                 // queue neighbours when one corner is not a isRoom
-                if (i + 2 < map.length && !map[i+1][j].isRoom())
+                if (i + 2 < map.length && !map[i + 1][j].isRoom())
                     q.add(new int[]{i, j, i + 2, j});
                 if (j + 2 < map[0].length && !map[i][j + 1].isRoom())
                     q.add(new int[]{i, j, i, j + 2});
