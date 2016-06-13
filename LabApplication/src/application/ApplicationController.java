@@ -55,10 +55,10 @@ public class ApplicationController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.primaryStage   = (Stage) resources.getObject(null);
+        this.primaryStage = (Stage) resources.getObject(null);
 
         //Init mapController;
-        this.mapController  = new MapController();
+        this.mapController = new MapController();
 
         //Init mapHolder
         this.mapHolder = new MapHolder(this.mapCanvas);
@@ -77,11 +77,11 @@ public class ApplicationController implements Initializable {
         initRunAStarMenuItem();
     }
 
-    private void initEmptyMapMenuItem(){
+    private void initEmptyMapMenuItem() {
         emptyMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Empty Map");
+            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Empty Map");
             try {
-                this.mapHolder.setMap(mapController.setEmptyMap(params.getArg1(),params.getArg2()));
+                this.mapHolder.setMap(mapController.setEmptyMap(params.getArg1(), params.getArg2()));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -90,11 +90,11 @@ public class ApplicationController implements Initializable {
         });
     }
 
-    private void initRandomMapMenuItem(){
+    private void initRandomMapMenuItem() {
         randomMapMenuItem.setOnAction(event -> {
-            Tuple3<Integer,Integer,Double> params   = dialogExecuter.executeRandomMapDialog();
-            try{
-                this.mapHolder.setMap(mapController.setRandomMap(params.getArg1(),params.getArg2(),params.getArg3()));
+            Tuple3<Integer, Integer, Double> params = dialogExecuter.executeRandomMapDialog();
+            try {
+                this.mapHolder.setMap(mapController.setRandomMap(params.getArg1(), params.getArg2(), params.getArg3()));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -103,11 +103,11 @@ public class ApplicationController implements Initializable {
         });
     }
 
-    private void initMazeMapMenuItem(){
+    private void initMazeMapMenuItem() {
         mazeMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Maze Map");
+            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Maze Map");
             try {
-                this.mapHolder.setMap(mapController.setMazeMap(params.getArg1(),params.getArg2()));
+                this.mapHolder.setMap(mapController.setMazeMap(params.getArg1(), params.getArg2()));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -116,11 +116,11 @@ public class ApplicationController implements Initializable {
         });
     }
 
-    private void initMazeRoomMapMenuItem(){
+    private void initMazeRoomMapMenuItem() {
         mazeRoomMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Maze Room Map");
+            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Maze Room Map");
             try {
-                this.mapHolder.setMap(mapController.setMazeRoomMap(params.getArg1(),params.getArg2()));
+                this.mapHolder.setMap(mapController.setMazeRoomMap(params.getArg1(), params.getArg2()));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -129,11 +129,11 @@ public class ApplicationController implements Initializable {
         });
     }
 
-    private void initSingleRoomMapMenuItem(){
+    private void initSingleRoomMapMenuItem() {
         singleRoomMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Single Room Map");
+            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Single Room Map");
             try {
-                this.mapHolder.setMap(mapController.setSingleRoomMap(params.getArg1(),params.getArg2()));
+                this.mapHolder.setMap(mapController.setSingleRoomMap(params.getArg1(), params.getArg2()));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -142,11 +142,11 @@ public class ApplicationController implements Initializable {
         });
     }
 
-    private void initDoubleRoomMapMenuItem(){
+    private void initDoubleRoomMapMenuItem() {
         doubleRoomMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Double Room Map");
+            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Double Room Map");
             try {
-                this.mapHolder.setMap(mapController.setDoubleRoomMap(params.getArg1(),params.getArg2()));
+                this.mapHolder.setMap(mapController.setDoubleRoomMap(params.getArg1(), params.getArg2()));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -155,11 +155,11 @@ public class ApplicationController implements Initializable {
         });
     }
 
-    private void initLoopRoomMapMenuItem(){
+    private void initLoopRoomMapMenuItem() {
         loopRoomMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer,Integer> params    = dialogExecuter.executeMapDimensionDialog("New Loop Room Map");
+            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Loop Room Map");
             try {
-                this.mapHolder.setMap(mapController.setLoopRoomMap(params.getArg1(),params.getArg2()));
+                this.mapHolder.setMap(mapController.setLoopRoomMap(params.getArg1(), params.getArg2()));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -168,7 +168,7 @@ public class ApplicationController implements Initializable {
         });
     }
 
-    private void initOpenMapMenuItem(){
+    private void initOpenMapMenuItem() {
         openMapMenuItem.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open Resource File");
@@ -188,23 +188,23 @@ public class ApplicationController implements Initializable {
         });
     }
 
-    private void initEditMapMenuItem(){
+    private void initEditMapMenuItem() {
         editMapMenuItem.setOnAction(event -> setEditMapMode());
     }
 
     private void initHeuristicToggleGroup() {
-        heuristicToggleGroup.selectedToggleProperty().addListener((ov,oldT,newT) -> {
-            if(newT==this.zeroHeuristicMenuItem)    this.mapController.setZeroHeuristic();
-            if(newT==this.gridHeuristicMenuItem)    this.mapController.setGridHeuristic();
-            if(newT==this.euclideanHeuristicMenuItem)    this.mapController.setEuclideanHeuristic();
+        heuristicToggleGroup.selectedToggleProperty().addListener((ov, oldT, newT) -> {
+            if (newT == this.zeroHeuristicMenuItem) this.mapController.setZeroHeuristic();
+            if (newT == this.gridHeuristicMenuItem) this.mapController.setGridHeuristic();
+            if (newT == this.euclideanHeuristicMenuItem) this.mapController.setEuclideanHeuristic();
         });
         this.heuristicToggleGroup.selectToggle(gridHeuristicMenuItem);
     }
 
-    private void initRunAStarMenuItem(){
+    private void initRunAStarMenuItem() {
         runAStarMenuItem.setOnAction(event -> {
-            setSetStartGoalMode((xStart,yStart,xGoal,yGoal) -> {
-                this.mapHolder.setShortestPath(this.mapController.findShortestPathWithAStar(xStart,yStart,xGoal,yGoal));
+            setSetStartGoalMode((xStart, yStart, xGoal, yGoal) -> {
+                this.mapHolder.setShortestPath(this.mapController.findShortestPathWithAStar(xStart, yStart, xGoal, yGoal));
             });
         });
     }
@@ -212,11 +212,11 @@ public class ApplicationController implements Initializable {
 
     /* ------- Mode Setter ------- */
 
-    private void setEditMapMode(){
+    private void setEditMapMode() {
         this.mapHolder.setOnMouseClickedCallback((x, y) -> {
             try {
-                this.mapController.switchPassable(x,y);
-                this.mapHolder.switchPassable(x,y);
+                this.mapController.switchPassable(x, y);
+                this.mapHolder.switchPassable(x, y);
             } catch (InvalidCoordinateException e) {
                 e.printStackTrace();
                 //Todo: setEditMapMode.mapConroller.switchPassable - InvalidCoordinateException
@@ -225,22 +225,22 @@ public class ApplicationController implements Initializable {
         this.mapHolder.refreshMap();
     }
 
-    private void setSetStartGoalMode(OnStartGoalSetCallback callback){
+    private void setSetStartGoalMode(OnStartGoalSetCallback callback) {
         this.mapHolder.setOnMouseClickedCallback((xStart, yStart) -> {
             try {
-                if(!this.mapHolder.isPassable(xStart,yStart))    return;
+                if (!this.mapHolder.isPassable(xStart, yStart)) return;
                 this.mapHolder.setOnMouseClickedCallback((xGoal, yGoal) -> {
                     try {
-                        if(!this.mapHolder.isPassable(xGoal,yGoal)||(xStart==xGoal&&yStart==yGoal))    return;
-                        this.mapHolder.setGoalPoint(xGoal,yGoal);
+                        if (!this.mapHolder.isPassable(xGoal, yGoal) || (xStart == xGoal && yStart == yGoal)) return;
+                        this.mapHolder.setGoalPoint(xGoal, yGoal);
                         this.mapHolder.setOnMouseClickedCallback(null);
-                        callback.call(xStart,yStart,xGoal,yGoal);
+                        callback.call(xStart, yStart, xGoal, yGoal);
                     } catch (InvalidCoordinateException e) {
                         e.printStackTrace();
                         //Todo InvalidCoordinateException
                     }
                 });
-                this.mapHolder.setStartPoint(xStart,yStart);
+                this.mapHolder.setStartPoint(xStart, yStart);
             } catch (InvalidCoordinateException e) {
                 e.printStackTrace();
                 //Todo InvalidCoordinateException

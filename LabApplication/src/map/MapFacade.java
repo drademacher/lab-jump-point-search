@@ -8,6 +8,8 @@ import exception.InvalidCoordinateException;
 public interface MapFacade {
 
     int getXDim();
+
     int getYDim();
+
     boolean isPassable(int x, int y) throws InvalidCoordinateException;
 }

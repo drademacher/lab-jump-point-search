@@ -5,7 +5,7 @@ package util;
  */
 
 //Todo: weg refactoren if possible
-public class Tuple2<A,B>  {
+public class Tuple2<A, B> {
 
     private A arg1;
     private B arg2;
