@@ -2,6 +2,7 @@ package map;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
+import util.Coordinate;
 
 import java.util.Arrays;
 
@@ -14,13 +15,13 @@ class Map implements MapFacade {
     private int xDim;
     private int yDim;
 
-    Map(int xDim, int yDim, boolean areFieldsPassable) throws MapInitialisationException {
-        if (xDim < 1 || yDim < 1) throw new MapInitialisationException(xDim, yDim);
-        this.xDim = xDim;
-        this.yDim = yDim;
-        this.map = new boolean[xDim][yDim];
+    Map(Coordinate dimension, boolean areFieldsPassable) throws MapInitialisationException {
+        this.xDim = dimension.getX();
+        this.yDim = dimension.getY();
+        if (this.xDim < 1 || this.yDim < 1) throw new MapInitialisationException(dimension);
+        this.map = new boolean[this.xDim][this.yDim];
         if (areFieldsPassable) {
-            for (boolean[] col : map) Arrays.fill(col, true);
+            for (boolean[] col : this.map) Arrays.fill(col, true);
         }
     }
 
@@ -38,20 +39,20 @@ class Map implements MapFacade {
     }
 
     @Override
-    public boolean isPassable(int x, int y) throws InvalidCoordinateException {
-        isValideCoordinate(x, y);
-        return map[x][y];
+    public boolean isPassable(Coordinate coordinate) throws InvalidCoordinateException {
+        isValideCoordinate(coordinate);
+        return map[coordinate.getX()][coordinate.getY()];
     }
 
-    void switchPassable(int x, int y) throws InvalidCoordinateException {
-        isValideCoordinate(x, y);
-        map[x][y] = !map[x][y];
+    void switchPassable(Coordinate coordinate) throws InvalidCoordinateException {
+        isValideCoordinate(coordinate);
+        map[coordinate.getX()][coordinate.getY()] = !map[coordinate.getX()][coordinate.getY()];
     }
 
 
     /* ------- Helper ------- */
 
-    private void isValideCoordinate(int x, int y) throws InvalidCoordinateException {
-        if (x < 0 || y < 0 || x >= xDim || y >= yDim) throw new InvalidCoordinateException(x, y);
+    private void isValideCoordinate(Coordinate coordinate) throws InvalidCoordinateException {
+        if (coordinate.getX() < 0 || coordinate.getY() < 0 || coordinate.getX() >= this.xDim || coordinate.getY() >= this.yDim) throw new InvalidCoordinateException(coordinate);
     }
 }

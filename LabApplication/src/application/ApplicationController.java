@@ -11,6 +11,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import map.MapController;
+import util.Coordinate;
 import util.Tuple2;
 import util.Tuple3;
 
@@ -79,9 +80,9 @@ public class ApplicationController implements Initializable {
 
     private void initEmptyMapMenuItem() {
         emptyMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Empty Map");
+            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Empty Map");
             try {
-                this.mapHolder.setMap(mapController.setEmptyMap(params.getArg1(), params.getArg2()));
+                this.mapHolder.setMap(mapController.setEmptyMap(dimension));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -92,9 +93,9 @@ public class ApplicationController implements Initializable {
 
     private void initRandomMapMenuItem() {
         randomMapMenuItem.setOnAction(event -> {
-            Tuple3<Integer, Integer, Double> params = dialogExecuter.executeRandomMapDialog();
+            Tuple2<Coordinate, Double> params = dialogExecuter.executeRandomMapDialog();
             try {
-                this.mapHolder.setMap(mapController.setRandomMap(params.getArg1(), params.getArg2(), params.getArg3()));
+                this.mapHolder.setMap(mapController.setRandomMap(params.getArg1(), params.getArg2()));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -105,9 +106,9 @@ public class ApplicationController implements Initializable {
 
     private void initMazeMapMenuItem() {
         mazeMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Maze Map");
+            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Maze Map");
             try {
-                this.mapHolder.setMap(mapController.setMazeMap(params.getArg1(), params.getArg2()));
+                this.mapHolder.setMap(mapController.setMazeMap(dimension));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -118,9 +119,9 @@ public class ApplicationController implements Initializable {
 
     private void initMazeRoomMapMenuItem() {
         mazeRoomMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Maze Room Map");
+            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Maze Room Map");
             try {
-                this.mapHolder.setMap(mapController.setMazeRoomMap(params.getArg1(), params.getArg2()));
+                this.mapHolder.setMap(mapController.setMazeRoomMap(dimension));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -131,9 +132,9 @@ public class ApplicationController implements Initializable {
 
     private void initSingleRoomMapMenuItem() {
         singleRoomMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Single Room Map");
+            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Single Room Map");
             try {
-                this.mapHolder.setMap(mapController.setSingleRoomMap(params.getArg1(), params.getArg2()));
+                this.mapHolder.setMap(mapController.setSingleRoomMap(dimension));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -144,9 +145,9 @@ public class ApplicationController implements Initializable {
 
     private void initDoubleRoomMapMenuItem() {
         doubleRoomMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Double Room Map");
+            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Double Room Map");
             try {
-                this.mapHolder.setMap(mapController.setDoubleRoomMap(params.getArg1(), params.getArg2()));
+                this.mapHolder.setMap(mapController.setDoubleRoomMap(dimension));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -157,9 +158,9 @@ public class ApplicationController implements Initializable {
 
     private void initLoopRoomMapMenuItem() {
         loopRoomMapMenuItem.setOnAction(event -> {
-            Tuple2<Integer, Integer> params = dialogExecuter.executeMapDimensionDialog("New Loop Room Map");
+            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Loop Room Map");
             try {
-                this.mapHolder.setMap(mapController.setLoopRoomMap(params.getArg1(), params.getArg2()));
+                this.mapHolder.setMap(mapController.setLoopRoomMap(dimension));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -203,8 +204,8 @@ public class ApplicationController implements Initializable {
 
     private void initRunAStarMenuItem() {
         runAStarMenuItem.setOnAction(event -> {
-            setSetStartGoalMode((xStart, yStart, xGoal, yGoal) -> {
-                this.mapHolder.setShortestPath(this.mapController.findShortestPathWithAStar(xStart, yStart, xGoal, yGoal));
+            setSetStartGoalMode((start, goal) -> {
+                this.mapHolder.setShortestPath(this.mapController.findShortestPathWithAStar(start, goal));
             });
         });
     }
@@ -213,10 +214,10 @@ public class ApplicationController implements Initializable {
     /* ------- Mode Setter ------- */
 
     private void setEditMapMode() {
-        this.mapHolder.setOnMouseClickedCallback((x, y) -> {
+        this.mapHolder.setOnMouseClickedCallback((coordinate) -> {
             try {
-                this.mapController.switchPassable(x, y);
-                this.mapHolder.switchPassable(x, y);
+                this.mapController.switchPassable(coordinate);
+                this.mapHolder.switchPassable(coordinate);
             } catch (InvalidCoordinateException e) {
                 e.printStackTrace();
                 //Todo: setEditMapMode.mapConroller.switchPassable - InvalidCoordinateException
@@ -226,21 +227,21 @@ public class ApplicationController implements Initializable {
     }
 
     private void setSetStartGoalMode(OnStartGoalSetCallback callback) {
-        this.mapHolder.setOnMouseClickedCallback((xStart, yStart) -> {
+        this.mapHolder.setOnMouseClickedCallback((start) -> {
             try {
-                if (!this.mapHolder.isPassable(xStart, yStart)) return;
-                this.mapHolder.setOnMouseClickedCallback((xGoal, yGoal) -> {
+                if (!this.mapHolder.isPassable(start)) return;
+                this.mapHolder.setOnMouseClickedCallback((goal) -> {
                     try {
-                        if (!this.mapHolder.isPassable(xGoal, yGoal) || (xStart == xGoal && yStart == yGoal)) return;
-                        this.mapHolder.setGoalPoint(xGoal, yGoal);
+                        if (!this.mapHolder.isPassable(goal) || (start.equals(goal))) return;
+                        this.mapHolder.setGoalPoint(goal);
                         this.mapHolder.setOnMouseClickedCallback(null);
-                        callback.call(xStart, yStart, xGoal, yGoal);
+                        callback.call(start, goal);
                     } catch (InvalidCoordinateException e) {
                         e.printStackTrace();
                         //Todo InvalidCoordinateException
                     }
                 });
-                this.mapHolder.setStartPoint(xStart, yStart);
+                this.mapHolder.setStartPoint(start);
             } catch (InvalidCoordinateException e) {
                 e.printStackTrace();
                 //Todo InvalidCoordinateException
@@ -253,6 +254,6 @@ public class ApplicationController implements Initializable {
     /* ------- Callback CeellType ------- */
 
     private interface OnStartGoalSetCallback {
-        void call(int xStart, int yStart, int xGoal, int yGoal);
+        void call(Coordinate start, Coordinate goal);
     }
 }

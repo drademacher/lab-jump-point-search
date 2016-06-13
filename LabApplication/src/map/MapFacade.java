@@ -1,6 +1,7 @@
 package map;
 
 import exception.InvalidCoordinateException;
+import util.Coordinate;
 
 /**
  * Created by paloka on 02.06.16.
@@ -11,5 +12,5 @@ public interface MapFacade {
 
     int getYDim();
 
-    boolean isPassable(int x, int y) throws InvalidCoordinateException;
+    boolean isPassable(Coordinate coordinate) throws InvalidCoordinateException;
 }
