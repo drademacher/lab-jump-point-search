@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="600.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controller">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+            <Menu mnemonicParsing="false" text="File" />
+                <Menu fx:id="mapMenu" mnemonicParsing="false" text="Edit Map">
+                    <items>
+                  <MenuItem fx:id="editMap" mnemonicParsing="false" text="Editor" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="emptyMap" mnemonicParsing="false" text="Empty Map" />
+                  <MenuItem fx:id="exampleMap" mnemonicParsing="false" text="Example Map" />
+                        <MenuItem fx:id="randomMap" mnemonicParsing="false" text="Random Obstacles" />
+                  <Menu mnemonicParsing="false" text="Map Generator">
+                    <items>
+                      <MenuItem fx:id="genMap1" mnemonicParsing="false" text="Maze" />
+                        <MenuItem fx:id="genMap2" mnemonicParsing="false" text="Maze with rooms" />
+                        <MenuItem fx:id="genMap3" mnemonicParsing="false" text="Single connected rooms" />
+                        <MenuItem fx:id="genMap4" mnemonicParsing="false" text="Rooms with loops" />
+                        <MenuItem fx:id="genMap5" mnemonicParsing="false" text="Double connected rooms" />
+                    </items>
+                  </Menu>
+                        <MenuItem fx:id="loadMap" mnemonicParsing="false" text="Load Map" />
+                    </items>
+                </Menu>
+                <Menu fx:id="algoMenu" mnemonicParsing="false" text="Edit Algorithm">
+               <items>
+                  <RadioMenuItem fx:id="astar" mnemonicParsing="false" selected="true" text="A-star">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="algo" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem fx:id="jps" mnemonicParsing="false" text="JPS" toggleGroup="$algo" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <RadioMenuItem mnemonicParsing="false" text="No heuristic">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="heuristic" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem mnemonicParsing="false" text="Euclidean heuristic" toggleGroup="$heuristic" />
+                  <RadioMenuItem mnemonicParsing="false" selected="true" text="Grid heuristic" toggleGroup="$heuristic" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <RadioMenuItem fx:id="noPrune" mnemonicParsing="false" selected="true" text="No pruning">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="pruning" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem fx:id="jpsPrune" mnemonicParsing="false" text="JPS+" toggleGroup="$pruning" />
+                  <RadioMenuItem fx:id="bbPrune" mnemonicParsing="false" text="Bounding Boxes" toggleGroup="$pruning" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <CheckMenuItem mnemonicParsing="false" selected="true" text="Corner Cutting" />
+               </items></Menu>
+                <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem fx:id="about" mnemonicParsing="false" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <bottom>
+      <StackPane prefHeight="33.0" prefWidth="600.0">
+         <children>
+              <HBox fx:id="visMode" alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0" visible="false">
+                  <children>
+                  <Button fx:id="setModeStart" mnemonicParsing="false" text="New Start and Goal" />
+                      <Button fx:id="playButton" mnemonicParsing="false" prefWidth="70.0" text="Start" />
+                      <Button fx:id="nextButton" mnemonicParsing="false" prefWidth="70.0" text="Next" />
+                      <Button fx:id="prevButton" mnemonicParsing="false" prefWidth="70.0" text="Previous" />
+                      <Button fx:id="restartButton" mnemonicParsing="false" prefWidth="70.0" text="Go back" />
+                  </children>
+              </HBox>
+            <HBox fx:id="setMode" alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0" visible="false">
+               <children>
+                  <Button fx:id="editModeStart" mnemonicParsing="false" text="Adjust Settings" />
+                  <Button mnemonicParsing="false" text="Set Start" />
+                  <Button mnemonicParsing="false" text="Set Goal" />
+                  <Button fx:id="setModeFinish" mnemonicParsing="false" prefWidth="70.0" text="Find Path" />
+               </children>
+            </HBox>
+            <HBox fx:id="editMode" alignment="CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0">
+               <children>
+                  <Button fx:id="editModeFinish" mnemonicParsing="false" text="Settings adjusted" />
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+    </bottom>
+    <center>
+        <StackPane>
+            <children>
+                <Canvas fx:id="canvas" height="200.0" width="200.0" />
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>
