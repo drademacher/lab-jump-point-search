@@ -21,7 +21,7 @@ public class MapHolder {
 
     private Canvas canvas;
     private OnMouseClickedCallback onMouseClickedCallback;
-    private int fieldSize = 20;
+    private int fieldSize = 10;
 
     MapHolder(Canvas canvas) {
         this.canvas = canvas;
@@ -139,7 +139,7 @@ public class MapHolder {
     }
 
 
-    /* ------- Callback Type ------- */
+    /* ------- Callback CeellType ------- */
 
     interface OnMouseClickedCallback {
         void call(int x, int y);
