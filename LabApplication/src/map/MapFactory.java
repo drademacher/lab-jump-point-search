@@ -2,6 +2,7 @@ package map;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
+import util.Coordinate;
 import util.RandomUtil;
 
 import java.io.*;
@@ -11,17 +12,17 @@ import java.util.Collections;
 class MapFactory {
     private final int[][] NEIGHS_ALL = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-    Map createEmptyMap(int xDim, int yDim) throws MapInitialisationException {
-        return new Map(xDim, yDim, true);
+    Map createEmptyMap(Coordinate dimension) throws MapInitialisationException {
+        return new Map(dimension, true);
     }
 
-    Map createRandomMap(int xDim, int yDim, double pPassable) throws MapInitialisationException {
-        Map map = new Map(xDim, yDim, false);
-        for (int x = 0; x < xDim; x++) {
-            for (int y = 0; y < yDim; y++) {
+    Map createRandomMap(Coordinate dimension, double pPassable) throws MapInitialisationException {
+        Map map = new Map(dimension, false);
+        for (int x = 0; x < map.getXDim(); x++) {
+            for (int y = 0; y < map.getYDim(); y++) {
                 if (RandomUtil.getRandomDouble() < pPassable) {
                     try {
-                        map.switchPassable(x, y);
+                        map.switchPassable(new Coordinate(x,y));
                     } catch (InvalidCoordinateException e) {
                         e.printStackTrace();
                         //Todo: MapFactory.createRandomMap - InvalidCoordinateException
@@ -32,19 +33,20 @@ class MapFactory {
         return map;
     }
 
-    Map createMazeMap(int xDim, int yDim) throws MapInitialisationException {
+    Map createMazeMap(Coordinate dimension) throws MapInitialisationException {
         // init structure
-        CellType[][] map = initCellType(xDim, yDim);
+        CellType[][] map = initCellType(dimension.getX(), dimension.getY());
 
         // gen maze with no dead ends at first
         genFloors(map, CCEmpty());
 
-        return close(map, xDim, yDim);
+        return close(map, dimension);
     }
 
-    Map createMazeRoomMap(int xDim, int yDim) throws MapInitialisationException {
+    Map createMazeRoomMap(Coordinate dimension) throws MapInitialisationException {
+
         // init structure
-        CellType[][] map = initCellType(xDim, yDim);
+        CellType[][] map = initCellType(dimension.getX(), dimension.getY());
 
         // gen rooms
         // TODO: user input for isRoom number upper bound!
@@ -54,12 +56,13 @@ class MapFactory {
         // gen maze with no dead ends at first
         genFloors(map, CCEachRoom(map, rooms));
 
-        return close(map, xDim, yDim);
+        return close(map, dimension);
     }
 
-    Map createSingleRoomMap(int xDim, int yDim) throws MapInitialisationException {
+    Map createSingleRoomMap(Coordinate dimension) throws MapInitialisationException {
+
         // init structure
-        CellType[][] map = initCellType(xDim, yDim);
+        CellType[][] map = initCellType(dimension.getX(), dimension.getY());
 
         // gen rooms
         ArrayList<Integer[]> rooms = genRooms(map);
@@ -68,12 +71,13 @@ class MapFactory {
         genFloors(map, CCEachRoom(map, rooms));
         clearDeadEndFloors(map);
 
-        return close(map, xDim, yDim);
+        return close(map, dimension);
     }
 
-    Map createDoubleRoomMap(int xDim, int yDim) throws MapInitialisationException {
+    Map createDoubleRoomMap(Coordinate dimension) throws MapInitialisationException {
+
         // init structure
-        CellType[][] map = initCellType(xDim, yDim);
+        CellType[][] map = initCellType(dimension.getX(), dimension.getY());
 
         // gen rooms
         ArrayList<Integer[]> rooms = genRooms(map);
@@ -88,12 +92,13 @@ class MapFactory {
         // remove the dead ends finally
         clearDeadEndFloors(map);
 
-        return close(map, xDim, yDim);
+        return close(map, dimension);
     }
 
-    Map createLoopRoomMap(int xDim, int yDim) throws MapInitialisationException {
+    Map createLoopRoomMap(Coordinate dimension) throws MapInitialisationException {
+
         // init structure
-        CellType[][] map = initCellType(xDim, yDim);
+        CellType[][] map = initCellType(dimension.getX(), dimension.getY());
 
         // gen rooms
         ArrayList<Integer[]> rooms = genRooms(map);
@@ -108,7 +113,7 @@ class MapFactory {
         // remove the dead ends finally
         clearDeadEndFloors(map);
 
-        return close(map, xDim, yDim);
+        return close(map, dimension);
     }
 
 
@@ -128,12 +133,12 @@ class MapFactory {
         return map;
     }
 
-    private Map close(CellType[][] map, int xDim, int yDim) throws MapInitialisationException {
-        Map res = new Map(xDim, yDim, false);
+    private Map close(CellType[][] map, Coordinate dimension) throws MapInitialisationException {
+        Map res = new Map(dimension, false);
         for (int x = 0; x < map.length; x++) {
             for (int y = 0; y < map[0].length; y++) {
                 if (!map[x][y].isObstacle()) try {
-                    res.switchPassable(x, y);
+                    res.switchPassable(new Coordinate(x, y));
                 } catch (InvalidCoordinateException e) {
                     // TODO: no idea
                     e.printStackTrace();
@@ -399,13 +404,13 @@ class MapFactory {
             br.readLine();  //Skip type
             int yDim = Integer.valueOf(br.readLine().substring(7));  //Read height
             int xDim = Integer.valueOf(br.readLine().substring(6));  //Read width
-            Map map = new Map(xDim, yDim, false); //init Map without passable fields
+            Map map = new Map(new Coordinate(xDim,yDim), false); //init Map without passable fields
             br.readLine();  //Skip map
             String currentLine;
             for (int y = 0; (currentLine = br.readLine()) != null; y++) { //Read in MapRow
                 for (int x = 0; x < currentLine.length(); x++) {
                     if (currentLine.charAt(x) == '.' || currentLine.charAt(x) == 'G' || currentLine.charAt(x) == 'S') {
-                        map.switchPassable(x, y);    //Mark passable fields
+                        map.switchPassable(new Coordinate(x,y));    //Mark passable fields
                     }
                 }
             }

@@ -1,5 +1,7 @@
 package exception;
 
+import util.Coordinate;
+
 /**
  * Created by paloka on 01.06.16.
  */
@@ -8,7 +10,7 @@ public class MapInitialisationException extends Exception {
         super("Error while Map initialisation");
     }
 
-    public MapInitialisationException(int xDim, int yDim) {
-        super("Error while Map initialisation with dimension (" + xDim + "," + yDim + ")");
+    public MapInitialisationException(Coordinate dimension) {
+        super("Error while Map initialisation with dimension (" + dimension.getX() + "," + dimension.getY() + ")");
     }
 }

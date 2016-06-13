@@ -1,5 +1,6 @@
 package shortestpath;
 
+import util.Coordinate;
 import util.Tuple2;
 
 import java.util.Collection;
@@ -12,39 +13,28 @@ import java.util.Map;
  */
 public class ShortestPathResult {
 
-    private int xStart, yStart, xGoal, yGoal;
-    private Collection<Tuple2<Integer, Integer>> openList;
-    private Map<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>> pathPredecessors;
+    private Coordinate start, goal;
+    private Collection<Coordinate> openList;
+    private Map<Coordinate, Coordinate> pathPredecessors;
 
-    public ShortestPathResult(int xStart, int yStart, int xGoal, int yGoal, Collection<Tuple2<Integer, Integer>> openList, Map<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>> pathPredecessors) {
-        this.xStart = xStart;
-        this.yStart = yStart;
-        this.xGoal = xGoal;
-        this.yGoal = yGoal;
+    public ShortestPathResult(Coordinate start, Coordinate goal, Collection<Coordinate> openList, Map<Coordinate, Coordinate> pathPredecessors) {
+        this.start  = start;
+        this.goal   = goal;
         this.openList = openList;
         this.pathPredecessors = pathPredecessors;
     }
 
-    public int getxGoal() {
-        return xGoal;
+    public Coordinate getStart(){
+        return this.start;
     }
 
-    public int getxStart() {
-        return xStart;
+    public Coordinate getGoal(){
+        return this.goal;
     }
 
-    public int getyGoal() {
-        return yGoal;
-    }
-
-    public int getyStart() {
-        return yStart;
-    }
-
-    public List<Tuple2<Integer, Integer>> getShortestPath() {
-        List<Tuple2<Integer, Integer>> path = new LinkedList<>();
-        Tuple2<Integer, Integer> current = new Tuple2<>(xGoal, yGoal);
-        Tuple2<Integer, Integer> start = new Tuple2<>(xStart, yStart);
+    public List<Coordinate> getShortestPath() {
+        List<Coordinate> path = new LinkedList<>();
+        Coordinate current  = goal;
         while (!current.equals(start)) {
             path.add(current);
             current = pathPredecessors.get(current);
@@ -52,11 +42,11 @@ public class ShortestPathResult {
         return path;
     }
 
-    public Collection<Tuple2<Integer, Integer>> getVisited() {
+    public Collection<Coordinate> getVisited() {
         return pathPredecessors.keySet();
     }
 
-    public Collection<Tuple2<Integer, Integer>> getOpenList() {
+    public Collection<Coordinate> getOpenList() {
         return this.openList;
     }
 }

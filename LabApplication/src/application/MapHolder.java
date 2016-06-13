@@ -6,7 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import map.MapFacade;
 import shortestpath.ShortestPathResult;
-import util.Tuple2;
+import util.Coordinate;
 
 import static application.ApplicationConstants.*;
 import static application.FieldVisualisation.*;
@@ -38,7 +38,7 @@ public class MapHolder {
             if (onMouseClickedCallback == null) return;
             int x = new Double((event.getX() - 1) / this.fieldSize).intValue();
             int y = new Double((event.getY() - 2) / this.fieldSize).intValue();
-            this.onMouseClickedCallback.call(x, y);
+            this.onMouseClickedCallback.call(new Coordinate(x,y));
         });
     }
 
@@ -47,23 +47,21 @@ public class MapHolder {
         renderMap();
     }
 
-    void switchPassable(int x, int y) {
+    void switchPassable(Coordinate coordinate) {
         try {
-            renderField(x, y, map.isPassable(x, y) ? GRID_POINT : OBSTACLE_POINT);
+            renderField(coordinate, map.isPassable(coordinate) ? GRID_POINT : OBSTACLE_POINT);
         } catch (InvalidCoordinateException e) {
             e.printStackTrace();
             //Todo: ApplicationController.renderField - InvalidCoordinateException
         }
     }
 
-    void setStartPoint(int x, int y) {
-        renderField(x, y, START_POINT);
+    void setStartPoint(Coordinate coordinate) {
+        renderField(coordinate, START_POINT);
     }
 
-    ;
-
-    void setGoalPoint(int x, int y) {
-        renderField(x, y, GOAL_POINT);
+    void setGoalPoint(Coordinate coordinate) {
+        renderField(coordinate, GOAL_POINT);
     }
 
     void setShortestPath(ShortestPathResult shortestPath) {
@@ -83,8 +81,8 @@ public class MapHolder {
         this.onMouseClickedCallback = callback;
     }
 
-    boolean isPassable(int x, int y) throws InvalidCoordinateException {
-        return this.map.isPassable(x, y);
+    boolean isPassable(Coordinate coordinate) throws InvalidCoordinateException {
+        return this.map.isPassable(coordinate);
     }
 
 
@@ -102,7 +100,7 @@ public class MapHolder {
         for (int x = 0; x < this.map.getXDim(); x++) {
             for (int y = 0; y < this.map.getYDim(); y++) {
                 try {
-                    gc.setFill(this.map.isPassable(x, y) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
+                    gc.setFill(this.map.isPassable(new Coordinate(x,y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
                     gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - 1, this.fieldSize - 1);
                 } catch (InvalidCoordinateException e) {
                     e.printStackTrace();
@@ -115,33 +113,33 @@ public class MapHolder {
 
     private void renderShortestPathResult() {
         if (shortestPathResult == null) return;
-        for (Tuple2<Integer, Integer> jumpPoint : this.shortestPathResult.getOpenList()) {
-            renderField(jumpPoint.getArg1(), jumpPoint.getArg2(), JUMP_POINT);
+        for (Coordinate jumpPoint : this.shortestPathResult.getOpenList()) {
+            renderField(jumpPoint, JUMP_POINT);
         }
-        for (Tuple2<Integer, Integer> visitedPoint : this.shortestPathResult.getVisited()) {
-            renderField(visitedPoint.getArg1(), visitedPoint.getArg2(), VISITED_POINT);
+        for (Coordinate visitedPoint : this.shortestPathResult.getVisited()) {
+            renderField(visitedPoint, VISITED_POINT);
         }
-        for (Tuple2<Integer, Integer> pathPoint : this.shortestPathResult.getShortestPath()) {
-            renderField(pathPoint.getArg1(), pathPoint.getArg2(), PATH_POINT);
+        for (Coordinate pathPoint : this.shortestPathResult.getShortestPath()) {
+            renderField(pathPoint, PATH_POINT);
         }
-        setStartPoint(this.shortestPathResult.getxStart(), this.shortestPathResult.getyStart());
-        setGoalPoint(this.shortestPathResult.getxGoal(), this.shortestPathResult.getyGoal());
+        setStartPoint(this.shortestPathResult.getStart());
+        setGoalPoint(this.shortestPathResult.getGoal());
     }
 
-    private void renderField(int x, int y, FieldVisualisation field) {
+    private void renderField(Coordinate coordinate, FieldVisualisation field) {
         if (this.canvas == null
-                || x < 0 || y < 0
-                || (this.canvas.getWidth() - 1) / this.fieldSize < x
-                || (this.canvas.getHeight() - 1) / this.fieldSize < y) return;
+                || coordinate.getX() < 0 || coordinate.getY() < 0
+                || (this.canvas.getWidth() - 1) / this.fieldSize < coordinate.getX()
+                || (this.canvas.getHeight() - 1) / this.fieldSize < coordinate.getY()) return;
         GraphicsContext gc = this.canvas.getGraphicsContext2D();
         gc.setFill(field.getColor());
-        gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - 1, this.fieldSize - 1);
+        gc.fillRect(coordinate.getX() * this.fieldSize + 1, coordinate.getY() * this.fieldSize + 1, this.fieldSize - 1, this.fieldSize - 1);
     }
 
 
     /* ------- Callback CeellType ------- */
 
     interface OnMouseClickedCallback {
-        void call(int x, int y);
+        void call(Coordinate coordinate);
     }
 }
