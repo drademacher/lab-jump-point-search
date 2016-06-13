@@ -139,7 +139,7 @@ public class MapHolder {
     }
 
 
-    /* ------- Callback Type ------- */
+    /* ------- Callback CeellType ------- */
 
     interface OnMouseClickedCallback {
         void call(int x, int y);

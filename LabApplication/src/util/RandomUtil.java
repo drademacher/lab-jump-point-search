@@ -13,4 +13,19 @@ public class RandomUtil {
         if (RANDOM == null) RANDOM = new Random();
         return RANDOM.nextDouble();
     }
+
+    public static int getRandomInteger(int d) {
+        if (RANDOM == null) RANDOM = new Random();
+        return RANDOM.nextInt(d);
+    }
+
+    public static double getRandomGaussian() {
+        if (RANDOM == null) RANDOM = new Random();
+        return RANDOM.nextGaussian();
+    }
+
+    public static Random getRANDOM() {
+        if (RANDOM == null) RANDOM = new Random();
+        return RANDOM;
+    }
 }

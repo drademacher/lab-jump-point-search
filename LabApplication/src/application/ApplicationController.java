@@ -250,7 +250,7 @@ public class ApplicationController implements Initializable {
     }
 
 
-    /* ------- Callback Type ------- */
+    /* ------- Callback CeellType ------- */
 
     private interface OnStartGoalSetCallback {
         void call(int xStart, int yStart, int xGoal, int yGoal);
