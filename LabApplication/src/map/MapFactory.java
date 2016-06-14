@@ -424,7 +424,7 @@ class MapFactory {
         }
     }
 
-    class CellType {
+    private class CellType {
         private int val;
 
         void setRoom() {
