@@ -3,6 +3,7 @@ package map;
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
 import util.Coordinate;
+import util.DisjointSet;
 import util.RandomUtil;
 
 import java.io.*;
@@ -116,6 +117,31 @@ class MapFactory {
         return close(map, dimension);
     }
 
+
+    Map loadMap(File file) throws MapInitialisationException {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            br.readLine();  //Skip type
+            int yDim = Integer.valueOf(br.readLine().substring(7));  //Read height
+            int xDim = Integer.valueOf(br.readLine().substring(6));  //Read width
+            Map map = new Map(new Coordinate(xDim,yDim), false); //init Map without passable fields
+            br.readLine();  //Skip map
+            String currentLine;
+            for (int y = 0; (currentLine = br.readLine()) != null; y++) { //Read in MapRow
+                for (int x = 0; x < currentLine.length(); x++) {
+                    if (currentLine.charAt(x) == '.' || currentLine.charAt(x) == 'G' || currentLine.charAt(x) == 'S') {
+                        map.switchPassable(new Coordinate(x,y));    //Mark passable fields
+                    }
+                }
+            }
+            return map;
+        } catch (Exception e) {
+            throw new MapInitialisationException();
+        }
+    }
+
+
+    /* ------- Helper for Room Generation ------- */
 
     private CellType[][] initCellType(int xDim, int yDim) {
         // design choice! ignore the last row / column if its even in the algorithm
@@ -254,6 +280,7 @@ class MapFactory {
         return cc;
     }
 
+
     /**
      * create a disjoint set with a connected component for each isRoom
      */
@@ -305,7 +332,6 @@ class MapFactory {
 
         return cc;
     }
-
 
     /**
      * internal function to generate a maze around the rooms
@@ -398,25 +424,31 @@ class MapFactory {
         }
     }
 
-    Map loadMap(File file) throws MapInitialisationException {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            br.readLine();  //Skip type
-            int yDim = Integer.valueOf(br.readLine().substring(7));  //Read height
-            int xDim = Integer.valueOf(br.readLine().substring(6));  //Read width
-            Map map = new Map(new Coordinate(xDim,yDim), false); //init Map without passable fields
-            br.readLine();  //Skip map
-            String currentLine;
-            for (int y = 0; (currentLine = br.readLine()) != null; y++) { //Read in MapRow
-                for (int x = 0; x < currentLine.length(); x++) {
-                    if (currentLine.charAt(x) == '.' || currentLine.charAt(x) == 'G' || currentLine.charAt(x) == 'S') {
-                        map.switchPassable(new Coordinate(x,y));    //Mark passable fields
-                    }
-                }
-            }
-            return map;
-        } catch (Exception e) {
-            throw new MapInitialisationException();
+    class CellType {
+        private int val;
+
+        void setRoom() {
+            val = 1;
+        }
+
+        void setFloor() {
+            val = 2;
+        }
+
+        void setObstacle() {
+            val = -1;
+        }
+
+        boolean isRoom() {
+            return val == 1;
+        }
+
+        boolean isFloor() {
+            return val == 2;
+        }
+
+        boolean isObstacle() {
+            return val == -1;
         }
     }
 }

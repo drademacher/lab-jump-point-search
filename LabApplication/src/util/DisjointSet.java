@@ -13,7 +13,7 @@
  *     Andrey Loskutov <loskutov@gmx.de> - generified interface, bug 462760
  ******************************************************************************/
 
-package map;
+package util;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,7 +37,7 @@ import java.util.List;
  *            element type
  * @since 3.2
  */
-class DisjointSet<T> {
+public class DisjointSet<T> {
     /**
      * A node in the disjoint set forest. Each tree in the forest is a disjoint
      * set, where the root of the tree is the set representative.

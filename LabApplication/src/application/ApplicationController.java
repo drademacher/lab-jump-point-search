@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import map.MapController;
 import util.Coordinate;
 import util.Tuple2;
-import util.Tuple3;
 
 import java.io.File;
 import java.net.URL;
@@ -251,7 +250,7 @@ public class ApplicationController implements Initializable {
     }
 
 
-    /* ------- Callback CeellType ------- */
+    /* ------- Callbacks ------- */
 
     private interface OnStartGoalSetCallback {
         void call(Coordinate start, Coordinate goal);
