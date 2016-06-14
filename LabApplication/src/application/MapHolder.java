@@ -3,10 +3,19 @@ package application;
 import exception.InvalidCoordinateException;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import map.MapFacade;
 import shortestpath.ShortestPathResult;
 import util.Coordinate;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static application.ApplicationConstants.*;
 import static application.FieldVisualisation.*;
@@ -15,6 +24,12 @@ import static application.FieldVisualisation.*;
  * Created by paloka on 06.06.16.
  */
 public class MapHolder {
+    private static MapHolder ourInstance;
+
+    private int xDimVis;
+    private int xOffsetVis = 0;
+    private int yDimVis;
+    private int yOffsetVis = 0;
 
     private MapFacade map;
     private ShortestPathResult shortestPathResult;
@@ -24,13 +39,15 @@ public class MapHolder {
     private int fieldSize = 10;
 
     MapHolder(Canvas canvas) {
+        ourInstance = this;
+
         this.canvas = canvas;
 
         canvas.setOnScroll(event -> {
             if (event.getDeltaY() == 0) return;
             if (event.getDeltaY() > 0 && fieldSize + ZOOM_FACTOR <= ZOOM_MAX) this.fieldSize += ZOOM_FACTOR;
             if (event.getDeltaY() < 0 && fieldSize - ZOOM_FACTOR >= ZOOM_MIN) this.fieldSize -= ZOOM_FACTOR;
-            //Todo: große Maps können ab einer bestimmten FIELD_SIZE nicht mehr angezeigt werden, der Versuch führt zu einer RuntimeException
+            updateDimVis();
             renderMap();
         });
 
@@ -40,6 +57,10 @@ public class MapHolder {
             int y = new Double((event.getY() - 2) / this.fieldSize).intValue();
             this.onMouseClickedCallback.call(new Coordinate(x,y));
         });
+    }
+
+    public static MapHolder getOurInstance() {
+        return ourInstance;
     }
 
     void refreshMap() {
@@ -69,12 +90,34 @@ public class MapHolder {
         renderShortestPathResult();
     }
 
+    void saveMap(File file) {
+        ArrayList<String> lines = new ArrayList<>();
+        lines.addAll(Arrays.asList("type octile", "height " + map.getYDim(), "width " + map.getXDim(), "map"));
+        String line;
+
+        try {
+            for (int y = 0; y < map.getYDim(); y++) {
+                line = "";
+                for (int x = 0; x < map.getXDim(); x++) {
+                    line = line + (map.isPassable(new Coordinate(x, y)) ? "." : "T");
+                }
+                lines.add(line);
+            }
+
+            Files.write(file.toPath(), lines, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidCoordinateException e) {
+            e.printStackTrace();
+        }
+    }
+
     /* ------- Getter & Setter ------- */
 
 
     void setMap(MapFacade map) {
         this.map = map;
-        //Todo: große Maps können ab einer bestimmten FIELD_SIZE nicht mehr angezeigt werden, der Versuch führt zu einer RuntimeException
+        updateDimVis();
     }
 
     void setOnMouseClickedCallback(OnMouseClickedCallback callback) {
@@ -91,16 +134,16 @@ public class MapHolder {
     private void renderMap() {
         if (map == null || canvas == null) return;
         GraphicsContext gc = this.canvas.getGraphicsContext2D();
-        this.canvas.setWidth(this.fieldSize * this.map.getXDim() + 1);
-        this.canvas.setHeight(this.fieldSize * this.map.getYDim() + 1);
+        this.canvas.setWidth(this.fieldSize * xDimVis + 1);
+        this.canvas.setHeight(this.fieldSize * yDimVis + 1);
 
         gc.setFill(Paint.valueOf("#212121"));
         gc.fillRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
 
-        for (int x = 0; x < this.map.getXDim(); x++) {
-            for (int y = 0; y < this.map.getYDim(); y++) {
+        for (int x = 0; x < xDimVis; x++) {
+            for (int y = 0; y < yDimVis; y++) {
                 try {
-                    gc.setFill(this.map.isPassable(new Coordinate(x,y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
+                    gc.setFill(this.map.isPassable(new Coordinate(xOffsetVis + x,yOffsetVis + y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
                     gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - 1, this.fieldSize - 1);
                 } catch (InvalidCoordinateException e) {
                     e.printStackTrace();
@@ -109,6 +152,27 @@ public class MapHolder {
             }
         }
         renderShortestPathResult();
+    }
+
+    private void updateDimVis() {
+        StackPane pane = (StackPane) canvas.getParent();
+        xDimVis = (int) ((pane.getWidth() - 1) / fieldSize);
+        xDimVis = Math.min(xDimVis, map.getXDim());
+        yDimVis = (int) ((pane.getHeight() - 1) / fieldSize);
+        yDimVis = Math.min(yDimVis, map.getYDim());
+
+        // adjust offsets if they are broken!
+        setCamera(0, 0);
+    }
+
+    public void setCamera(int diffX, int diffY) {
+        if (map == null) return;
+        xOffsetVis += diffX;
+        xOffsetVis = Math.min(Math.max(0, xOffsetVis), map.getXDim() - xDimVis);
+        yOffsetVis += diffY;
+        yOffsetVis = Math.min(Math.max(0, yOffsetVis), map.getYDim() - yDimVis);
+        System.out.println(yOffsetVis);
+        renderMap();
     }
 
     private void renderShortestPathResult() {
@@ -127,6 +191,10 @@ public class MapHolder {
     }
 
     private void renderField(Coordinate coordinate, FieldVisualisation field) {
+        coordinate = new Coordinate(coordinate.getX() - xOffsetVis, coordinate.getY() - yOffsetVis);
+
+        // TODO: logik immer noch richtig mit der neuen coordinate???
+        // Code wie bisher
         if (this.canvas == null
                 || coordinate.getX() < 0 || coordinate.getY() < 0
                 || (this.canvas.getWidth() - 1) / this.fieldSize < coordinate.getX()
@@ -137,7 +205,7 @@ public class MapHolder {
     }
 
 
-    /* ------- Callback CeellType ------- */
+    /* ------- Callback Type ------- */
 
     interface OnMouseClickedCallback {
         void call(Coordinate coordinate);

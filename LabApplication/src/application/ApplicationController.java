@@ -11,11 +11,17 @@ import javafx.scene.control.ToggleGroup;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import map.MapController;
+import map.MapFacade;
 import util.Coordinate;
 import util.Tuple2;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 /**
@@ -27,7 +33,7 @@ public class ApplicationController implements Initializable {
     private MenuItem emptyMapMenuItem, randomMapMenuItem, mazeMapMenuItem, mazeRoomMapMenuItem, singleRoomMapMenuItem, doubleRoomMapMenuItem, loopRoomMapMenuItem;
 
     @FXML
-    private MenuItem openMapMenuItem;
+    private MenuItem openMapMenuItem, saveMapMenuItem;
 
     @FXML
     private MenuItem editMapMenuItem;
@@ -72,10 +78,13 @@ public class ApplicationController implements Initializable {
         initDoubleRoomMapMenuItem();
         initLoopRoomMapMenuItem();
         initOpenMapMenuItem();
+        initSaveMapMenuItem();
         initEditMapMenuItem();
         initHeuristicToggleGroup();
         initRunAStarMenuItem();
+        // initKeyEventListener();
     }
+
 
     private void initEmptyMapMenuItem() {
         emptyMapMenuItem.setOnAction(event -> {
@@ -188,6 +197,21 @@ public class ApplicationController implements Initializable {
         });
     }
 
+    private void initSaveMapMenuItem() {
+        // TODO: map access by a getter on MapHolder - is this the right way to do??
+        saveMapMenuItem.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Current Map");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Map Files", "*.map"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*"));
+            File selectedFile = fileChooser.showSaveDialog(this.primaryStage);
+            if (selectedFile != null) {
+                mapHolder.saveMap(selectedFile);
+            }
+        });
+    }
+
     private void initEditMapMenuItem() {
         editMapMenuItem.setOnAction(event -> setEditMapMode());
     }
@@ -248,7 +272,6 @@ public class ApplicationController implements Initializable {
         });
         this.mapHolder.refreshMap();
     }
-
 
     /* ------- Callbacks ------- */
 
