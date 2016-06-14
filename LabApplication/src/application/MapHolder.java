@@ -9,6 +9,13 @@ import map.MapFacade;
 import shortestpath.ShortestPathResult;
 import util.Coordinate;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static application.ApplicationConstants.*;
 import static application.FieldVisualisation.*;
 
@@ -73,17 +80,34 @@ public class MapHolder {
         renderShortestPathResult();
     }
 
+    void saveMap(File file) {
+        ArrayList<String> lines = new ArrayList<>();
+        lines.addAll(Arrays.asList("type octile", "height " + map.getYDim(), "width " + map.getXDim(), "map"));
+        String line;
+
+        try {
+            for (int y = 0; y < map.getYDim(); y++) {
+                line = "";
+                for (int x = 0; x < map.getXDim(); x++) {
+                    line = line + (map.isPassable(new Coordinate(x, y)) ? "." : "T");
+                }
+                lines.add(line);
+            }
+
+            Files.write(file.toPath(), lines, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidCoordinateException e) {
+            e.printStackTrace();
+        }
+    }
+
     /* ------- Getter & Setter ------- */
 
 
     void setMap(MapFacade map) {
         this.map = map;
         updateDimVis();
-    }
-
-    MapFacade getMap() {
-        // TODO: getter nur fürs speichern benutzt
-        return map;
     }
 
     void setOnMouseClickedCallback(OnMouseClickedCallback callback) {

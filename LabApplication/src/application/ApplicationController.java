@@ -205,26 +205,7 @@ public class ApplicationController implements Initializable {
                     new FileChooser.ExtensionFilter("All Files", "*.*"));
             File selectedFile = fileChooser.showSaveDialog(this.primaryStage);
             if (selectedFile != null) {
-                MapFacade map = mapHolder.getMap();
-                ArrayList<String> lines = new ArrayList<>();
-                lines.addAll(Arrays.asList("type octile", "height " + map.getYDim(), "width " + map.getXDim(), "map"));
-                String line;
-
-                try {
-                    for (int y = 0; y < map.getYDim(); y++) {
-                        line = "";
-                        for (int x = 0; x < map.getXDim(); x++) {
-                            line = line + (map.isPassable(new Coordinate(x, y)) ? "." : "T");
-                        }
-                        lines.add(line);
-                    }
-
-                    Files.write(selectedFile.toPath(), lines, Charset.forName("UTF-8"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InvalidCoordinateException e) {
-                    e.printStackTrace();
-                }
+                mapHolder.saveMap(selectedFile);
             }
         });
     }
