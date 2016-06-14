@@ -136,6 +136,7 @@ public class MapHolder {
         GraphicsContext gc = this.canvas.getGraphicsContext2D();
         this.canvas.setWidth(this.fieldSize * xDimVis + 1);
         this.canvas.setHeight(this.fieldSize * yDimVis + 1);
+        int padding = (fieldSize > 5) ? 1 : 0;
 
         gc.setFill(Paint.valueOf("#212121"));
         gc.fillRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
@@ -144,7 +145,8 @@ public class MapHolder {
             for (int y = 0; y < yDimVis; y++) {
                 try {
                     gc.setFill(this.map.isPassable(new Coordinate(xOffsetVis + x,yOffsetVis + y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
-                    gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - 1, this.fieldSize - 1);
+                    // TODO: the padding (1 pixel top left) will remain always! solve this by making two methods of rendering
+                    gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - padding, this.fieldSize - padding);
                 } catch (InvalidCoordinateException e) {
                     e.printStackTrace();
                     //Todo: ApplicationController.renderMap - InvalidCoordinateException
@@ -199,9 +201,12 @@ public class MapHolder {
                 || coordinate.getX() < 0 || coordinate.getY() < 0
                 || (this.canvas.getWidth() - 1) / this.fieldSize < coordinate.getX()
                 || (this.canvas.getHeight() - 1) / this.fieldSize < coordinate.getY()) return;
+
+        // TODO: move this padding on a higher level!
+        int padding = (fieldSize > 5) ? 1 : 0;
         GraphicsContext gc = this.canvas.getGraphicsContext2D();
         gc.setFill(field.getColor());
-        gc.fillRect(coordinate.getX() * this.fieldSize + 1, coordinate.getY() * this.fieldSize + 1, this.fieldSize - 1, this.fieldSize - 1);
+        gc.fillRect(coordinate.getX() * this.fieldSize + 1, coordinate.getY() * this.fieldSize + 1, this.fieldSize - padding, this.fieldSize - padding);
     }
 
 
