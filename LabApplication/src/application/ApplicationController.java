@@ -82,7 +82,9 @@ public class ApplicationController implements Initializable {
         initEditMapMenuItem();
         initHeuristicToggleGroup();
         initRunAStarMenuItem();
+        // initKeyEventListener();
     }
+
 
     private void initEmptyMapMenuItem() {
         emptyMapMenuItem.setOnAction(event -> {
@@ -270,7 +272,6 @@ public class ApplicationController implements Initializable {
         });
         this.mapHolder.refreshMap();
     }
-
 
     /* ------- Callbacks ------- */
 

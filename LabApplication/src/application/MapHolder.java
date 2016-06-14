@@ -3,6 +3,7 @@ package application;
 import exception.InvalidCoordinateException;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import map.MapFacade;
@@ -23,9 +24,12 @@ import static application.FieldVisualisation.*;
  * Created by paloka on 06.06.16.
  */
 public class MapHolder {
+    private static MapHolder ourInstance;
 
     private int xDimVis;
+    private int xOffsetVis = 0;
     private int yDimVis;
+    private int yOffsetVis = 0;
 
     private MapFacade map;
     private ShortestPathResult shortestPathResult;
@@ -35,6 +39,8 @@ public class MapHolder {
     private int fieldSize = 10;
 
     MapHolder(Canvas canvas) {
+        ourInstance = this;
+
         this.canvas = canvas;
 
         canvas.setOnScroll(event -> {
@@ -51,6 +57,10 @@ public class MapHolder {
             int y = new Double((event.getY() - 2) / this.fieldSize).intValue();
             this.onMouseClickedCallback.call(new Coordinate(x,y));
         });
+    }
+
+    public static MapHolder getOurInstance() {
+        return ourInstance;
     }
 
     void refreshMap() {
@@ -133,7 +143,7 @@ public class MapHolder {
         for (int x = 0; x < xDimVis; x++) {
             for (int y = 0; y < yDimVis; y++) {
                 try {
-                    gc.setFill(this.map.isPassable(new Coordinate(x,y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
+                    gc.setFill(this.map.isPassable(new Coordinate(xOffsetVis + x,yOffsetVis + y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
                     gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - 1, this.fieldSize - 1);
                 } catch (InvalidCoordinateException e) {
                     e.printStackTrace();
@@ -150,6 +160,19 @@ public class MapHolder {
         xDimVis = Math.min(xDimVis, map.getXDim());
         yDimVis = (int) ((pane.getHeight() - 1) / fieldSize);
         yDimVis = Math.min(yDimVis, map.getYDim());
+
+        // adjust offsets if they are broken!
+        setCamera(0, 0);
+    }
+
+    public void setCamera(int diffX, int diffY) {
+        if (map == null) return;
+        xOffsetVis += diffX;
+        xOffsetVis = Math.min(Math.max(0, xOffsetVis), map.getXDim() - xDimVis);
+        yOffsetVis += diffY;
+        yOffsetVis = Math.min(Math.max(0, yOffsetVis), map.getYDim() - yDimVis);
+        System.out.println(yOffsetVis);
+        renderMap();
     }
 
     private void renderShortestPathResult() {
@@ -168,6 +191,10 @@ public class MapHolder {
     }
 
     private void renderField(Coordinate coordinate, FieldVisualisation field) {
+        coordinate = new Coordinate(coordinate.getX() - xOffsetVis, coordinate.getY() - yOffsetVis);
+
+        // TODO: logik immer noch richtig mit der neuen coordinate???
+        // Code wie bisher
         if (this.canvas == null
                 || coordinate.getX() < 0 || coordinate.getY() < 0
                 || (this.canvas.getWidth() - 1) / this.fieldSize < coordinate.getX()
