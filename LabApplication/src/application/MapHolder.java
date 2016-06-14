@@ -3,6 +3,7 @@ package application;
 import exception.InvalidCoordinateException;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import map.MapFacade;
 import shortestpath.ShortestPathResult;
@@ -15,6 +16,9 @@ import static application.FieldVisualisation.*;
  * Created by paloka on 06.06.16.
  */
 public class MapHolder {
+
+    private int xDimVis;
+    private int yDimVis;
 
     private MapFacade map;
     private ShortestPathResult shortestPathResult;
@@ -30,7 +34,7 @@ public class MapHolder {
             if (event.getDeltaY() == 0) return;
             if (event.getDeltaY() > 0 && fieldSize + ZOOM_FACTOR <= ZOOM_MAX) this.fieldSize += ZOOM_FACTOR;
             if (event.getDeltaY() < 0 && fieldSize - ZOOM_FACTOR >= ZOOM_MIN) this.fieldSize -= ZOOM_FACTOR;
-            //Todo: große Maps können ab einer bestimmten FIELD_SIZE nicht mehr angezeigt werden, der Versuch führt zu einer RuntimeException
+            updateDimVis();
             renderMap();
         });
 
@@ -74,7 +78,7 @@ public class MapHolder {
 
     void setMap(MapFacade map) {
         this.map = map;
-        //Todo: große Maps können ab einer bestimmten FIELD_SIZE nicht mehr angezeigt werden, der Versuch führt zu einer RuntimeException
+        updateDimVis();
     }
 
     MapFacade getMap() {
@@ -96,14 +100,14 @@ public class MapHolder {
     private void renderMap() {
         if (map == null || canvas == null) return;
         GraphicsContext gc = this.canvas.getGraphicsContext2D();
-        this.canvas.setWidth(this.fieldSize * this.map.getXDim() + 1);
-        this.canvas.setHeight(this.fieldSize * this.map.getYDim() + 1);
+        this.canvas.setWidth(this.fieldSize * xDimVis + 1);
+        this.canvas.setHeight(this.fieldSize * yDimVis + 1);
 
         gc.setFill(Paint.valueOf("#212121"));
         gc.fillRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
 
-        for (int x = 0; x < this.map.getXDim(); x++) {
-            for (int y = 0; y < this.map.getYDim(); y++) {
+        for (int x = 0; x < xDimVis; x++) {
+            for (int y = 0; y < yDimVis; y++) {
                 try {
                     gc.setFill(this.map.isPassable(new Coordinate(x,y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
                     gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - 1, this.fieldSize - 1);
@@ -114,6 +118,14 @@ public class MapHolder {
             }
         }
         renderShortestPathResult();
+    }
+
+    private void updateDimVis() {
+        StackPane pane = (StackPane) canvas.getParent();
+        xDimVis = (int) ((pane.getWidth() - 1) / fieldSize);
+        xDimVis = Math.min(xDimVis, map.getXDim());
+        yDimVis = (int) ((pane.getHeight() - 1) / fieldSize);
+        yDimVis = Math.min(yDimVis, map.getYDim());
     }
 
     private void renderShortestPathResult() {
