@@ -41,6 +41,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Run">
                     <MenuItem fx:id="runAStarMenuItem" mnemonicParsing="false" text="A-Star"/>
+                    <MenuItem fx:id="runJPSMenuItem" mnemonicParsing="false" text="JPS"/>
                 </Menu>
             </menus>
         </MenuBar>

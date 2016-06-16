@@ -11,17 +11,11 @@ import javafx.scene.control.ToggleGroup;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import map.MapController;
-import map.MapFacade;
 import util.Coordinate;
 import util.Tuple2;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 /**
@@ -45,7 +39,7 @@ public class ApplicationController implements Initializable {
     private RadioMenuItem zeroHeuristicMenuItem, euclideanHeuristicMenuItem, gridHeuristicMenuItem;
 
     @FXML
-    private MenuItem runAStarMenuItem;
+    private MenuItem runAStarMenuItem, runJPSMenuItem;
 
     @FXML
     private Canvas mapCanvas;
@@ -82,6 +76,7 @@ public class ApplicationController implements Initializable {
         initEditMapMenuItem();
         initHeuristicToggleGroup();
         initRunAStarMenuItem();
+        initRunJPSMenuItem();
         // initKeyEventListener();
     }
 
@@ -228,6 +223,14 @@ public class ApplicationController implements Initializable {
         runAStarMenuItem.setOnAction(event -> {
             setSetStartGoalMode((start, goal) -> {
                 this.mapHolder.setShortestPath(this.mapController.findShortestPathWithAStar(start, goal));
+            });
+        });
+    }
+
+    private void initRunJPSMenuItem() {
+        runJPSMenuItem.setOnAction(event -> {
+            setSetStartGoalMode((start, goal) -> {
+                this.mapHolder.setShortestPath(this.mapController.findShortestPathWithJPS(start, goal));
             });
         });
     }
