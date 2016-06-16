@@ -198,7 +198,6 @@ public class ApplicationController implements Initializable {
     }
 
     private void initSaveMapMenuItem() {
-        // TODO: map access by a getter on MapHolder - is this the right way to do??
         saveMapMenuItem.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Current Map");
@@ -207,7 +206,7 @@ public class ApplicationController implements Initializable {
                     new FileChooser.ExtensionFilter("All Files", "*.*"));
             File selectedFile = fileChooser.showSaveDialog(this.primaryStage);
             if (selectedFile != null) {
-                mapHolder.saveMap(selectedFile);
+                this.mapController.saveMap(selectedFile);
             }
         });
     }

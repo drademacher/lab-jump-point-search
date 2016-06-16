@@ -90,30 +90,8 @@ public class MapHolder {
         renderShortestPathResult();
     }
 
-    void saveMap(File file) {
-        ArrayList<String> lines = new ArrayList<>();
-        lines.addAll(Arrays.asList("type octile", "height " + map.getYDim(), "width " + map.getXDim(), "map"));
-        String line;
-
-        try {
-            for (int y = 0; y < map.getYDim(); y++) {
-                line = "";
-                for (int x = 0; x < map.getXDim(); x++) {
-                    line = line + (map.isPassable(new Coordinate(x, y)) ? "." : "T");
-                }
-                lines.add(line);
-            }
-
-            Files.write(file.toPath(), lines, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidCoordinateException e) {
-            e.printStackTrace();
-        }
-    }
 
     /* ------- Getter & Setter ------- */
-
 
     void setMap(MapFacade map) {
         this.map = map;

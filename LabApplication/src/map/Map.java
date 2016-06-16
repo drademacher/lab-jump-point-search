@@ -4,6 +4,11 @@ import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
 import util.Coordinate;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -47,6 +52,25 @@ class Map implements MapFacade {
     void switchPassable(Coordinate coordinate) throws InvalidCoordinateException {
         isValideCoordinate(coordinate);
         map[coordinate.getX()][coordinate.getY()] = !map[coordinate.getX()][coordinate.getY()];
+    }
+
+
+    /* ------- Persistence ------- */
+
+    void save(File file){
+        ArrayList<String> lines = new ArrayList<>();
+        lines.addAll(Arrays.asList("type octile", "height " + this.yDim, "width " + this.xDim, "map"));
+        for (int y = 0; y < this.yDim; y++) {
+            String line = "";
+            for (int x = 0; x < this.xDim; x++) line = line + (this.map[x][y] ? "." : "T");
+            lines.add(line);
+        }
+        try {
+            Files.write(file.toPath(), lines, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            //Todo: Map.save - IOException
+            e.printStackTrace();
+        }
     }
 
 
