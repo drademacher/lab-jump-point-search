@@ -72,6 +72,11 @@ public class MapController {
         return aStar.findShortestPath(this.map, start, goal, this.heuristic);
     }
 
+    public ShortestPathResult findShortestPathWithJPS(Coordinate start, Coordinate goal) {
+        ShortestPathAlgorithm jps = shortestPathAlgorithmFactory.createJPS();
+        return jps.findShortestPath(this.map, start, goal, this.heuristic);
+    }
+
 
     /* ------- MapHeuristic Setter ------- */
 
