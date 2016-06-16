@@ -55,7 +55,7 @@ public class MapHolder {
             if (onMouseClickedCallback == null) return;
             int x = new Double((event.getX() - 1) / this.fieldSize).intValue();
             int y = new Double((event.getY() - 2) / this.fieldSize).intValue();
-            this.onMouseClickedCallback.call(new Coordinate(x,y));
+            this.onMouseClickedCallback.call(new Coordinate(xOffsetVis + x, yOffsetVis + y));
         });
     }
 
@@ -173,7 +173,6 @@ public class MapHolder {
         xOffsetVis = Math.min(Math.max(0, xOffsetVis), map.getXDim() - xDimVis);
         yOffsetVis += diffY;
         yOffsetVis = Math.min(Math.max(0, yOffsetVis), map.getYDim() - yDimVis);
-        System.out.println(yOffsetVis);
         renderMap();
     }
 
