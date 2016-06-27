@@ -16,7 +16,7 @@ public class ShortestPathAlgorithmFactory {
     public ShortestPathAlgorithm createAStar() {
         return new ShortestPathAlgorithm() {
             @Override
-            protected Collection<Tuple2<Coordinate, Double>> getOpenListCandidates(MapFacade map, Coordinate currentPoint) {
+            protected Collection<Tuple2<Coordinate, Double>> getOpenListCandidates(MapFacade map, Coordinate currentPoint, Coordinate predecessor, Coordinate goal) {
                 int x = currentPoint.getX();
                 int y = currentPoint.getY();
 
@@ -30,12 +30,11 @@ public class ShortestPathAlgorithmFactory {
     public ShortestPathAlgorithm createJPS() {
         return new ShortestPathAlgorithm() {
             @Override
-            protected Collection<Tuple2<Coordinate, Double>> getOpenListCandidates(MapFacade map, Coordinate currentPoint) {
+            protected Collection<Tuple2<Coordinate, Double>> getOpenListCandidates(MapFacade map, Coordinate currentPoint, Coordinate predecessor, Coordinate goal) {
                 int x = currentPoint.getX();
                 int y = currentPoint.getY();
 
-                boolean[][] neighborsPassable = getNeighborsPassable(map, x, y);
-                Collection<Tuple2<Coordinate, Double>> candidates = makeJPSCandidates(x, y, neighborsPassable);
+                Collection<Tuple2<Coordinate, Double>> candidates = makeJPSCandidates(map, currentPoint, predecessor, goal);
                 return candidates;
             }
         };
@@ -73,9 +72,100 @@ public class ShortestPathAlgorithmFactory {
     }
 
 
-    private Collection<Tuple2<Coordinate, Double>> makeJPSCandidates(int x, int y, boolean[][] neighborsPassable) {
+    private Collection<Tuple2<Coordinate, Double>> makeJPSCandidates(MapFacade map, Coordinate current, Coordinate predecessor, Coordinate goal) {
         Collection<Tuple2<Coordinate, Double>> candidates = new ArrayList<>();
-        // TODO: make candidates here
+        Collection<Coordinate> dirs = new ArrayList<>();
+        if(predecessor!=null){
+            Coordinate dir = getDirection(current, predecessor);
+            dirs.add(dir);
+            int val = Math.abs(dir.getX()) + Math.abs(dir.getY());
+            if (val == 1) {
+                boolean[][] neighborsPassable   = getNeighborsPassable(map, current.getX(), current.getY());
+                if (dir.getY() == 0) {
+                    if (!neighborsPassable[(-1) * dir.getX() + 1][0]) {
+                        dirs.add(new Coordinate(0,-1));
+                        dirs.add(new Coordinate(dir.getX(),-1));
+                    }
+                    if (!neighborsPassable[(-1) * dir.getX() + 1][2]) {
+                        dirs.add(new Coordinate(0,1));
+                        dirs.add(new Coordinate(dir.getX(),1));
+                    }
+                }
+                if (dir.getX() == 0) {
+                    if (!neighborsPassable[0][(-1) * dir.getY() + 1]){
+                        dirs.add(new Coordinate(-1,0));
+                        dirs.add(new Coordinate(-1,dir.getY()));
+                    }
+                    if (!neighborsPassable[2][(-1) * dir.getY() + 1]){
+                        dirs.add(new Coordinate(1,0));
+                        dirs.add(new Coordinate(1,dir.getY()));
+                    }
+                }
+            }else{
+                dirs.add(new Coordinate(dir.getX(), 0));
+                dirs.add(new Coordinate(0, dir.getY()));
+            }
+        }else{
+            dirs.add(new Coordinate(0,-1));
+            dirs.add(new Coordinate(1,-1));
+            dirs.add(new Coordinate(1,0));
+            dirs.add(new Coordinate(1,1));
+            dirs.add(new Coordinate(0,1));
+            dirs.add(new Coordinate(-1,1));
+            dirs.add(new Coordinate(-1,0));
+            dirs.add(new Coordinate(-1,-1));
+        }
+
+        for(Coordinate dir:dirs) {
+            Tuple2<Coordinate, Double> candidate = exploreDirection(map, current, 0.0, dir, goal);
+            if (candidate != null) candidates.add(candidate);
+        }
+
         return candidates;
+    }
+
+    private Coordinate getDirection(Coordinate current, Coordinate predecessor) {
+        final int deltaX = (int) Math.signum(current.getX() - predecessor.getX());
+        final int deltaY = (int) Math.signum(current.getY() - predecessor.getY());
+
+        return new Coordinate(deltaX, deltaY);
+    }
+
+    private Tuple2<Coordinate, Double> exploreDirection(MapFacade map, Coordinate current, Double cost, Coordinate dir, Coordinate goal) {
+        Coordinate next = current.add(dir);
+        int val = Math.abs(dir.getX()) + Math.abs(dir.getY());
+        cost += Math.sqrt(val);
+        boolean[][] neighborsPassable = getNeighborsPassable(map, next.getX(), next.getY());
+
+        if (!neighborsPassable[1][1]) {
+            return null;
+        }
+
+        if (val==2 && (!neighborsPassable[-1*dir.getX()+1][1] || !neighborsPassable[1][-1*dir.getY()+1]))   return null;
+
+        if(next.equals(goal)) return new Tuple2<>(next,cost);
+
+        if (val == 1) {
+            if (dir.getY() == 0) {
+                if (!neighborsPassable[(-1) * dir.getX() + 1][0] && neighborsPassable[1][0]) {
+                    return new Tuple2<>(next, cost);
+                }
+                if (!neighborsPassable[(-1) * dir.getX() + 1][2] && neighborsPassable[1][2]) {
+                    return new Tuple2<>(next, cost);
+                }
+            }
+            if (dir.getX() == 0) {
+                if (!neighborsPassable[0][(-1) * dir.getY() + 1] && neighborsPassable[0][1])
+                    return new Tuple2<>(next, cost);
+                if (!neighborsPassable[2][(-1) * dir.getY() + 1] && neighborsPassable[2][1])
+                    return new Tuple2<>(next, cost);
+            }
+        } else {
+            if(exploreDirection(map, next, cost, new Coordinate(dir.getX(),0), goal) != null)     return new Tuple2<>(next,cost);
+            if(exploreDirection(map, next, cost, new Coordinate(0, dir.getY()), goal) != null)    return new Tuple2<>(next,cost);
+        }
+
+        // return new Tuple2<>(next, cost);
+        return exploreDirection(map, next, cost, dir, goal);
     }
 }
