@@ -39,4 +39,8 @@ public class Coordinate {
         result = 31 * result + y;
         return result;
     }
+
+    public Coordinate add(Coordinate adding) {
+        return new Coordinate(x + adding.getX(), y + adding.getY());
+    }
 }

@@ -37,7 +37,7 @@ public abstract class ShortestPathAlgorithm {
                         openList.stream().map(entry -> entry.getArg1()).collect(Collectors.toList()),
                         pathPredecessors);
             }
-            openList.addAll(getOpenListCandidates(map, currentPoint).stream().
+            openList.addAll(getOpenListCandidates(map, currentPoint, currentPredecessor, goal).stream().
                     filter(candidate -> pathPredecessors.get(candidate.getArg1()) == null).
                     map(candidate -> new Tuple3<>(candidate.getArg1(), currentPoint, new Tuple2<>(pathDistance + candidate.getArg2(),heuristic.estimateDistance(candidate.getArg1(),goal)))).
                     collect(Collectors.toList()));
@@ -46,5 +46,5 @@ public abstract class ShortestPathAlgorithm {
         throw new NullPointerException("No Path");
     }
 
-    protected abstract Collection<Tuple2<Coordinate, Double>> getOpenListCandidates(MapFacade map, Coordinate currentPoint);
+    protected abstract Collection<Tuple2<Coordinate, Double>> getOpenListCandidates(MapFacade map, Coordinate currentPoint, Coordinate predecessor, Coordinate goal);
 }
