@@ -39,6 +39,12 @@
                                        text="Euclidean Heuristic" toggleGroup="$heuristicToggleGroup"/>
                     </Menu>
                 </Menu>
+                <Menu mnemonicParsing="false" text="View">
+                    <CheckMenuItem fx:id="viewObstacles" mnemonicParsing="false" selected="true" disable="true" text="Obstacles"/>
+                    <CheckMenuItem fx:id="viewOpenlist" mnemonicParsing="false" selected="true" text="Openlist"/>
+                    <CheckMenuItem fx:id="viewPath" mnemonicParsing="false" selected="true" text="Shortest Path"/>
+                    <CheckMenuItem fx:id="viewDetails" mnemonicParsing="false" selected="true" text="Details"/>
+                </Menu>
                 <Menu mnemonicParsing="false" text="Run">
                     <MenuItem fx:id="runAStarMenuItem" mnemonicParsing="false" text="A-Star"/>
                     <MenuItem fx:id="runJPSMenuItem" mnemonicParsing="false" text="JPS"/>
@@ -50,9 +56,13 @@
 
     </bottom>
     <center>
-        <StackPane>
+        <StackPane style="-fx-background-color: #212121;">
             <children>
-                <Canvas fx:id="mapCanvas"/>
+                <Canvas fx:id="gridCanvas"/>
+                <Canvas fx:id="obstacleCanvas"/>
+                <Canvas fx:id="openlistCanvas"/>
+                <Canvas fx:id="pathCanvas"/>
+                <Canvas fx:id="detailsCanvas"/>
             </children>
         </StackPane>
     </center>
