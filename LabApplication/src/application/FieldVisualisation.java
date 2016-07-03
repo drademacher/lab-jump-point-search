@@ -7,13 +7,15 @@ import javafx.scene.paint.Paint;
  * Created by paloka on 01.06.16.
  */
 enum FieldVisualisation {
-    GOAL_POINT("#DE2C2C"),
-    GRID_POINT("#E8E8E8"),
-    JUMP_POINT("#90C3D4"),
-    START_POINT("#2CDE38"),
-    OBSTACLE_POINT("#454545"),
-    VISITED_POINT("#BABABA"),
-    PATH_POINT("#DEDE2C");
+    GOAL_POINT("#D90000"),
+    GRID_POINT("#FFFFFF"),
+    JUMP_POINT("#595959"),
+    START_POINT("#006AD9"),
+    OBSTACLE_POINT("#212121"),
+    VISITED_POINT("#D9D9D9"),
+    PATH_POINT("#2BD942");
+
+    // TODO: use color #D92BD3 for fields of jump points
 
     private Color color;
 

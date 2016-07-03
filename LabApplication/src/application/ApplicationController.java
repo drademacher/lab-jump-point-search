@@ -5,9 +5,12 @@ import exception.MapInitialisationException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import map.MapController;
@@ -39,10 +42,13 @@ public class ApplicationController implements Initializable {
     private RadioMenuItem zeroHeuristicMenuItem, euclideanHeuristicMenuItem, gridHeuristicMenuItem;
 
     @FXML
+    private CheckMenuItem viewObstacles, viewOpenlist, viewPath, viewDetails;
+
+    @FXML
     private MenuItem runAStarMenuItem, runJPSMenuItem;
 
     @FXML
-    private Canvas mapCanvas;
+    private Canvas gridCanvas, obstacleCanvas, openlistCanvas, pathCanvas, detailsCanvas;
 
     private Stage primaryStage;
     private MapHolder mapHolder;
@@ -61,7 +67,7 @@ public class ApplicationController implements Initializable {
         this.mapController = new MapController();
 
         //Init mapHolder
-        this.mapHolder = new MapHolder(this.mapCanvas);
+        this.mapHolder = new MapHolder(this.gridCanvas, this.obstacleCanvas, this.openlistCanvas, this.pathCanvas, this.detailsCanvas);
 
         //Init Menu
         initEmptyMapMenuItem();
@@ -77,6 +83,7 @@ public class ApplicationController implements Initializable {
         initHeuristicToggleGroup();
         initRunAStarMenuItem();
         initRunJPSMenuItem();
+        initViews();
         // initKeyEventListener();
     }
 
@@ -234,6 +241,25 @@ public class ApplicationController implements Initializable {
             });
         });
     }
+
+
+
+    /* ------- View Selects ------- */
+
+    private void initViews() {
+
+
+        obstacleCanvas.visibleProperty().bind(viewObstacles.selectedProperty());
+        openlistCanvas.visibleProperty().bind(viewOpenlist.selectedProperty());
+        pathCanvas.visibleProperty().bind(viewPath.selectedProperty());
+        detailsCanvas.visibleProperty().bind(viewDetails.selectedProperty());
+
+        obstacleCanvas.setMouseTransparent(true);
+        openlistCanvas.setMouseTransparent(true);
+        pathCanvas.setMouseTransparent(true);
+        detailsCanvas.setMouseTransparent(true);
+    }
+
 
 
     /* ------- Mode Setter ------- */
