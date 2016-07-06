@@ -56,7 +56,7 @@
 
     </bottom>
     <center>
-        <StackPane style="-fx-background-color: #212121;">
+        <StackPane style="-fx-background-color: #B3B3B3;">
             <children>
                 <Canvas fx:id="gridCanvas"/>
                 <Canvas fx:id="obstacleCanvas"/>
