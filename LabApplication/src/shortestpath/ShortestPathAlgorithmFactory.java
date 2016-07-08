@@ -63,49 +63,49 @@ public class ShortestPathAlgorithmFactory {
 
     private Collection<Tuple2<Coordinate, Double>> makeJPSCandidates(MapFacade map, Coordinate currentPoint, Coordinate predecessor, Coordinate goal) {
         Collection<Tuple2<Coordinate, Double>> candidates = new ArrayList<>();
-        Collection<Coordinate> dirs = new ArrayList<>();
+        Collection<Coordinate> directions = new ArrayList<>();
         if(predecessor!=null){
-            Coordinate dir = getDirection(currentPoint, predecessor);
-            dirs.add(dir);
-            int val = Math.abs(dir.getX()) + Math.abs(dir.getY());
+            Coordinate direction = getDirection(currentPoint, predecessor);
+            directions.add(direction);
+            int val = Math.abs(direction.getX()) + Math.abs(direction.getY());
             if (val == 1) {
                 boolean[][] neighborsPassable   = getNeighborsPassable(map, currentPoint);
-                if (dir.getY() == 0) {
-                    if (!neighborsPassable[(-1) * dir.getX() + 1][0]) {
-                        dirs.add(new Coordinate(0,-1));
-                        dirs.add(new Coordinate(dir.getX(),-1));
+                if (direction.getY() == 0) {
+                    if (!neighborsPassable[(-1) * direction.getX() + 1][0]) {
+                        directions.add(new Coordinate(0,-1));
+                        directions.add(new Coordinate(direction.getX(),-1));
                     }
-                    if (!neighborsPassable[(-1) * dir.getX() + 1][2]) {
-                        dirs.add(new Coordinate(0,1));
-                        dirs.add(new Coordinate(dir.getX(),1));
+                    if (!neighborsPassable[(-1) * direction.getX() + 1][2]) {
+                        directions.add(new Coordinate(0,1));
+                        directions.add(new Coordinate(direction.getX(),1));
                     }
                 }
-                if (dir.getX() == 0) {
-                    if (!neighborsPassable[0][(-1) * dir.getY() + 1]){
-                        dirs.add(new Coordinate(-1,0));
-                        dirs.add(new Coordinate(-1,dir.getY()));
+                if (direction.getX() == 0) {
+                    if (!neighborsPassable[0][(-1) * direction.getY() + 1]){
+                        directions.add(new Coordinate(-1,0));
+                        directions.add(new Coordinate(-1,direction.getY()));
                     }
-                    if (!neighborsPassable[2][(-1) * dir.getY() + 1]){
-                        dirs.add(new Coordinate(1,0));
-                        dirs.add(new Coordinate(1,dir.getY()));
+                    if (!neighborsPassable[2][(-1) * direction.getY() + 1]){
+                        directions.add(new Coordinate(1,0));
+                        directions.add(new Coordinate(1,direction.getY()));
                     }
                 }
             }else{
-                dirs.add(new Coordinate(dir.getX(), 0));
-                dirs.add(new Coordinate(0, dir.getY()));
+                directions.add(new Coordinate(direction.getX(), 0));
+                directions.add(new Coordinate(0, direction.getY()));
             }
         }else{
-            dirs.add(new Coordinate(0,-1));
-            dirs.add(new Coordinate(1,-1));
-            dirs.add(new Coordinate(1,0));
-            dirs.add(new Coordinate(1,1));
-            dirs.add(new Coordinate(0,1));
-            dirs.add(new Coordinate(-1,1));
-            dirs.add(new Coordinate(-1,0));
-            dirs.add(new Coordinate(-1,-1));
+            directions.add(new Coordinate(0,-1));
+            directions.add(new Coordinate(1,-1));
+            directions.add(new Coordinate(1,0));
+            directions.add(new Coordinate(1,1));
+            directions.add(new Coordinate(0,1));
+            directions.add(new Coordinate(-1,1));
+            directions.add(new Coordinate(-1,0));
+            directions.add(new Coordinate(-1,-1));
         }
 
-        for(Coordinate dir:dirs) {
+        for(Coordinate dir:directions) {
             Tuple2<Coordinate, Double> candidate = exploreDirection(map, currentPoint, 0.0, dir, goal);
             if (candidate != null) candidates.add(candidate);
         }
@@ -113,9 +113,9 @@ public class ShortestPathAlgorithmFactory {
         return candidates;
     }
 
-    private Tuple2<Coordinate, Double> exploreDirection(MapFacade map, Coordinate currentPoint, Double cost, Coordinate dir, Coordinate goal) {
-        Coordinate next = currentPoint.add(dir);
-        int val = Math.abs(dir.getX()) + Math.abs(dir.getY());
+    private Tuple2<Coordinate, Double> exploreDirection(MapFacade map, Coordinate currentPoint, Double cost, Coordinate direction, Coordinate goal) {
+        Coordinate next = currentPoint.add(direction);
+        int val = Math.abs(direction.getX()) + Math.abs(direction.getY());
         cost += Math.sqrt(val);
         boolean[][] neighborsPassable = getNeighborsPassable(map, currentPoint);
 
@@ -123,31 +123,31 @@ public class ShortestPathAlgorithmFactory {
             return null;
         }
 
-        if (val==2 && (!neighborsPassable[-1*dir.getX()+1][1] || !neighborsPassable[1][-1*dir.getY()+1]))   return null;
+        if (val==2 && (!neighborsPassable[-1*direction.getX()+1][1] || !neighborsPassable[1][-1*direction.getY()+1]))   return null;
 
         if(next.equals(goal)) return new Tuple2<>(next,cost);
 
         if (val == 1) {
-            if (dir.getY() == 0) {
-                if (!neighborsPassable[(-1) * dir.getX() + 1][0] && neighborsPassable[1][0]) {
+            if (direction.getY() == 0) {
+                if (!neighborsPassable[(-1) * direction.getX() + 1][0] && neighborsPassable[1][0]) {
                     return new Tuple2<>(next, cost);
                 }
-                if (!neighborsPassable[(-1) * dir.getX() + 1][2] && neighborsPassable[1][2]) {
+                if (!neighborsPassable[(-1) * direction.getX() + 1][2] && neighborsPassable[1][2]) {
                     return new Tuple2<>(next, cost);
                 }
             }
-            if (dir.getX() == 0) {
-                if (!neighborsPassable[0][(-1) * dir.getY() + 1] && neighborsPassable[0][1])
+            if (direction.getX() == 0) {
+                if (!neighborsPassable[0][(-1) * direction.getY() + 1] && neighborsPassable[0][1])
                     return new Tuple2<>(next, cost);
-                if (!neighborsPassable[2][(-1) * dir.getY() + 1] && neighborsPassable[2][1])
+                if (!neighborsPassable[2][(-1) * direction.getY() + 1] && neighborsPassable[2][1])
                     return new Tuple2<>(next, cost);
             }
         } else {
-            if(exploreDirection(map, next, cost, new Coordinate(dir.getX(),0), goal) != null)     return new Tuple2<>(next,cost);
-            if(exploreDirection(map, next, cost, new Coordinate(0, dir.getY()), goal) != null)    return new Tuple2<>(next,cost);
+            if(exploreDirection(map, next, cost, new Coordinate(direction.getX(),0), goal) != null)     return new Tuple2<>(next,cost);
+            if(exploreDirection(map, next, cost, new Coordinate(0, direction.getY()), goal) != null)    return new Tuple2<>(next,cost);
         }
 
-        return exploreDirection(map, next, cost, dir, goal);
+        return exploreDirection(map, next, cost, direction, goal);
     }
 
 
