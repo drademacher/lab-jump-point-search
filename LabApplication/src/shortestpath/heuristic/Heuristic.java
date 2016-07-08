@@ -1,4 +1,4 @@
-package shortestpath;
+package shortestpath.heuristic;
 
 import util.Coordinate;
 

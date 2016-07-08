@@ -2,10 +2,10 @@ package map;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
-import shortestpath.Heuristic;
 import shortestpath.ShortestPathAlgorithm;
 import shortestpath.ShortestPathAlgorithmFactory;
 import shortestpath.ShortestPathResult;
+import shortestpath.heuristic.HeuristicStrategy;
 import util.Coordinate;
 
 import java.io.File;
@@ -13,12 +13,13 @@ import java.io.File;
 public class MapController {
 
     private Map map;
-    private MapFactory mapFactory = new MapFactory();
+
+    private MapFactory mapFactory               = new MapFactory();
+    private HeuristicStrategy heuristicStrategy = new HeuristicStrategy();
     private ShortestPathAlgorithmFactory shortestPathAlgorithmFactory = new ShortestPathAlgorithmFactory();
-    private Heuristic heuristic;
 
 
-    /* ------- Factory ------- */
+    /* ------- MapFactory Operations ------- */
 
     public MapFacade setEmptyMap(Coordinate dimension) throws MapInitialisationException {
         this.map = mapFactory.createEmptyMap(dimension);
@@ -67,38 +68,35 @@ public class MapController {
         this.map.switchPassable(coordinate);
     }
 
-    public ShortestPathResult findShortestPathWithAStar(Coordinate start, Coordinate goal) {
-        ShortestPathAlgorithm aStar = shortestPathAlgorithmFactory.createAStar();
-        return aStar.findShortestPath(this.map, start, goal, this.heuristic);
-    }
-
-    public ShortestPathResult findShortestPathWithJPS(Coordinate start, Coordinate goal) {
-        ShortestPathAlgorithm jps = shortestPathAlgorithmFactory.createJPS();
-        return jps.findShortestPath(this.map, start, goal, this.heuristic);
-    }
-
     public void saveMap(File file) {
         this.map.save(file);
     }
 
 
-    /* ------- MapHeuristic Setter ------- */
+    /* ------- ShortestPath Operations ------- */
 
-    public void setZeroHeuristic() {
-        this.heuristic = (p,q) -> 0;
+    public ShortestPathResult findShortestPathWithAStar(Coordinate start, Coordinate goal) {
+        ShortestPathAlgorithm aStar = shortestPathAlgorithmFactory.createAStar();
+        return aStar.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic());
     }
 
-    public void setEuclideanHeuristic() {
-        this.heuristic = (p,q) -> Math.sqrt((p.getX() - q.getX()) * (p.getX() - q.getX()) + (p.getY() - q.getY()) * (p.getY() - q.getY()));
+    public ShortestPathResult findShortestPathWithJPS(Coordinate start, Coordinate goal) {
+        ShortestPathAlgorithm jps = shortestPathAlgorithmFactory.createJPS();
+        return jps.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic());
+    }
+
+
+    /* ------- MapHeuristic Operations ------- */
+
+    public void setZeroHeuristic() {
+        this.heuristicStrategy.setZeroHeuristic();
     }
 
     public void setGridHeuristic() {
-        this.heuristic = (p,q) -> {
-            int deltaX = Math.abs(p.getX() - q.getX());
-            int deltaY = Math.abs(p.getY() - q.getY());
-            int min = Math.min(deltaX, deltaY);
-            int max = Math.max(deltaX, deltaY);
-            return max - min + Math.sqrt(2) * min;
-        };
+        this.heuristicStrategy.setGridHeuristic();
+    }
+
+    public void setEuclideanHeuristic() {
+        this.heuristicStrategy.setEucideanHeuristic();
     }
 }

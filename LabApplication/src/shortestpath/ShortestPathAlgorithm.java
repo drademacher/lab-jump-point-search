@@ -1,6 +1,7 @@
 package shortestpath;
 
 import map.MapFacade;
+import shortestpath.heuristic.Heuristic;
 import util.Coordinate;
 import util.Tuple2;
 import util.Tuple3;
