@@ -44,9 +44,13 @@ class Map implements MapFacade {
     }
 
     @Override
-    public boolean isPassable(Coordinate coordinate) throws InvalidCoordinateException {
-        isValideCoordinate(coordinate);
-        return map[coordinate.getX()][coordinate.getY()];
+    public boolean isPassable(Coordinate coordinate){
+        try {
+            isValideCoordinate(coordinate);
+            return map[coordinate.getX()][coordinate.getY()];
+        } catch (InvalidCoordinateException e) {
+            return false;
+        }
     }
 
     void switchPassable(Coordinate coordinate) throws InvalidCoordinateException {

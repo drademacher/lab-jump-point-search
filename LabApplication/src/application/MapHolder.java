@@ -4,7 +4,6 @@ import exception.InvalidCoordinateException;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Paint;
 import map.MapFacade;
 import shortestpath.ShortestPathResult;
 import util.Coordinate;
@@ -65,12 +64,7 @@ public class MapHolder {
     }
 
     void switchPassable(Coordinate coordinate) {
-        try {
-            renderField(gridCanvas, coordinate, map.isPassable(coordinate) ? GRID_POINT : OBSTACLE_POINT);
-        } catch (InvalidCoordinateException e) {
-            e.printStackTrace();
-            //Todo: ApplicationController.renderField - InvalidCoordinateException
-        }
+        renderField(gridCanvas, coordinate, map.isPassable(coordinate) ? GRID_POINT : OBSTACLE_POINT);
     }
 
     void setStartPoint(Coordinate coordinate) {
@@ -117,14 +111,9 @@ public class MapHolder {
 
         for (int x = 0; x < xDimVis; x++) {
             for (int y = 0; y < yDimVis; y++) {
-                try {
-                    // TODO: just print the grid point and discard the drawing of obstacles!
-                    gc.setFill(this.map.isPassable(new Coordinate(xOffsetVis + x,yOffsetVis + y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
-                    gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - padding, this.fieldSize - padding);
-                } catch (InvalidCoordinateException e) {
-                    e.printStackTrace();
-                    //Todo: ApplicationController.renderMap - InvalidCoordinateException
-                }
+                // TODO: just print the grid point and discard the drawing of obstacles!
+                gc.setFill(this.map.isPassable(new Coordinate(xOffsetVis + x,yOffsetVis + y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
+                gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - padding, this.fieldSize - padding);
             }
         }
         renderShortestPathResult();

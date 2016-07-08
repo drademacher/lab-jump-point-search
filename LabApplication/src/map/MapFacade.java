@@ -12,5 +12,5 @@ public interface MapFacade {
 
     int getYDim();
 
-    boolean isPassable(Coordinate coordinate) throws InvalidCoordinateException;
+    boolean isPassable(Coordinate coordinate);
 }

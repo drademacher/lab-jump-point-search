@@ -91,12 +91,12 @@ public class MapController {
     /* ------- ShortestPath Operations ------- */
 
     public ShortestPathResult findShortestPathWithAStar(Coordinate start, Coordinate goal) {
-        ShortestPathAlgorithm aStar = shortestPathAlgorithmFactory.createAStar();
+        ShortestPathAlgorithm aStar = shortestPathAlgorithmFactory.createAStar(false); //Todo: CornerCutting Option
         return aStar.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic());
     }
 
     public ShortestPathResult findShortestPathWithJPS(Coordinate start, Coordinate goal) {
-        ShortestPathAlgorithm jps = shortestPathAlgorithmFactory.createJPS();
+        ShortestPathAlgorithm jps = shortestPathAlgorithmFactory.createJPS(false); //Todo: CornerCutting Option
         return jps.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic());
     }
 }
