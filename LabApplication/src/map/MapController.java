@@ -73,19 +73,6 @@ public class MapController {
     }
 
 
-    /* ------- ShortestPath Operations ------- */
-
-    public ShortestPathResult findShortestPathWithAStar(Coordinate start, Coordinate goal) {
-        ShortestPathAlgorithm aStar = shortestPathAlgorithmFactory.createAStar();
-        return aStar.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic());
-    }
-
-    public ShortestPathResult findShortestPathWithJPS(Coordinate start, Coordinate goal) {
-        ShortestPathAlgorithm jps = shortestPathAlgorithmFactory.createJPS();
-        return jps.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic());
-    }
-
-
     /* ------- MapHeuristic Operations ------- */
 
     public void setZeroHeuristic() {
@@ -98,5 +85,18 @@ public class MapController {
 
     public void setEuclideanHeuristic() {
         this.heuristicStrategy.setEucideanHeuristic();
+    }
+
+
+    /* ------- ShortestPath Operations ------- */
+
+    public ShortestPathResult findShortestPathWithAStar(Coordinate start, Coordinate goal) {
+        ShortestPathAlgorithm aStar = shortestPathAlgorithmFactory.createAStar();
+        return aStar.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic());
+    }
+
+    public ShortestPathResult findShortestPathWithJPS(Coordinate start, Coordinate goal) {
+        ShortestPathAlgorithm jps = shortestPathAlgorithmFactory.createJPS();
+        return jps.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic());
     }
 }
