@@ -1,5 +1,7 @@
 package shortestpath.heuristic;
 
+import util.MathUtil;
+
 /**
  * Created by paloka on 08.07.16.
  */
@@ -21,7 +23,7 @@ public class HeuristicStrategy {
             int deltaY = Math.abs(p.getY() - q.getY());
             int min = Math.min(deltaX, deltaY);
             int max = Math.max(deltaX, deltaY);
-            return max - min + Math.sqrt(2) * min;
+            return max - min + MathUtil.SQRT2 * min;
         };
     }
 

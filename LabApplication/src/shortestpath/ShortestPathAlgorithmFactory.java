@@ -3,6 +3,7 @@ package shortestpath;
 import exception.InvalidCoordinateException;
 import map.MapFacade;
 import util.Coordinate;
+import util.MathUtil;
 import util.Tuple2;
 
 import java.util.ArrayList;
@@ -46,13 +47,13 @@ public class ShortestPathAlgorithmFactory {
         if (neighborsPassable[1][0]) candidates.add(new Tuple2<>(new Coordinate(x, y - 1), 1.0));
         if (neighborsPassable[1][2]) candidates.add(new Tuple2<>(new Coordinate(x, y + 1), 1.0));
         if (neighborsPassable[0][0] && neighborsPassable[1][0] && neighborsPassable[0][1])
-            candidates.add(new Tuple2<>(new Coordinate(x - 1, y - 1), Math.sqrt(2.0)));
+            candidates.add(new Tuple2<>(new Coordinate(x - 1, y - 1), MathUtil.SQRT2));
         if (neighborsPassable[2][2] && neighborsPassable[1][2] && neighborsPassable[2][1])
-            candidates.add(new Tuple2<>(new Coordinate(x + 1, y + 1), Math.sqrt(2.0)));
+            candidates.add(new Tuple2<>(new Coordinate(x + 1, y + 1), MathUtil.SQRT2));
         if (neighborsPassable[0][2] && neighborsPassable[1][2] && neighborsPassable[0][1])
-            candidates.add(new Tuple2<>(new Coordinate(x - 1, y + 1), Math.sqrt(2.0)));
+            candidates.add(new Tuple2<>(new Coordinate(x - 1, y + 1), MathUtil.SQRT2));
         if (neighborsPassable[2][0] && neighborsPassable[1][0] && neighborsPassable[2][1])
-            candidates.add(new Tuple2<>(new Coordinate(x + 1, y - 1), Math.sqrt(2.0)));
+            candidates.add(new Tuple2<>(new Coordinate(x + 1, y - 1), MathUtil.SQRT2));
 
         return candidates;
     }
@@ -146,7 +147,6 @@ public class ShortestPathAlgorithmFactory {
             if(exploreDirection(map, next, cost, new Coordinate(0, dir.getY()), goal) != null)    return new Tuple2<>(next,cost);
         }
 
-        // return new Tuple2<>(next, cost);
         return exploreDirection(map, next, cost, dir, goal);
     }
 
