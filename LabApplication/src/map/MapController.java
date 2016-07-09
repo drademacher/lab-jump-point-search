@@ -6,6 +6,7 @@ import shortestpath.ShortestPathAlgorithm;
 import shortestpath.ShortestPathAlgorithmFactory;
 import shortestpath.ShortestPathResult;
 import shortestpath.heuristic.HeuristicStrategy;
+import shortestpath.movingRule.MovingRuleStrategy;
 import util.Coordinate;
 
 import java.io.File;
@@ -14,8 +15,9 @@ public class MapController {
 
     private Map map;
 
-    private MapFactory mapFactory               = new MapFactory();
-    private HeuristicStrategy heuristicStrategy = new HeuristicStrategy();
+    private MapFactory mapFactory                   = new MapFactory();
+    private HeuristicStrategy heuristicStrategy     = new HeuristicStrategy();
+    private MovingRuleStrategy movingRuleStrategy   = new MovingRuleStrategy();
     private ShortestPathAlgorithmFactory shortestPathAlgorithmFactory = new ShortestPathAlgorithmFactory();
 
 
@@ -75,28 +77,43 @@ public class MapController {
 
     /* ------- MapHeuristic Operations ------- */
 
-    public void setZeroHeuristic() {
-        this.heuristicStrategy.setZeroHeuristic();
+    public void setHeuristicZero() {
+        this.heuristicStrategy.setHeuristicZero();
     }
 
-    public void setGridHeuristic() {
-        this.heuristicStrategy.setGridHeuristic();
+    public void setHeuristicGrid() {
+        this.heuristicStrategy.setHeuristicGrid();
     }
 
-    public void setEuclideanHeuristic() {
-        this.heuristicStrategy.setEucideanHeuristic();
+    public void setHeuristicEuclidean() {
+        this.heuristicStrategy.setHeuristicEucidean();
+    }
+
+
+    /* ------- MapMovingRule Operations ------- */
+
+    public void setMovingRuleOrthogonalOnly(){
+        this.movingRuleStrategy.setMovingRuleOrthogonalOnly();
+    }
+
+    public void setMovingRuleCornerCutting(){
+        this.movingRuleStrategy.setMovingRuleCornerCutting();
+    }
+
+    public void setMovingRuleNoCornerCutting(){
+        this.movingRuleStrategy.setMovingRuleNoCornerCutting();
     }
 
 
     /* ------- ShortestPath Operations ------- */
 
     public ShortestPathResult findShortestPathWithAStar(Coordinate start, Coordinate goal) {
-        ShortestPathAlgorithm aStar = shortestPathAlgorithmFactory.createAStar(false); //Todo: CornerCutting Option
-        return aStar.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic());
+        ShortestPathAlgorithm aStar = shortestPathAlgorithmFactory.createAStar();
+        return aStar.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic(), this.movingRuleStrategy.getMovingRule());
     }
 
     public ShortestPathResult findShortestPathWithJPS(Coordinate start, Coordinate goal) {
-        ShortestPathAlgorithm jps = shortestPathAlgorithmFactory.createJPS(false); //Todo: CornerCutting Option
-        return jps.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic());
+        ShortestPathAlgorithm jps = shortestPathAlgorithmFactory.createJPS();
+        return jps.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic(), this.movingRuleStrategy.getMovingRule());
     }
 }

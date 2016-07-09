@@ -13,11 +13,11 @@ public class HeuristicStrategy {
         return this.heuristic;
     }
 
-    public void setZeroHeuristic(){
+    public void setHeuristicZero(){
         this.heuristic = (p,q) -> 0;
     }
 
-    public void setGridHeuristic(){
+    public void setHeuristicGrid(){
         this.heuristic = (p,q) -> {
             int deltaX = Math.abs(p.getX() - q.getX());
             int deltaY = Math.abs(p.getY() - q.getY());
@@ -27,7 +27,7 @@ public class HeuristicStrategy {
         };
     }
 
-    public void setEucideanHeuristic(){
+    public void setHeuristicEucidean(){
         this.heuristic = (p,q) -> Math.sqrt((p.getX() - q.getX()) * (p.getX() - q.getX()) + (p.getY() - q.getY()) * (p.getY() - q.getY()));
     }
 }

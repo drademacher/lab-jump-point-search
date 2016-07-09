@@ -5,12 +5,7 @@ import exception.MapInitialisationException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Paint;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import map.MapController;
@@ -36,10 +31,13 @@ public class ApplicationController implements Initializable {
     private MenuItem editMapMenuItem;
 
     @FXML
-    private ToggleGroup heuristicToggleGroup;
+    private ToggleGroup heuristicToggleGroup, movingRuleToggleGroup;
 
     @FXML
     private RadioMenuItem zeroHeuristicMenuItem, euclideanHeuristicMenuItem, gridHeuristicMenuItem;
+
+    @FXML
+    private RadioMenuItem orthogonalOnlyMovingRuleMenuItem, cornerCuttingMovingRuleMenuItem, noCornerCuttingMovingRuleMenuItem;
 
     @FXML
     private CheckMenuItem viewObstacles, viewOpenlist, viewPath, viewDetails;
@@ -81,12 +79,12 @@ public class ApplicationController implements Initializable {
         initSaveMapMenuItem();
         initEditMapMenuItem();
         initHeuristicToggleGroup();
+        initMovingRuleToggleGroup();
         initRunAStarMenuItem();
         initRunJPSMenuItem();
         initViews();
         // initKeyEventListener();
     }
-
 
     private void initEmptyMapMenuItem() {
         emptyMapMenuItem.setOnAction(event -> {
@@ -100,6 +98,7 @@ public class ApplicationController implements Initializable {
             }
         });
     }
+
 
     private void initRandomMapMenuItem() {
         randomMapMenuItem.setOnAction(event -> {
@@ -219,11 +218,20 @@ public class ApplicationController implements Initializable {
 
     private void initHeuristicToggleGroup() {
         heuristicToggleGroup.selectedToggleProperty().addListener((ov, oldT, newT) -> {
-            if (newT == this.zeroHeuristicMenuItem) this.mapController.setZeroHeuristic();
-            if (newT == this.gridHeuristicMenuItem) this.mapController.setGridHeuristic();
-            if (newT == this.euclideanHeuristicMenuItem) this.mapController.setEuclideanHeuristic();
+            if (newT == this.zeroHeuristicMenuItem) this.mapController.setHeuristicZero();
+            if (newT == this.gridHeuristicMenuItem) this.mapController.setHeuristicGrid();
+            if (newT == this.euclideanHeuristicMenuItem) this.mapController.setHeuristicEuclidean();
         });
-        this.heuristicToggleGroup.selectToggle(gridHeuristicMenuItem);
+        this.heuristicToggleGroup.selectToggle(this.gridHeuristicMenuItem);
+    }
+
+    private void initMovingRuleToggleGroup() {
+        movingRuleToggleGroup.selectedToggleProperty().addListener((ov, oldT, newT) -> {
+            if (newT == this.orthogonalOnlyMovingRuleMenuItem) this.mapController.setMovingRuleOrthogonalOnly();
+            if (newT == this.cornerCuttingMovingRuleMenuItem) this.mapController.setMovingRuleCornerCutting();
+            if (newT == this.noCornerCuttingMovingRuleMenuItem) this.mapController.setMovingRuleNoCornerCutting();
+        });
+        this.movingRuleToggleGroup.selectToggle(this.noCornerCuttingMovingRuleMenuItem);
     }
 
     private void initRunAStarMenuItem() {

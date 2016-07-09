@@ -38,6 +38,17 @@
                         <RadioMenuItem fx:id="euclideanHeuristicMenuItem" mnemonicParsing="false"
                                        text="Euclidean Heuristic" toggleGroup="$heuristicToggleGroup"/>
                     </Menu>
+                    <Menu mnemonicParsing="false" text="Moving Rule">
+                        <RadioMenuItem fx:id="orthogonalOnlyMovingRuleMenuItem" mnemonicParsing="false" text="Orthogonal Only">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="movingRuleToggleGroup"/>
+                            </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem fx:id="cornerCuttingMovingRuleMenuItem" mnemonicParsing="false" text="Corner Cutting"
+                                       toggleGroup="$movingRuleToggleGroup"/>
+                        <RadioMenuItem fx:id="noCornerCuttingMovingRuleMenuItem" mnemonicParsing="false"
+                                       text="No Corner Cutting" toggleGroup="$movingRuleToggleGroup"/>
+                    </Menu>
                 </Menu>
                 <Menu mnemonicParsing="false" text="View">
                     <CheckMenuItem fx:id="viewObstacles" mnemonicParsing="false" selected="true" disable="true" text="Obstacles"/>
