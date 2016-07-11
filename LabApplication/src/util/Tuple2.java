@@ -1,10 +1,6 @@
 package util;
 
-/**
- * Created by paloka on 03.06.16.
- */
 
-//Todo: weg refactoren if possible
 public class Tuple2<A, B> {
 
     private A arg1;
@@ -30,9 +26,7 @@ public class Tuple2<A, B> {
 
         Tuple2<?, ?> tuple2 = (Tuple2<?, ?>) o;
 
-        if (arg1 != null ? !arg1.equals(tuple2.arg1) : tuple2.arg1 != null) return false;
-        return arg2 != null ? arg2.equals(tuple2.arg2) : tuple2.arg2 == null;
-
+        return arg1 != null ? arg1.equals(tuple2.arg1) : tuple2.arg1 == null && (arg2 != null ? arg2.equals(tuple2.arg2) : tuple2.arg2 == null);
     }
 
     @Override

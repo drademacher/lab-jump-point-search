@@ -44,6 +44,27 @@ public abstract class ShortestPathAlgorithm {
         //Todo: throw NoPathFoundException
         throw new NullPointerException("No Path");
     }
+    
+    public PreProcessing preprocessing(MapFacade map, MovingRule movingRule) {
+        PreProcessing result = new PreProcessing();
+        for (int x = 0; x < map.getXDim(); x++) {
+            for (int y = 0; y < map.getYDim(); y++) {
+                Coordinate cur = new Coordinate(x, y);
+                if (!map.isPassable(cur)) {
+                    continue;
+                }
+
+                for (Coordinate dir : movingRule.getAllDirections()) {
+                    Tuple2<Coordinate, Double> next = exploreStrategy(map, cur, dir, 0.0, null, movingRule);
+                    result.putIfAbsent(cur, new HashMap<>());
+                    result.get(cur).put(dir, next);
+                }
+
+            }
+        }
+        
+        return result;
+    }
 
 
     /* ------- Algorithm Substeps ------- */
