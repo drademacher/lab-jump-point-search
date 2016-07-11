@@ -61,6 +61,16 @@ public class MovingRuleStrategy {
                 }
                 return forcedDirections;
             }
+
+            @Override
+            public Collection<Coordinate> getSubDirections(Coordinate direction){
+                Collection<Coordinate> subDirections    = new ArrayList<>();
+                if(direction.getX()==0){
+                    subDirections.add(new Coordinate(1,0));
+                    subDirections.add(new Coordinate(-1,0));
+                }
+                return subDirections;
+            }
         };
     }
 
