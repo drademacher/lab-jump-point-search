@@ -77,8 +77,8 @@ public class MovingRuleStrategy {
 
                 if(Math.abs(dirX)+Math.abs(dirY)==2){
                     forcedDirections.addAll(getSubDirections(direction).stream()
-                            .filter(subDir -> !map.isPassable(currentPoint.add(subDir)))
-                            .map(subDir -> subDir.add(subDir.add(new Coordinate(-dirX, -dirY))))
+                            .filter(subDir -> !map.isPassable(currentPoint.sub(subDir)) && map.isPassable(currentPoint.add(direction).sub(subDir).sub(subDir)))
+                            .map(subDir -> direction.sub(subDir).sub(subDir))
                             .collect(Collectors.toList()));
                 }else{
                     if(dirX==0){
@@ -108,24 +108,24 @@ public class MovingRuleStrategy {
                 int curY   = currentPoint.getY();
 
                 if (dirY == 0) {
-                    if(!map.isPassable(new Coordinate(curX+(-1)*dirX,curY-1))
+                    if(!map.isPassable(new Coordinate(curX-dirX,curY-1))
                             && map.isPassable(new Coordinate(curX,curY-1))) {
                         forcedDirections.add(new Coordinate(0,-1));
                         forcedDirections.add(new Coordinate(dirX,-1));
                     }
-                    if(!map.isPassable(new Coordinate(curX+(-1)*dirX,curY+1))
+                    if(!map.isPassable(new Coordinate(curX-dirX,curY+1))
                             && map.isPassable(new Coordinate(curX,curY+1))){
                         forcedDirections.add(new Coordinate(0,1));
                         forcedDirections.add(new Coordinate(dirX,1));
                     }
                 }
                 if (dirX == 0) {
-                    if(!map.isPassable(new Coordinate(curX-1,curY+(-1)*dirY))
+                    if(!map.isPassable(new Coordinate(curX-1,curY-dirY))
                             && map.isPassable(new Coordinate(curX-1,curY))){
                         forcedDirections.add(new Coordinate(-1,0));
                         forcedDirections.add(new Coordinate(-1,dirY));
                     }
-                    if(!map.isPassable(new Coordinate(curX+1,curY+(-1)*dirY))
+                    if(!map.isPassable(new Coordinate(curX+1,curY-dirY))
                             && map.isPassable(new Coordinate(curX+1,curY))){
                         forcedDirections.add(new Coordinate(1,0));
                         forcedDirections.add(new Coordinate(1,dirY));

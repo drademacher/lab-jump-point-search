@@ -43,4 +43,8 @@ public class Coordinate {
     public Coordinate add(Coordinate adding) {
         return new Coordinate(x + adding.getX(), y + adding.getY());
     }
+
+    public Coordinate sub(Coordinate substracting) {
+        return new Coordinate(x - substracting.getX(), y - substracting.getY());
+    }
 }
