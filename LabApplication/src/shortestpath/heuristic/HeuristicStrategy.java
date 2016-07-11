@@ -30,4 +30,8 @@ public class HeuristicStrategy {
     public void setHeuristicEucidean(){
         this.heuristic = (p,q) -> Math.sqrt((p.getX() - q.getX()) * (p.getX() - q.getX()) + (p.getY() - q.getY()) * (p.getY() - q.getY()));
     }
+
+    public void setHeuristicManhatten() {
+        this.heuristic = (p, q) -> Math.abs(p.getX() - q.getX()) + Math.abs(p.getY() + q.getY());
+    }
 }

@@ -81,6 +81,10 @@ public class MapController {
         this.heuristicStrategy.setHeuristicZero();
     }
 
+    public void setHeuristicManhatten() {
+        this.heuristicStrategy.setHeuristicManhatten();
+    }
+
     public void setHeuristicGrid() {
         this.heuristicStrategy.setHeuristicGrid();
     }
@@ -116,4 +120,5 @@ public class MapController {
         ShortestPathAlgorithm jps = shortestPathAlgorithmFactory.createJPS();
         return jps.findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic(), this.movingRuleStrategy.getMovingRule());
     }
+
 }

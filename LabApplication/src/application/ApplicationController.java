@@ -34,7 +34,7 @@ public class ApplicationController implements Initializable {
     private ToggleGroup heuristicToggleGroup, movingRuleToggleGroup;
 
     @FXML
-    private RadioMenuItem zeroHeuristicMenuItem, euclideanHeuristicMenuItem, gridHeuristicMenuItem;
+    private RadioMenuItem zeroHeuristicMenuItem, manhattenHeursticMenuItem, euclideanHeuristicMenuItem, gridHeuristicMenuItem;
 
     @FXML
     private RadioMenuItem orthogonalOnlyMovingRuleMenuItem, cornerCuttingMovingRuleMenuItem, noCornerCuttingMovingRuleMenuItem;
@@ -219,6 +219,7 @@ public class ApplicationController implements Initializable {
     private void initHeuristicToggleGroup() {
         heuristicToggleGroup.selectedToggleProperty().addListener((ov, oldT, newT) -> {
             if (newT == this.zeroHeuristicMenuItem) this.mapController.setHeuristicZero();
+            if (newT == this.manhattenHeursticMenuItem) this.mapController.setHeuristicManhatten();
             if (newT == this.gridHeuristicMenuItem) this.mapController.setHeuristicGrid();
             if (newT == this.euclideanHeuristicMenuItem) this.mapController.setHeuristicEuclidean();
         });
