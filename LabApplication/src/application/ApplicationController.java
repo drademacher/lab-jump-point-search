@@ -257,7 +257,9 @@ public class ApplicationController implements Initializable {
     }
 
     private void initPreprocessRunMenuItem(){
-
+        preprocessRunMenuItem.setOnAction(event ->{
+            this.mapController.preprocessShortestPath();
+        });
     }
 
 

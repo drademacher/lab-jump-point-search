@@ -24,6 +24,10 @@ public class ShortestPathStrategy {
         return this.shortestPath;
     }
 
+    public void preprocess(MapFacade map, MovingRule movingRule){
+        this.shortestPath.preprocess(map,movingRule);
+    }
+
     public void setShortestPathAStar(){
         this.shortestPath   = new ShortestPathAStar();
     }
@@ -54,7 +58,6 @@ public class ShortestPathStrategy {
             return new Tuple2<>(candidate,Math.abs(direction.getX())+Math.abs(direction.getY())<2?1:MathUtil.SQRT2);
         }
     }
-
 
     private class ShortestPathJPS extends ShortestPath {
         @Override
@@ -87,7 +90,6 @@ public class ShortestPathStrategy {
             return exploreStrategy(map, candidate, direction, cost, goal, movingRule);
         }
     }
-
 
     private class ShortestPathPreprocessed extends ShortestPath {
         private ShortestPath shortestPathPreprocessingStrategy;
@@ -129,6 +131,15 @@ public class ShortestPathStrategy {
                 return new Tuple2<>(candidate.getArg1(),cost+candidate.getArg2());
             }
             return null;
+        }
+
+        @Override
+        public void preprocess(MapFacade map, MovingRule movingRule) {
+            for(int x=0;x<map.getXDim();x++){
+                for(int y=0;y<map.getYDim();y++){
+                    for(Coordinate direction:movingRule.getAllDirections()) this.shortestPathPreprocessingStrategy.exploreStrategy(map, new Coordinate(x,y), direction, 0.0, null, movingRule);
+                }
+            }
         }
     }
 }

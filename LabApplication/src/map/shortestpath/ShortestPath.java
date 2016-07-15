@@ -66,4 +66,7 @@ public abstract class ShortestPath {
     protected abstract Tuple2<Coordinate, Double> exploreStrategy(MapFacade map, Coordinate currentPoint, Coordinate direction, Double cost, Coordinate goal, MovingRule movingRule);
 
 
+    /* ------- Preprocessing ------- */
+
+    protected void preprocess(MapFacade map, MovingRule movingRule){};
 }
