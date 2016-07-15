@@ -1,8 +1,8 @@
-package shortestpath;
+package map.shortestpath;
 
 import map.MapFacade;
-import shortestpath.heuristic.Heuristic;
-import shortestpath.movingRule.MovingRule;
+import map.heuristic.Heuristic;
+import map.movingRule.MovingRule;
 import util.Coordinate;
 import util.Tuple2;
 import util.Tuple3;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Created by paloka on 06.06.16.
  */
-public abstract class ShortestPathAlgorithm {
+public abstract class ShortestPath {
 
     public ShortestPathResult findShortestPath(MapFacade map, Coordinate start, Coordinate goal, Heuristic heuristic, MovingRule movingRule) {
         Map<Coordinate, Coordinate> pathPredecessors = new HashMap<>();
@@ -44,27 +44,6 @@ public abstract class ShortestPathAlgorithm {
         //Todo: throw NoPathFoundException
         throw new NullPointerException("No Path");
     }
-    
-    public PreProcessing preprocessing(MapFacade map, MovingRule movingRule) {
-        PreProcessing result = new PreProcessing();
-        for (int x = 0; x < map.getXDim(); x++) {
-            for (int y = 0; y < map.getYDim(); y++) {
-                Coordinate cur = new Coordinate(x, y);
-                if (!map.isPassable(cur)) {
-                    continue;
-                }
-
-                for (Coordinate dir : movingRule.getAllDirections()) {
-                    Tuple2<Coordinate, Double> next = exploreStrategy(map, cur, dir, 0.0, null, movingRule);
-                    result.putIfAbsent(cur, new HashMap<>());
-                    result.get(cur).put(dir, next);
-                }
-
-            }
-        }
-        
-        return result;
-    }
 
 
     /* ------- Algorithm Substeps ------- */
@@ -85,4 +64,6 @@ public abstract class ShortestPathAlgorithm {
 
     protected abstract Collection<Coordinate> getDirectionsStrategy(MapFacade map, Coordinate currentPoint, Coordinate predecessor, MovingRule movingRule);
     protected abstract Tuple2<Coordinate, Double> exploreStrategy(MapFacade map, Coordinate currentPoint, Coordinate direction, Double cost, Coordinate goal, MovingRule movingRule);
+
+
 }

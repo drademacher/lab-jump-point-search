@@ -33,7 +33,7 @@
                                 <ToggleGroup fx:id="heuristicToggleGroup"/>
                             </toggleGroup>
                         </RadioMenuItem>
-                        <RadioMenuItem fx:id="manhattenHeuristicMenuItem" mnemonicParsing="false"
+                        <RadioMenuItem fx:id="manhattanHeuristicMenuItem" mnemonicParsing="false"
                                        text="Manhatten Heuristic" toggleGroup="$heuristicToggleGroup"/>
                         <RadioMenuItem fx:id="gridHeuristicMenuItem" mnemonicParsing="false" text="Grid Heuristic"
                                        toggleGroup="$heuristicToggleGroup"/>
@@ -51,6 +51,17 @@
                         <RadioMenuItem fx:id="noCornerCuttingMovingRuleMenuItem" mnemonicParsing="false"
                                        text="No Corner Cutting" toggleGroup="$movingRuleToggleGroup"/>
                     </Menu>
+                    <Menu mnemonicParsing="false" text="ShortestPath">
+                        <RadioMenuItem fx:id="aStarShortestPathMenuItem" mnemonicParsing="false" text="A-Star">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="shortestPathToggleGroup"/>
+                            </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem fx:id="jpsShortestPathMenuItem" mnemonicParsing="false" text="JPS"
+                                       toggleGroup="$shortestPathToggleGroup"/>
+                        <RadioMenuItem fx:id="jpsPlusShortestPathMenuItem" mnemonicParsing="false"
+                                       text="JPS-Plus" toggleGroup="$shortestPathToggleGroup"/>
+                    </Menu>
                 </Menu>
                 <Menu mnemonicParsing="false" text="View">
                     <CheckMenuItem fx:id="viewObstacles" mnemonicParsing="false" selected="true" disable="true" text="Obstacles"/>
@@ -58,9 +69,9 @@
                     <CheckMenuItem fx:id="viewPath" mnemonicParsing="false" selected="true" text="Shortest Path"/>
                     <CheckMenuItem fx:id="viewDetails" mnemonicParsing="false" selected="true" text="Details"/>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Run">
-                    <MenuItem fx:id="runAStarMenuItem" mnemonicParsing="false" text="A-Star"/>
-                    <MenuItem fx:id="runJPSMenuItem" mnemonicParsing="false" text="JPS"/>
+                <Menu mnemonicParsing="false" text="View">
+                    <MenuItem fx:id="preprocessRunMenuItem" mnemonicParsing="false" text="Preprocess"/>
+                    <MenuItem fx:id="runRunMenuItem" mnemonicParsing="false" text="Run"/>
                 </Menu>
             </menus>
         </MenuBar>

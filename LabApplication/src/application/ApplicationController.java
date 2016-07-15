@@ -31,19 +31,22 @@ public class ApplicationController implements Initializable {
     private MenuItem editMapMenuItem;
 
     @FXML
-    private ToggleGroup heuristicToggleGroup, movingRuleToggleGroup;
+    private ToggleGroup heuristicToggleGroup, movingRuleToggleGroup, shortestPathToggleGroup;
 
     @FXML
-    private RadioMenuItem zeroHeuristicMenuItem, manhattenHeursticMenuItem, euclideanHeuristicMenuItem, gridHeuristicMenuItem;
+    private RadioMenuItem zeroHeuristicMenuItem, manhattanHeuristicMenuItem, euclideanHeuristicMenuItem, gridHeuristicMenuItem;
 
     @FXML
     private RadioMenuItem orthogonalOnlyMovingRuleMenuItem, cornerCuttingMovingRuleMenuItem, noCornerCuttingMovingRuleMenuItem;
 
     @FXML
+    private RadioMenuItem aStarShortestPathMenuItem, jpsShortestPathMenuItem, jpsPlusShortestPathMenuItem;
+
+    @FXML
     private CheckMenuItem viewObstacles, viewOpenlist, viewPath, viewDetails;
 
     @FXML
-    private MenuItem runAStarMenuItem, runJPSMenuItem;
+    private MenuItem runRunMenuItem, preprocessRunMenuItem;
 
     @FXML
     private Canvas gridCanvas, obstacleCanvas, openlistCanvas, pathCanvas, detailsCanvas;
@@ -80,8 +83,9 @@ public class ApplicationController implements Initializable {
         initEditMapMenuItem();
         initHeuristicToggleGroup();
         initMovingRuleToggleGroup();
-        initRunAStarMenuItem();
-        initRunJPSMenuItem();
+        initShortestPathToggleGroup();
+        initRunRunMenuItem();
+        initPreprocessRunMenuItem();
         initViews();
         // initKeyEventListener();
     }
@@ -219,7 +223,7 @@ public class ApplicationController implements Initializable {
     private void initHeuristicToggleGroup() {
         heuristicToggleGroup.selectedToggleProperty().addListener((ov, oldT, newT) -> {
             if (newT == this.zeroHeuristicMenuItem) this.mapController.setHeuristicZero();
-            if (newT == this.manhattenHeursticMenuItem) this.mapController.setHeuristicManhatten();
+            if (newT == this.manhattanHeuristicMenuItem) this.mapController.setHeuristicManhattan();
             if (newT == this.gridHeuristicMenuItem) this.mapController.setHeuristicGrid();
             if (newT == this.euclideanHeuristicMenuItem) this.mapController.setHeuristicEuclidean();
         });
@@ -228,29 +232,33 @@ public class ApplicationController implements Initializable {
 
     private void initMovingRuleToggleGroup() {
         movingRuleToggleGroup.selectedToggleProperty().addListener((ov, oldT, newT) -> {
-            if (newT == this.orthogonalOnlyMovingRuleMenuItem) this.mapController.setMovingRuleOrthogonalOnly();
-            if (newT == this.cornerCuttingMovingRuleMenuItem) this.mapController.setMovingRuleCornerCutting();
+            if (newT == this.orthogonalOnlyMovingRuleMenuItem) this.mapController.setMovingRuleNoDiagonal();
+            if (newT == this.cornerCuttingMovingRuleMenuItem) this.mapController.setMovingRuleBasic();
             if (newT == this.noCornerCuttingMovingRuleMenuItem) this.mapController.setMovingRuleNoCornerCutting();
         });
         this.movingRuleToggleGroup.selectToggle(this.noCornerCuttingMovingRuleMenuItem);
     }
 
-    private void initRunAStarMenuItem() {
-        runAStarMenuItem.setOnAction(event -> {
-            setSetStartGoalMode((start, goal) -> {
-                this.mapHolder.setShortestPath(this.mapController.findShortestPathWithAStar(start, goal));
-            });
+    private void initShortestPathToggleGroup() {
+        shortestPathToggleGroup.selectedToggleProperty().addListener((ov, oldT, newT) -> {
+            if (newT == this.aStarShortestPathMenuItem) this.mapController.setShortestPathAStar();
+            if (newT == this.jpsShortestPathMenuItem) this.mapController.setShortestPathJPS();
+            if (newT == this.jpsPlusShortestPathMenuItem) this.mapController.setShortestPathJPSPlus();
+        });
+        this.shortestPathToggleGroup.selectToggle(this.aStarShortestPathMenuItem);
+    }
+
+    private void initRunRunMenuItem(){
+        runRunMenuItem.setOnAction(event ->{
+           setSetStartGoalMode((start, goal) ->{
+               this.mapHolder.setShortestPath(this.mapController.findShortestPath(start,goal));
+           });
         });
     }
 
-    private void initRunJPSMenuItem() {
-        runJPSMenuItem.setOnAction(event -> {
-            setSetStartGoalMode((start, goal) -> {
-                this.mapHolder.setShortestPath(this.mapController.findShortestPathWithJPS(start, goal));
-            });
-        });
-    }
+    private void initPreprocessRunMenuItem(){
 
+    }
 
 
     /* ------- View Selects ------- */
@@ -268,7 +276,6 @@ public class ApplicationController implements Initializable {
         pathCanvas.setMouseTransparent(true);
         detailsCanvas.setMouseTransparent(true);
     }
-
 
 
     /* ------- Mode Setter ------- */
@@ -309,6 +316,7 @@ public class ApplicationController implements Initializable {
         });
         this.mapHolder.refreshMap();
     }
+
 
     /* ------- Callbacks ------- */
 

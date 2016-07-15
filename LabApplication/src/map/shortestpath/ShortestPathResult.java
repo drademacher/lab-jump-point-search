@@ -1,7 +1,6 @@
-package shortestpath;
+package map.shortestpath;
 
 import util.Coordinate;
-import util.Tuple2;
 
 import java.util.Collection;
 import java.util.LinkedList;

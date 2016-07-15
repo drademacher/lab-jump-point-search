@@ -1,4 +1,4 @@
-package shortestpath.movingRule;
+package map.movingRule;
 
 import map.MapFacade;
 import util.Coordinate;

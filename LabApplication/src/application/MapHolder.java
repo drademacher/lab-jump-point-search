@@ -5,7 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import map.MapFacade;
-import shortestpath.ShortestPathResult;
+import map.shortestpath.ShortestPathResult;
 import util.Coordinate;
 
 import static application.ApplicationConstants.*;
