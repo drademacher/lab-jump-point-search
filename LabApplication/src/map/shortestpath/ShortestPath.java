@@ -13,7 +13,14 @@ import java.util.stream.Collectors;
 /**
  * Created by paloka on 06.06.16.
  */
-public abstract class ShortestPath {
+public abstract class ShortestPath implements AbstractExploreStrategy, AbstractGetDirectionsStrategy {
+
+    /* ------- Preprocessing ------- */
+
+    protected void doPreprocessing(MapFacade map, MovingRule movingRule){}
+
+
+    /* ------- ShortestPath ------- */
 
     public ShortestPathResult findShortestPath(MapFacade map, Coordinate start, Coordinate goal, Heuristic heuristic, MovingRule movingRule) {
         Map<Coordinate, Coordinate> pathPredecessors = new HashMap<>();
@@ -58,15 +65,4 @@ public abstract class ShortestPath {
         }
         return candidates;
     }
-
-
-    /* ------- Algorithm Strategies ------- */
-
-    protected abstract Collection<Coordinate> getDirectionsStrategy(MapFacade map, Coordinate currentPoint, Coordinate predecessor, MovingRule movingRule);
-    protected abstract Tuple2<Coordinate, Double> exploreStrategy(MapFacade map, Coordinate currentPoint, Coordinate direction, Double cost, Coordinate goal, MovingRule movingRule);
-
-
-    /* ------- Preprocessing ------- */
-
-    protected void preprocess(MapFacade map, MovingRule movingRule){};
 }
