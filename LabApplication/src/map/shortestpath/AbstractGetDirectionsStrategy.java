@@ -10,5 +10,5 @@ import java.util.Collection;
  * Created by paloka on 21.07.16.
  */
 interface AbstractGetDirectionsStrategy {
-    abstract Collection<Coordinate> getDirectionsStrategy(MapFacade map, Coordinate currentPoint, Coordinate predecessor, MovingRule movingRule);
+    Collection<Coordinate> getDirectionsStrategy(MapFacade map, Coordinate currentPoint, Coordinate predecessor, MovingRule movingRule);
 }
