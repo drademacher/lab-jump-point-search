@@ -108,12 +108,32 @@ public class ShortestPathStrategy {
             return this.getDirectionsStrategy.getDirectionsStrategy(map,currentPoint,predecessor,movingRule);
         }
 
-        //Todo: test for goalpoint
         @Override
         public Tuple2<Coordinate, Double> exploreStrategy(MapFacade map, Coordinate currentPoint, Coordinate direction, Double cost, Coordinate goal, MovingRule movingRule) {
-            Tuple3<Coordinate,Double,Boolean> candidate  = this.preprocessing.getPreprocessing(currentPoint,direction);
-
-            if(candidate!=null && candidate.getArg3()) return new Tuple2<>(candidate.getArg1(),cost+candidate.getArg2());
+            Tuple3<Coordinate,Double,Boolean> preprocessedPoint  = this.preprocessing.getPreprocessing(currentPoint,direction);
+            if(preprocessedPoint!=null) {
+                Coordinate candidate = preprocessedPoint.getArg1();
+                int deltaXToGoal        = direction.getX()*(goal.getX()-currentPoint.getX());
+                int deltaXToCandidate   = direction.getX()*(candidate.getX()-currentPoint.getX());
+                deltaXToGoal            = deltaXToGoal<=0 || deltaXToGoal>deltaXToCandidate?0:deltaXToGoal;
+                int deltaYToGoal        = direction.getY()*(goal.getY()-currentPoint.getY());
+                int deltaYToCandidate   = direction.getY()*(candidate.getY()-currentPoint.getY());
+                deltaYToGoal            = deltaYToGoal<=0 || deltaYToGoal>deltaYToCandidate?0:deltaYToGoal;
+                int minDistanceToGoal   = Math.min(deltaXToGoal,deltaYToGoal);
+                int maxDistanceToGoal   = Math.max(deltaXToGoal,deltaYToGoal);
+                int steps               = minDistanceToGoal>0?minDistanceToGoal:(maxDistanceToGoal>0?maxDistanceToGoal:0);
+                if(steps>0){
+                    Coordinate forcedPoint  = currentPoint.add(direction.mult(steps));
+                    if(forcedPoint.equals(goal)) return new Tuple2<>(forcedPoint,cost + steps*Math.sqrt(Math.abs(direction.getX()))+Math.abs(direction.getY()));
+                    for(Coordinate dir:movingRule.getSubDirections(direction)){
+                        Tuple2<Coordinate,Double> NextInDir  = exploreStrategy(map,forcedPoint,dir,0.0,goal,movingRule);
+                        if(NextInDir!=null && goal.equals(NextInDir.getArg1())){
+                            return new Tuple2<>(forcedPoint,cost+steps*Math.sqrt(Math.abs(direction.getX())+Math.abs(direction.getY())));
+                        }
+                    }
+                }
+                if (preprocessedPoint.getArg3()) return new Tuple2<>(candidate, cost + preprocessedPoint.getArg2());
+            }
             return null;
         }
 
@@ -135,26 +155,26 @@ public class ShortestPathStrategy {
             }
 
             Coordinate candidate = currentPoint.add(direction);
-            if(!map.isPassable(candidate) || movingRule.isCornerCut(map, currentPoint, direction))    return new Tuple3<>(candidate,cost,false);
+            if(!map.isPassable(candidate) || movingRule.isCornerCut(map, currentPoint, direction)){
+                return new Tuple3<>(currentPoint,cost,false);
+            }
 
-            Double NewCost = cost + Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()));
+            Double stepCost = Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()));
             if(movingRule.getForcedDirections(map,candidate,direction).size()>0){
                 preprocessing.putIfAbsent(currentPoint,new HashMap<>());
-                Tuple3<Coordinate,Double,Boolean> result    = new Tuple3<>(candidate,NewCost,true);
-                preprocessing.get(currentPoint).put(direction,result);
-                return result;
+                preprocessing.get(currentPoint).put(direction,new Tuple3<>(candidate,stepCost,true));
+                return new Tuple3<>(candidate,cost+stepCost,true);
             }
 
             for(Coordinate subDirection:movingRule.getSubDirections(direction)){
                 if(exploreStrategy(map, candidate, subDirection, 1.0, goal, movingRule).getArg3()){
                     preprocessing.putIfAbsent(currentPoint,new HashMap<>());
-                    Tuple3<Coordinate,Double,Boolean> result    = new Tuple3<>(candidate,NewCost,true);
-                    preprocessing.get(currentPoint).put(direction,result);
-                    return result;
+                    preprocessing.get(currentPoint).put(direction,new Tuple3<>(candidate,stepCost,true));
+                    return new Tuple3<>(candidate,cost+stepCost,true);
                 }
             }
 
-            Tuple3<Coordinate,Double,Boolean> result    = exploreStrategy(map, candidate, direction, NewCost, goal, movingRule);
+            Tuple3<Coordinate,Double,Boolean> result    = exploreStrategy(map, candidate, direction, cost+stepCost, goal, movingRule);
             preprocessing.putIfAbsent(currentPoint,new HashMap<>());
             preprocessing.get(currentPoint).put(direction,new Tuple3<>(result.getArg1(),result.getArg2()-cost,result.getArg3()));
             return result;

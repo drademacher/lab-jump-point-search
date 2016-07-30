@@ -69,7 +69,7 @@
                     <CheckMenuItem fx:id="viewPath" mnemonicParsing="false" selected="true" text="Shortest Path"/>
                     <CheckMenuItem fx:id="viewDetails" mnemonicParsing="false" selected="true" text="Details"/>
                 </Menu>
-                <Menu mnemonicParsing="false" text="View">
+                <Menu mnemonicParsing="false" text="Run">
                     <MenuItem fx:id="preprocessRunMenuItem" mnemonicParsing="false" text="Preprocess"/>
                     <MenuItem fx:id="runRunMenuItem" mnemonicParsing="false" text="Run"/>
                 </Menu>

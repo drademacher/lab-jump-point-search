@@ -21,6 +21,18 @@ public class Coordinate {
         return y;
     }
 
+    public Coordinate add(Coordinate adding) {
+        return new Coordinate(x + adding.getX(), y + adding.getY());
+    }
+
+    public Coordinate sub(Coordinate substracting) {
+        return new Coordinate(x - substracting.getX(), y - substracting.getY());
+    }
+
+    public Coordinate mult(int multiplicator){
+        return new Coordinate(x*multiplicator,y*multiplicator);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -38,13 +50,5 @@ public class Coordinate {
         int result = x;
         result = 31 * result + y;
         return result;
-    }
-
-    public Coordinate add(Coordinate adding) {
-        return new Coordinate(x + adding.getX(), y + adding.getY());
-    }
-
-    public Coordinate sub(Coordinate substracting) {
-        return new Coordinate(x - substracting.getX(), y - substracting.getY());
     }
 }
