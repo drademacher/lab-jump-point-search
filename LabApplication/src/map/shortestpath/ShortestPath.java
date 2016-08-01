@@ -61,8 +61,12 @@ public abstract class ShortestPath implements AbstractExploreStrategy, AbstractG
         Collection<Tuple2<Coordinate, Double>> candidates = new ArrayList<>();
         for(Coordinate dir:directions) {
             Tuple2<Coordinate, Double> candidate = exploreStrategy(map, currentPoint, dir, 0.0, goal, movingRule);
-            if (candidate != null) candidates.add(candidate);
+            if (candidate != null && !prune(candidate.getArg1(), dir, goal)) candidates.add(candidate);
         }
         return candidates;
+    }
+
+    protected boolean prune(Coordinate candidate, Coordinate direction, Coordinate goal){
+        return false;
     }
 }
