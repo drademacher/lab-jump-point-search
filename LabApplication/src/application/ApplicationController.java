@@ -40,7 +40,7 @@ public class ApplicationController implements Initializable {
     private RadioMenuItem orthogonalOnlyMovingRuleMenuItem, cornerCuttingMovingRuleMenuItem, noCornerCuttingMovingRuleMenuItem;
 
     @FXML
-    private RadioMenuItem aStarShortestPathMenuItem, jpsShortestPathMenuItem, jpsPlusShortestPathMenuItem;
+    private RadioMenuItem aStarShortestPathMenuItem, jpsShortestPathMenuItem, jpsPlusShortestPathMenuItem, jpsBBShortestPathMenuItem;
 
     @FXML
     private CheckMenuItem viewObstacles, viewOpenlist, viewPath, viewDetails;
@@ -244,6 +244,7 @@ public class ApplicationController implements Initializable {
             if (newT == this.aStarShortestPathMenuItem) this.mapController.setShortestPathAStar();
             if (newT == this.jpsShortestPathMenuItem) this.mapController.setShortestPathJPS();
             if (newT == this.jpsPlusShortestPathMenuItem) this.mapController.setShortestPathJPSPlus();
+            if (newT == this.jpsBBShortestPathMenuItem) this.mapController.setShortestPathJPSBB();
         });
         this.shortestPathToggleGroup.selectToggle(this.aStarShortestPathMenuItem);
     }
@@ -251,7 +252,7 @@ public class ApplicationController implements Initializable {
     private void initRunRunMenuItem(){
         runRunMenuItem.setOnAction(event ->{
            setSetStartGoalMode((start, goal) ->{
-               this.mapHolder.setShortestPath(this.mapController.findShortestPath(start,goal));
+               this.mapHolder.setShortestPath(this.mapController.runShortstPath(start,goal));
            });
         });
     }

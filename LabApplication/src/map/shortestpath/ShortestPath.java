@@ -13,16 +13,20 @@ import java.util.stream.Collectors;
 /**
  * Created by paloka on 06.06.16.
  */
-public abstract class ShortestPath implements AbstractExploreStrategy, AbstractGetDirectionsStrategy {
+public abstract class ShortestPath implements AbstractExploreStrategy {
 
     /* ------- Preprocessing ------- */
 
     protected void doPreprocessing(MapFacade map, MovingRule movingRule){}
 
+    protected boolean prune(Coordinate candidate, Coordinate direction, Coordinate goal){
+        return false;
+    }
+
 
     /* ------- ShortestPath ------- */
 
-    public ShortestPathResult findShortestPath(MapFacade map, Coordinate start, Coordinate goal, Heuristic heuristic, MovingRule movingRule) {
+    protected ShortestPathResult findShortestPath(MapFacade map, Coordinate start, Coordinate goal, Heuristic heuristic, MovingRule movingRule) {
         Map<Coordinate, Coordinate> pathPredecessors = new HashMap<>();
 
         PriorityQueue<Tuple3<Coordinate, Coordinate, Tuple2<Double,Double>>> openList = new PriorityQueue<>((p, q) -> {
@@ -61,12 +65,8 @@ public abstract class ShortestPath implements AbstractExploreStrategy, AbstractG
         Collection<Tuple2<Coordinate, Double>> candidates = new ArrayList<>();
         for(Coordinate dir:directions) {
             Tuple2<Coordinate, Double> candidate = exploreStrategy(map, currentPoint, dir, 0.0, goal, movingRule);
-            if (candidate != null && !prune(candidate.getArg1(), dir, goal)) candidates.add(candidate);
+            if (candidate != null && !prune(candidate.getArg1(),dir,goal)) candidates.add(candidate);
         }
         return candidates;
-    }
-
-    protected boolean prune(Coordinate candidate, Coordinate direction, Coordinate goal){
-        return false;
     }
 }

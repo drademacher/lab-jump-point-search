@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 abstract class ShortestPathPreprocessing implements AbstractExploreStrategy {
 
-    HashMap<Coordinate, HashMap<Coordinate,Tuple3<Coordinate,Double,Boolean>>> preprocessing    = new HashMap<>();
+    private HashMap<Coordinate, HashMap<Coordinate,Tuple3<Coordinate,Double,Boolean>>> preprocessing    = new HashMap<>();
 
     void doPreprocessing(MapFacade map, MovingRule movingRule) {
         this.preprocessing  = new HashMap<>();
@@ -28,6 +28,15 @@ abstract class ShortestPathPreprocessing implements AbstractExploreStrategy {
     protected Tuple3<Coordinate,Double,Boolean> getPreprocessing(Coordinate currentPoint, Coordinate direction){
         if(this.preprocessing.get(currentPoint)==null)  return null;
         return this.preprocessing.get(currentPoint).get(direction);
+    }
+
+    protected void putPreprocessing(Coordinate currentPoint, Coordinate direction, Tuple3<Coordinate,Double,Boolean> nextPoint){
+        preprocessing.putIfAbsent(currentPoint,new HashMap<>());
+        preprocessing.get(currentPoint).put(direction,nextPoint);
+    }
+
+    protected boolean prune(Coordinate candidate, Coordinate direction, Coordinate goal){
+        return false;
     }
 
     @Override

@@ -19,18 +19,12 @@ public class BoundingBox {
     }
 
     BoundingBox add(BoundingBox summand){
-        this.minX   = Math.min(this.minX,summand.getMinX());
-        this.maxX   = Math.max(this.maxX,summand.getMaxX());
-        this.minY   = Math.min(this.minY,summand.getMinY());
-        this.maxY   = Math.max(this.maxY,summand.getMaxY());
-        return this;
-    }
-
-    BoundingBox add(Coordinate summand){
-        this.minX   = Math.min(this.minX,summand.getX());
-        this.maxX   = Math.max(this.maxX,summand.getX());
-        this.minY   = Math.min(this.minY,summand.getY());
-        this.maxY   = Math.max(this.maxY,summand.getY());
+        if(summand!=null) {
+            this.minX = Math.min(this.minX, summand.getMinX());
+            this.maxX = Math.max(this.maxX, summand.getMaxX());
+            this.minY = Math.min(this.minY, summand.getMinY());
+            this.maxY = Math.max(this.maxY, summand.getMaxY());
+        }
         return this;
     }
 

@@ -1,6 +1,7 @@
 package map.shortestpath;
 
 import map.MapFacade;
+import map.heuristic.Heuristic;
 import map.movingRule.MovingRule;
 import util.Coordinate;
 import util.MathUtil;
@@ -9,7 +10,6 @@ import util.Tuple3;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 /**
  * Created by paloka on 08.06.16.
@@ -18,16 +18,18 @@ public class ShortestPathStrategy {
 
     private ShortestPath shortestPath;
 
-
-    /* ------- ShortestPath Getter & Setter ------- */
-
-    public ShortestPath getShortestPath(){
-        return this.shortestPath;
-    }
+    /* ------- ShortestPath Operations ------- */
 
     public void preprocess(MapFacade map, MovingRule movingRule){
         this.shortestPath.doPreprocessing(map,movingRule);
     }
+
+    public ShortestPathResult run(MapFacade map, Coordinate start, Coordinate goal, Heuristic heuristic, MovingRule movingRule){
+        return this.shortestPath.findShortestPath(map,start,goal,heuristic,movingRule);
+    }
+
+
+    /* ------- ShortestPath Setter ------- */
 
     public void setShortestPathAStar(){
         this.shortestPath   = new ShortestPathAStar();
@@ -38,7 +40,11 @@ public class ShortestPathStrategy {
     }
 
     public void setShortestPathJPSPlus() {
-        this.shortestPath   = new ShortestPathPreprocessed(new ShortestPathJPSPreprocessing(),new ShortestPathJPS());
+        this.shortestPath   = new ShortestPathPreprocessed(new ShortestPathJPSPlusPreprocessing());
+    }
+
+    public void setShortestPathJPSBB() {
+        this.shortestPath   = new ShortestPathPreprocessed(new ShortestPathJPSBBPreprocessing());
     }
 
 
@@ -64,16 +70,7 @@ public class ShortestPathStrategy {
     private class ShortestPathJPS extends ShortestPath {
         @Override
         public Collection<Coordinate> getDirectionsStrategy(MapFacade map, Coordinate currentPoint, Coordinate predecessor, MovingRule movingRule) {
-            if(predecessor!=null){
-                Collection<Coordinate> directions = new ArrayList<>();
-                Coordinate direction = movingRule.getDirection(currentPoint, predecessor);
-                directions.add(direction);
-                directions.addAll(movingRule.getForcedDirections(map,currentPoint,direction));
-                directions.addAll(movingRule.getSubDirections(direction));
-                return directions;
-            }else{
-                return movingRule.getAllDirections();
-            }
+            return getDirectionsJPS(map,currentPoint,predecessor,movingRule);
         }
 
         @Override
@@ -96,16 +93,14 @@ public class ShortestPathStrategy {
 
     private class ShortestPathPreprocessed extends ShortestPath {
         ShortestPathPreprocessing preprocessing;
-        AbstractGetDirectionsStrategy getDirectionsStrategy;
 
-        ShortestPathPreprocessed(ShortestPathPreprocessing preprocessing, AbstractGetDirectionsStrategy getDirectionsStrategy){
+        ShortestPathPreprocessed(ShortestPathPreprocessing preprocessing){
             this.preprocessing          = preprocessing;
-            this.getDirectionsStrategy  = getDirectionsStrategy;
         }
 
         @Override
         public Collection<Coordinate> getDirectionsStrategy(MapFacade map, Coordinate currentPoint, Coordinate predecessor, MovingRule movingRule) {
-            return this.getDirectionsStrategy.getDirectionsStrategy(map,currentPoint,predecessor,movingRule);
+            return this.preprocessing.getDirectionsStrategy(map,currentPoint,predecessor,movingRule);
         }
 
         @Override
@@ -138,6 +133,11 @@ public class ShortestPathStrategy {
         }
 
         @Override
+        protected boolean prune(Coordinate candidate, Coordinate direction, Coordinate goal){
+            return this.preprocessing.prune(candidate,direction,goal);
+        }
+
+        @Override
         public void doPreprocessing(MapFacade map, MovingRule movingRule) {
             this.preprocessing.doPreprocessing(map,movingRule);
         }
@@ -146,11 +146,16 @@ public class ShortestPathStrategy {
 
     /* ------- ShortestPathPreprocessing ------- */
 
-    private class ShortestPathJPSPreprocessing extends ShortestPathPreprocessing {
+    private class ShortestPathJPSPlusPreprocessing extends ShortestPathPreprocessing {
+        @Override
+        public Collection<Coordinate> getDirectionsStrategy(MapFacade map, Coordinate currentPoint, Coordinate predecessor, MovingRule movingRule){
+            return getDirectionsJPS(map,currentPoint,predecessor,movingRule);
+        }
+
         @Override
         public Tuple3<Coordinate,Double,Boolean> exploreStrategy(MapFacade map, Coordinate currentPoint, Coordinate direction, Double cost, Coordinate goal, MovingRule movingRule){
             if(getPreprocessing(currentPoint,direction)!=null){
-                Tuple3<Coordinate,Double,Boolean> preprocessedPoint  = preprocessing.get(currentPoint).get(direction);
+                Tuple3<Coordinate,Double,Boolean> preprocessedPoint  = getPreprocessing(currentPoint,direction);
                 return new Tuple3<>(preprocessedPoint.getArg1(), preprocessedPoint.getArg2() + cost, preprocessedPoint.getArg3());
             }
 
@@ -161,23 +166,87 @@ public class ShortestPathStrategy {
 
             Double stepCost = Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()));
             if(movingRule.getForcedDirections(map,candidate,direction).size()>0){
-                preprocessing.putIfAbsent(currentPoint,new HashMap<>());
-                preprocessing.get(currentPoint).put(direction,new Tuple3<>(candidate,stepCost,true));
+                putPreprocessing(currentPoint,direction,new Tuple3<>(candidate,stepCost,true));
                 return new Tuple3<>(candidate,cost+stepCost,true);
             }
 
             for(Coordinate subDirection:movingRule.getSubDirections(direction)){
                 if(exploreStrategy(map, candidate, subDirection, 1.0, goal, movingRule).getArg3()){
-                    preprocessing.putIfAbsent(currentPoint,new HashMap<>());
-                    preprocessing.get(currentPoint).put(direction,new Tuple3<>(candidate,stepCost,true));
+                    putPreprocessing(currentPoint,direction,new Tuple3<>(candidate,stepCost,true));
                     return new Tuple3<>(candidate,cost+stepCost,true);
                 }
             }
 
             Tuple3<Coordinate,Double,Boolean> result    = exploreStrategy(map, candidate, direction, cost+stepCost, goal, movingRule);
-            preprocessing.putIfAbsent(currentPoint,new HashMap<>());
-            preprocessing.get(currentPoint).put(direction,new Tuple3<>(result.getArg1(),result.getArg2()-cost,result.getArg3()));
+            putPreprocessing(currentPoint,direction,new Tuple3<>(result.getArg1(),result.getArg2()-cost,result.getArg3()));
             return result;
+        }
+    }
+
+
+    private class ShortestPathJPSBBPreprocessing extends ShortestPathBoundingBoxesPreprocessing{
+        @Override
+        public Collection<Coordinate> getDirectionsStrategy(MapFacade map, Coordinate currentPoint, Coordinate predecessor, MovingRule movingRule){
+            return getDirectionsJPS(map,currentPoint,predecessor,movingRule);
+        }
+
+        //Todo: JPS+BB Buggy
+        @Override
+        public Tuple3<Coordinate,Double,Boolean> exploreStrategy(MapFacade map, Coordinate currentPoint, Coordinate direction, Double cost, Coordinate goal, MovingRule movingRule){
+//            if(getPreprocessing(currentPoint,direction)!=null){
+//                Tuple3<Coordinate,Double,Boolean> preprocessedPoint  = getPreprocessing(currentPoint,direction);
+//                return new Tuple3<>(preprocessedPoint.getArg1(), preprocessedPoint.getArg2() + cost, preprocessedPoint.getArg3());
+//            }
+
+            Coordinate candidate = currentPoint.add(direction);
+            if(!map.isPassable(candidate) || movingRule.isCornerCut(map, currentPoint, direction)){
+                return new Tuple3<>(currentPoint,cost,false);
+            }
+            addBoundingBox(candidate,direction,candidate);
+
+            Double stepCost = Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()));
+            Collection<Coordinate> forcedDirections = movingRule.getForcedDirections(map,candidate,direction);
+            if(forcedDirections.size()>0){
+                for(Coordinate dir:forcedDirections){
+                    exploreStrategy(map,candidate,dir,0.0,null,movingRule);
+                    addBoundingBox(candidate,direction,getBoundingBox(candidate.add(dir),dir));
+                }
+                putPreprocessing(currentPoint,direction,new Tuple3<>(candidate,stepCost,true));
+                return new Tuple3<>(candidate,cost+stepCost,true);
+            }
+
+            boolean subResultExists = false;
+            for(Coordinate subDirection:movingRule.getSubDirections(direction)){
+                Tuple3<Coordinate,Double,Boolean> subResult = exploreStrategy(map, candidate, subDirection, 1.0, goal, movingRule);
+                addBoundingBox(candidate,direction,getBoundingBox(candidate.add(subDirection),subDirection));
+                if(subResult.getArg3()) subResultExists = true;
+            }
+
+            Tuple3<Coordinate,Double,Boolean> result    = exploreStrategy(map, candidate, direction, cost+stepCost, goal, movingRule);
+            addBoundingBox(candidate,direction,getBoundingBox(candidate.add(direction),direction));
+
+            if(subResultExists){
+                putPreprocessing(currentPoint,direction,new Tuple3<>(candidate,stepCost,true));
+                return new Tuple3<>(candidate,cost+stepCost,true);
+            }
+            putPreprocessing(currentPoint,direction,new Tuple3<>(result.getArg1(),result.getArg2()-cost,result.getArg3()));
+            return result;
+        }
+    }
+
+
+    /* ------- GetDirectionStrategíes ------- */
+
+    private Collection<Coordinate> getDirectionsJPS(MapFacade map, Coordinate currentPoint, Coordinate predecessor, MovingRule movingRule){
+        if(predecessor!=null){
+            Collection<Coordinate> directions = new ArrayList<>();
+            Coordinate direction = movingRule.getDirection(currentPoint, predecessor);
+            directions.add(direction);
+            directions.addAll(movingRule.getForcedDirections(map,currentPoint,direction));
+            directions.addAll(movingRule.getSubDirections(direction));
+            return directions;
+        }else{
+            return movingRule.getAllDirections();
         }
     }
 }

@@ -61,6 +61,8 @@
                                        toggleGroup="$shortestPathToggleGroup"/>
                         <RadioMenuItem fx:id="jpsPlusShortestPathMenuItem" mnemonicParsing="false"
                                        text="JPS-Plus" toggleGroup="$shortestPathToggleGroup"/>
+                        <RadioMenuItem fx:id="jpsBBShortestPathMenuItem" mnemonicParsing="false"
+                                       text="JPS-Plus + BB" toggleGroup="$shortestPathToggleGroup"/>
                     </Menu>
                 </Menu>
                 <Menu mnemonicParsing="false" text="View">

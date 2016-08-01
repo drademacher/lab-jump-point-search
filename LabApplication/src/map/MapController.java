@@ -120,11 +120,15 @@ public class MapController {
 
     public void setShortestPathJPSPlus() { this.shortestPathStrategy.setShortestPathJPSPlus(); }
 
+    public void setShortestPathJPSBB(){
+        this.shortestPathStrategy.setShortestPathJPSBB();
+    }
+
     public void preprocessShortestPath(){
         this.shortestPathStrategy.preprocess(this.map, this.movingRuleStrategy.getMovingRule());
     }
 
-    public ShortestPathResult findShortestPath(Coordinate start, Coordinate goal) {
-        return this.shortestPathStrategy.getShortestPath().findShortestPath(this.map, start, goal, this.heuristicStrategy.getHeuristic(), this.movingRuleStrategy.getMovingRule());
+    public ShortestPathResult runShortstPath(Coordinate start, Coordinate goal) {
+        return this.shortestPathStrategy.run(this.map, start, goal, this.heuristicStrategy.getHeuristic(), this.movingRuleStrategy.getMovingRule());
     }
 }
