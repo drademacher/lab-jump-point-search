@@ -18,8 +18,11 @@ abstract class ShortestPathPreprocessing implements AbstractExploreStrategy {
         this.preprocessing  = new HashMap<>();
         for(int x=0;x<map.getXDim();x++){
             for(int y=0;y<map.getYDim();y++){
-                for(Coordinate direction:movingRule.getAllDirections()){
-                    this.exploreStrategy(map, new Coordinate(x,y), direction, 0.0, null, movingRule);
+                Coordinate current  = new Coordinate(x,y);
+                if(map.isPassable(current)){
+                    for(Coordinate direction:movingRule.getAllDirections()){
+                        this.exploreStrategy(map, current, direction, 0.0, null, movingRule);
+                    }
                 }
             }
         }
