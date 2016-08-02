@@ -48,4 +48,9 @@ public class BoundingBox {
     int getMinY() {
         return minY;
     }
+
+    @Override
+    public String toString(){
+        return "("+minX+"-"+maxX+","+minY+"-"+maxY+")";
+    }
 }

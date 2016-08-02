@@ -27,6 +27,8 @@ public abstract class ShortestPath implements AbstractExploreStrategy {
     /* ------- ShortestPath ------- */
 
     protected ShortestPathResult findShortestPath(MapFacade map, Coordinate start, Coordinate goal, Heuristic heuristic, MovingRule movingRule) {
+        System.out.println("start: "+start+"\t goal: "+goal);
+
         Map<Coordinate, Coordinate> pathPredecessors = new HashMap<>();
 
         PriorityQueue<Tuple3<Coordinate, Coordinate, Tuple2<Double,Double>>> openList = new PriorityQueue<>((p, q) -> {
@@ -65,6 +67,7 @@ public abstract class ShortestPath implements AbstractExploreStrategy {
         Collection<Tuple2<Coordinate, Double>> candidates = new ArrayList<>();
         for(Coordinate dir:directions) {
             Tuple2<Coordinate, Double> candidate = exploreStrategy(map, currentPoint, dir, 0.0, goal, movingRule);
+            if(candidate!=null) System.out.print("current: "+currentPoint);
             if (candidate != null && !prune(candidate.getArg1(),dir,goal)) candidates.add(candidate);
         }
         return candidates;

@@ -28,8 +28,10 @@ abstract class ShortestPathBoundingBoxesPreprocessing extends ShortestPathPrepro
     @Override
     protected boolean prune(Coordinate candidate, Coordinate direction, Coordinate goal){
         if(this.boundingBoxes.get(candidate)==null || this.boundingBoxes.get(candidate).get(direction)==null){
+            System.out.println("candidate: "+candidate+"\t direction: "+direction+"\t No BoundingBox found");
             return true;
         }
+        System.out.println("\t candidate: "+candidate+"\t direction: "+direction+"\t BoundingBox: "+this.boundingBoxes.get(candidate).get(direction)+"\t"+this.boundingBoxes.get(candidate).get(direction).isInBoundingBox(goal));
         return !this.boundingBoxes.get(candidate).get(direction).isInBoundingBox(goal);
     }
 }

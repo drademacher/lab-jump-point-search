@@ -193,10 +193,10 @@ public class ShortestPathStrategy {
         //Todo: JPS+BB Buggy
         @Override
         public Tuple3<Coordinate,Double,Boolean> exploreStrategy(MapFacade map, Coordinate currentPoint, Coordinate direction, Double cost, Coordinate goal, MovingRule movingRule){
-//            if(getPreprocessing(currentPoint,direction)!=null){
-//                Tuple3<Coordinate,Double,Boolean> preprocessedPoint  = getPreprocessing(currentPoint,direction);
-//                return new Tuple3<>(preprocessedPoint.getArg1(), preprocessedPoint.getArg2() + cost, preprocessedPoint.getArg3());
-//            }
+            if(getPreprocessing(currentPoint,direction)!=null){
+                Tuple3<Coordinate,Double,Boolean> preprocessedPoint  = getPreprocessing(currentPoint,direction);
+                return new Tuple3<>(preprocessedPoint.getArg1(), preprocessedPoint.getArg2() + cost, preprocessedPoint.getArg3());
+            }
 
             Coordinate candidate = currentPoint.add(direction);
             if(!map.isPassable(candidate) || movingRule.isCornerCut(map, currentPoint, direction)){
