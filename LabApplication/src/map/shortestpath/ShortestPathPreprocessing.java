@@ -14,7 +14,7 @@ abstract class ShortestPathPreprocessing implements AbstractExploreStrategy {
 
     private HashMap<Coordinate, HashMap<Coordinate,Tuple3<Coordinate,Double,Boolean>>> preprocessing    = new HashMap<>();
 
-    void doPreprocessing(MapFacade map, MovingRule movingRule) {
+    protected void doPreprocessing(MapFacade map, MovingRule movingRule) {
         this.preprocessing  = new HashMap<>();
         for(int x=0;x<map.getXDim();x++){
             for(int y=0;y<map.getYDim();y++){

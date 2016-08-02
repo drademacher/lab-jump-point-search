@@ -1,5 +1,7 @@
 package map.shortestpath;
 
+import map.MapFacade;
+import map.movingRule.MovingRule;
 import util.Coordinate;
 
 import java.util.HashMap;
@@ -23,6 +25,12 @@ abstract class ShortestPathBoundingBoxesPreprocessing extends ShortestPathPrepro
     protected BoundingBox getBoundingBox(Coordinate currentPoint, Coordinate direction){
         if(this.boundingBoxes.get(currentPoint)==null)  return null;
         return this.boundingBoxes.get(currentPoint).get(direction);
+    }
+
+    @Override
+    protected void doPreprocessing(MapFacade map, MovingRule movingRule){
+        this.boundingBoxes  = new HashMap<>();
+        super.doPreprocessing(map,movingRule);
     }
 
     @Override

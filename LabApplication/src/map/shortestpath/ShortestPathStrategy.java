@@ -205,27 +205,26 @@ public class ShortestPathStrategy {
             addBoundingBox(candidate,direction,candidate);
 
             Double stepCost = Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()));
+            boolean candidateIsJP = false;
             Collection<Coordinate> forcedDirections = movingRule.getForcedDirections(map,candidate,direction);
             if(forcedDirections.size()>0){
                 for(Coordinate dir:forcedDirections){
                     exploreStrategy(map,candidate,dir,0.0,null,movingRule);
                     addBoundingBox(candidate,direction,getBoundingBox(candidate.add(dir),dir));
                 }
-                putPreprocessing(currentPoint,direction,new Tuple3<>(candidate,stepCost,true));
-                return new Tuple3<>(candidate,cost+stepCost,true);
+                candidateIsJP = true;
             }
 
-            boolean subResultExists = false;
             for(Coordinate subDirection:movingRule.getSubDirections(direction)){
                 Tuple3<Coordinate,Double,Boolean> subResult = exploreStrategy(map, candidate, subDirection, 1.0, goal, movingRule);
                 addBoundingBox(candidate,direction,getBoundingBox(candidate.add(subDirection),subDirection));
-                if(subResult.getArg3()) subResultExists = true;
+                if(subResult.getArg3()) candidateIsJP = true;
             }
 
             Tuple3<Coordinate,Double,Boolean> result    = exploreStrategy(map, candidate, direction, cost+stepCost, goal, movingRule);
             addBoundingBox(candidate,direction,getBoundingBox(candidate.add(direction),direction));
 
-            if(subResultExists){
+            if(candidateIsJP){
                 putPreprocessing(currentPoint,direction,new Tuple3<>(candidate,stepCost,true));
                 return new Tuple3<>(candidate,cost+stepCost,true);
             }
