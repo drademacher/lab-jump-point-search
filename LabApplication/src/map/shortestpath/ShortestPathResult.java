@@ -34,10 +34,14 @@ public class ShortestPathResult {
     public List<Vector> getShortestPath() {
         List<Vector> path = new LinkedList<>();
         Vector current  = goal;
-        while (!current.equals(start)) {
-            path.add(current);
-            current = pathPredecessors.get(current);
-        }
+        do {
+            Vector next = pathPredecessors.get(current);
+            Vector direction = current.getDirectionTo(next);
+            while(!current.equals(next)) {
+                path.add(current);
+                current = current.add(direction);
+            }
+        } while (!current.equals(start));
         return path;
     }
 

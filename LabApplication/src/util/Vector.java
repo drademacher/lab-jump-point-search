@@ -33,6 +33,11 @@ public class Vector {
         return new Vector(x*multiplicator,y*multiplicator);
     }
 
+    public Vector getDirectionTo(Vector goal){
+        Vector dir  = goal.sub(this);
+        return new Vector((int)Math.signum(dir.getX()),(int)Math.signum(dir.getY()));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
