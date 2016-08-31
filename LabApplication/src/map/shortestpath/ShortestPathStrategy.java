@@ -32,25 +32,30 @@ public class ShortestPathStrategy {
     /* ------- ShortestPath Setter ------- */
 
     public void setShortestPathAStar(){
-        this.shortestPath   = new ShortestPathAStar();
+        this.shortestPath   = new AStarShortestPath(new NoShortestPathPruning());
     }
 
     public void setShortestPathJPS(){
-        this.shortestPath   = new ShortestPathJPS();
+        this.shortestPath   = new JPSShortestPath(new NoShortestPathPruning());
     }
 
     public void setShortestPathJPSPlus() {
-        this.shortestPath   = new ShortestPathPreprocessed(new ShortestPathJPSPlusPreprocessing());
+        this.shortestPath   = new PreCalculatedShortestPath(new JPSPlusPreCalculationShortestPathPreprocessing(), new NoShortestPathPruning());
     }
 
     public void setShortestPathJPSBB() {
-        this.shortestPath   = new ShortestPathPreprocessed(new ShortestPathJPSBBPreprocessing());
+        this.shortestPath   = new PreCalculatedShortestPath(new JPSPlusPreCalculationShortestPathPreprocessing(), new BruteForceBoundingBoxesShortestPathPruning());
     }
 
 
-    /* ------- ShortestPathStrategy ------- */
+    /* ------- ShortestPathImplementations ------- */
 
-    private class ShortestPathAStar extends ShortestPath {
+    private class AStarShortestPath extends ShortestPath {
+
+        protected AStarShortestPath(AbstractShortestPathPruning pruning){
+            super(new NoShortestPathPreprocessing(),pruning);
+        }
+
         @Override
         public Collection<Vector> getDirectionsStrategy(MapFacade map, Vector currentPoint, Vector predecessor, MovingRule movingRule) {
             return movingRule.getAllDirections();
@@ -67,7 +72,12 @@ public class ShortestPathStrategy {
     }
 
 
-    private class ShortestPathJPS extends ShortestPath {
+    private class JPSShortestPath extends ShortestPath {
+
+        protected JPSShortestPath(AbstractShortestPathPruning pruning){
+            super(new NoShortestPathPreprocessing(),pruning);
+        }
+
         @Override
         public Collection<Vector> getDirectionsStrategy(MapFacade map, Vector currentPoint, Vector predecessor, MovingRule movingRule) {
             return getDirectionsJPS(map,currentPoint,predecessor,movingRule);
@@ -91,21 +101,23 @@ public class ShortestPathStrategy {
     }
 
 
-    private class ShortestPathPreprocessed extends ShortestPath {
-        ShortestPathPreprocessing preprocessing;
+    private class PreCalculatedShortestPath extends ShortestPath {
 
-        ShortestPathPreprocessed(ShortestPathPreprocessing preprocessing){
-            this.preprocessing          = preprocessing;
+        PreCalculationShortestPathPreprocessing preprocessing;
+
+        PreCalculatedShortestPath(PreCalculationShortestPathPreprocessing preprocessing, AbstractShortestPathPruning pruning){
+            super(preprocessing,pruning);
+            this.preprocessing  = preprocessing;
         }
 
         @Override
         public Collection<Vector> getDirectionsStrategy(MapFacade map, Vector currentPoint, Vector predecessor, MovingRule movingRule) {
-            return this.preprocessing.getDirectionsStrategy(map,currentPoint,predecessor,movingRule);
+            return preprocessing.getDirectionsStrategy(map,currentPoint,predecessor,movingRule);
         }
 
         @Override
         public Tuple2<Vector, Double> exploreStrategy(MapFacade map, Vector currentPoint, Vector direction, Double cost, Vector goal, MovingRule movingRule) {
-            Tuple3<Vector,Double,Boolean> preprocessedPoint  = this.preprocessing.getPreprocessing(currentPoint,direction);
+            Tuple3<Vector,Double,Boolean> preprocessedPoint  = preprocessing.getPreprocessing(currentPoint,direction);
             if(preprocessedPoint!=null) {
                 Vector candidate = preprocessedPoint.getArg1();
                 int deltaXToGoal        = direction.getX()*(goal.getX()-currentPoint.getX());
@@ -131,29 +143,26 @@ public class ShortestPathStrategy {
             }
             return null;
         }
-
-        @Override
-        protected boolean prune(Vector candidate, Vector direction, Vector goal){
-            return this.preprocessing.prune(candidate,direction,goal);
-        }
-
-        @Override
-        public void doPreprocessing(MapFacade map, MovingRule movingRule) {
-            this.preprocessing.doPreprocessing(map,movingRule);
-        }
     }
 
 
-    /* ------- ShortestPathPreprocessing ------- */
+    /* ------- ShortestPathPreprocessingImplementations ------- */
 
-    private class ShortestPathJPSPlusPreprocessing extends ShortestPathPreprocessing {
+    private class NoShortestPathPreprocessing implements AbstractShortestPathPreprocessing{
+        @Override
+        public void doPreprocessing(MapFacade map, MovingRule movingRule) {
+            //Do nothing because no preprocessing wanted
+        }
+    }
+
+    private class JPSPlusPreCalculationShortestPathPreprocessing extends PreCalculationShortestPathPreprocessing {
         @Override
         public Collection<Vector> getDirectionsStrategy(MapFacade map, Vector currentPoint, Vector predecessor, MovingRule movingRule){
             return getDirectionsJPS(map,currentPoint,predecessor,movingRule);
         }
 
         @Override
-        public Tuple3<Vector,Double,Boolean> exploreStrategy(MapFacade map, Vector currentPoint, Vector direction, Double cost, Vector goal, MovingRule movingRule){
+        public Tuple3<Vector,Double,Boolean> exploreStrategy(MapFacade map, Vector currentPoint, Vector direction, Double cost, Vector goal, MovingRule movingRule) {
             if(getPreprocessing(currentPoint,direction)!=null){
                 Tuple3<Vector,Double,Boolean> preprocessedPoint  = getPreprocessing(currentPoint,direction);
                 return new Tuple3<>(preprocessedPoint.getArg1(), preprocessedPoint.getArg2() + cost, preprocessedPoint.getArg3());
@@ -184,57 +193,30 @@ public class ShortestPathStrategy {
     }
 
 
-    private class ShortestPathJPSBBPreprocessing extends ShortestPathBoundingBoxesPreprocessing{
+    /* ------- ShortestPathPruningImplementations ------- */
+
+    private class NoShortestPathPruning implements AbstractShortestPathPruning{
         @Override
-        public Collection<Vector> getDirectionsStrategy(MapFacade map, Vector currentPoint, Vector predecessor, MovingRule movingRule){
-            return getDirectionsJPS(map,currentPoint,predecessor,movingRule);
+        public void doPreprocessing(MapFacade map, MovingRule movingRule) {
+            //Do nothing because no pruning wanted
         }
 
-        //Todo: JPS+BB Buggy
         @Override
-        public Tuple3<Vector,Double,Boolean> exploreStrategy(MapFacade map, Vector currentPoint, Vector direction, Double cost, Vector goal, MovingRule movingRule){
-            if(getPreprocessing(currentPoint,direction)!=null){
-                Tuple3<Vector,Double,Boolean> preprocessedPoint  = getPreprocessing(currentPoint,direction);
-                return new Tuple3<>(preprocessedPoint.getArg1(), preprocessedPoint.getArg2() + cost, preprocessedPoint.getArg3());
-            }
-
-            Vector candidate = currentPoint.add(direction);
-            if(!map.isPassable(candidate) || movingRule.isCornerCut(map, currentPoint, direction)){
-                return new Tuple3<>(currentPoint,cost,false);
-            }
-            addBoundingBox(candidate,direction,candidate);
-
-            Double stepCost = Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()));
-            boolean candidateIsJP = false;
-            Collection<Vector> forcedDirections = movingRule.getForcedDirections(map,candidate,direction);
-            if(forcedDirections.size()>0){
-                for(Vector dir:forcedDirections){
-                    exploreStrategy(map,candidate,dir,0.0,null,movingRule);
-                    addBoundingBox(candidate,direction,getBoundingBox(candidate.add(dir),dir));
-                }
-                candidateIsJP = true;
-            }
-
-            for(Vector subDirection:movingRule.getSubDirections(direction)){
-                Tuple3<Vector,Double,Boolean> subResult = exploreStrategy(map, candidate, subDirection, 1.0, goal, movingRule);
-                addBoundingBox(candidate,direction,getBoundingBox(candidate.add(subDirection),subDirection));
-                if(subResult.getArg3()) candidateIsJP = true;
-            }
-
-            Tuple3<Vector,Double,Boolean> result    = exploreStrategy(map, candidate, direction, cost+stepCost, goal, movingRule);
-            addBoundingBox(candidate,direction,getBoundingBox(candidate.add(direction),direction));
-
-            if(candidateIsJP){
-                putPreprocessing(currentPoint,direction,new Tuple3<>(candidate,stepCost,true));
-                return new Tuple3<>(candidate,cost+stepCost,true);
-            }
-            putPreprocessing(currentPoint,direction,new Tuple3<>(result.getArg1(),result.getArg2()-cost,result.getArg3()));
-            return result;
+        public boolean prune(Vector candidate, Vector direction, Vector goal) {
+            return false; //Never prune anything
         }
     }
 
 
-    /* ------- GetDirectionStrategíes ------- */
+    private class BruteForceBoundingBoxesShortestPathPruning extends BoundingBoxesShortestPathPruning{
+        @Override
+        public void doPreprocessing(MapFacade map, MovingRule movingRule) {
+            //Todo: Baue BoundingBoxes Brute Force
+        }
+    }
+
+
+    /* ------- HelperMathods ------- */
 
     private Collection<Vector> getDirectionsJPS(MapFacade map, Vector currentPoint, Vector predecessor, MovingRule movingRule){
         if(predecessor!=null){

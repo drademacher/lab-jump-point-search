@@ -10,11 +10,12 @@ import java.util.HashMap;
 /**
  * Created by paloka on 21.07.16.
  */
-abstract class ShortestPathPreprocessing implements AbstractExploreStrategy {
+abstract class PreCalculationShortestPathPreprocessing implements AbstractExploreStrategy, AbstractShortestPathPreprocessing {
 
     private HashMap<Vector, HashMap<Vector,Tuple3<Vector,Double,Boolean>>> preprocessing    = new HashMap<>();
 
-    protected void doPreprocessing(MapFacade map, MovingRule movingRule) {
+    @Override
+    public void doPreprocessing(MapFacade map, MovingRule movingRule) {
         this.preprocessing  = new HashMap<>();
         for(int x=0;x<map.getXDim();x++){
             for(int y=0;y<map.getYDim();y++){
@@ -36,10 +37,6 @@ abstract class ShortestPathPreprocessing implements AbstractExploreStrategy {
     protected void putPreprocessing(Vector currentPoint, Vector direction, Tuple3<Vector,Double,Boolean> nextPoint){
         preprocessing.putIfAbsent(currentPoint,new HashMap<>());
         preprocessing.get(currentPoint).put(direction,nextPoint);
-    }
-
-    protected boolean prune(Vector candidate, Vector direction, Vector goal){
-        return false;
     }
 
     @Override

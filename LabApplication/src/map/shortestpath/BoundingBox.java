@@ -18,7 +18,7 @@ public class BoundingBox {
         this.maxY   = maxY;
     }
 
-    BoundingBox add(BoundingBox summand){
+    BoundingBox union(BoundingBox summand){
         if(summand!=null) {
             this.minX = Math.min(this.minX, summand.getMinX());
             this.maxX = Math.max(this.maxX, summand.getMaxX());

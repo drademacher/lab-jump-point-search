@@ -15,12 +15,23 @@ import java.util.stream.Collectors;
  */
 public abstract class ShortestPath implements AbstractExploreStrategy {
 
+    private AbstractShortestPathPreprocessing   preprocessing   = null;
+    private AbstractShortestPathPruning         pruning         = null;
+
+    protected ShortestPath(AbstractShortestPathPreprocessing preprocessing, AbstractShortestPathPruning pruning){
+        this.preprocessing  = preprocessing;
+        this.pruning        = pruning;
+    }
+
     /* ------- Preprocessing ------- */
 
-    protected void doPreprocessing(MapFacade map, MovingRule movingRule){}
+    protected void doPreprocessing(MapFacade map, MovingRule movingRule){
+        this.preprocessing.doPreprocessing(map,movingRule);
+        this.pruning.doPreprocessing(map,movingRule);
+    }
 
     protected boolean prune(Vector candidate, Vector direction, Vector goal){
-        return false;
+        return pruning.prune(candidate,direction,goal);
     }
 
 
