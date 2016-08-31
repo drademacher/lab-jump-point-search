@@ -2,7 +2,7 @@ package map;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
-import util.Coordinate;
+import util.Vector;
 import util.DisjointSet;
 import util.RandomUtil;
 
@@ -13,17 +13,17 @@ import java.util.Collections;
 class MapFactory {
     private final int[][] NEIGHS_ALL = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-    Map createEmptyMap(Coordinate dimension) throws MapInitialisationException {
+    Map createEmptyMap(Vector dimension) throws MapInitialisationException {
         return new Map(dimension, true);
     }
 
-    Map createRandomMap(Coordinate dimension, double pPassable) throws MapInitialisationException {
+    Map createRandomMap(Vector dimension, double pPassable) throws MapInitialisationException {
         Map map = new Map(dimension, false);
         for (int x = 0; x < map.getXDim(); x++) {
             for (int y = 0; y < map.getYDim(); y++) {
                 if (RandomUtil.getRandomDouble() < pPassable) {
                     try {
-                        map.switchPassable(new Coordinate(x,y));
+                        map.switchPassable(new Vector(x,y));
                     } catch (InvalidCoordinateException e) {
                         e.printStackTrace();
                         //Todo: MapFactory.createRandomMap - InvalidCoordinateException
@@ -34,7 +34,7 @@ class MapFactory {
         return map;
     }
 
-    Map createMazeMap(Coordinate dimension) throws MapInitialisationException {
+    Map createMazeMap(Vector dimension) throws MapInitialisationException {
         // init structure
         CellType[][] map = initCellType(dimension.getX(), dimension.getY());
 
@@ -44,7 +44,7 @@ class MapFactory {
         return close(map, dimension);
     }
 
-    Map createMazeRoomMap(Coordinate dimension) throws MapInitialisationException {
+    Map createMazeRoomMap(Vector dimension) throws MapInitialisationException {
 
         // init structure
         CellType[][] map = initCellType(dimension.getX(), dimension.getY());
@@ -60,7 +60,7 @@ class MapFactory {
         return close(map, dimension);
     }
 
-    Map createSingleRoomMap(Coordinate dimension) throws MapInitialisationException {
+    Map createSingleRoomMap(Vector dimension) throws MapInitialisationException {
 
         // init structure
         CellType[][] map = initCellType(dimension.getX(), dimension.getY());
@@ -75,7 +75,7 @@ class MapFactory {
         return close(map, dimension);
     }
 
-    Map createDoubleRoomMap(Coordinate dimension) throws MapInitialisationException {
+    Map createDoubleRoomMap(Vector dimension) throws MapInitialisationException {
 
         // init structure
         CellType[][] map = initCellType(dimension.getX(), dimension.getY());
@@ -96,7 +96,7 @@ class MapFactory {
         return close(map, dimension);
     }
 
-    Map createLoopRoomMap(Coordinate dimension) throws MapInitialisationException {
+    Map createLoopRoomMap(Vector dimension) throws MapInitialisationException {
 
         // init structure
         CellType[][] map = initCellType(dimension.getX(), dimension.getY());
@@ -124,13 +124,13 @@ class MapFactory {
             br.readLine();  //Skip type
             int yDim = Integer.valueOf(br.readLine().substring(7));  //Read height
             int xDim = Integer.valueOf(br.readLine().substring(6));  //Read width
-            Map map = new Map(new Coordinate(xDim,yDim), false); //init Map without passable fields
+            Map map = new Map(new Vector(xDim,yDim), false); //init Map without passable fields
             br.readLine();  //Skip map
             String currentLine;
             for (int y = 0; (currentLine = br.readLine()) != null; y++) { //Read in MapRow
                 for (int x = 0; x < currentLine.length(); x++) {
                     if (currentLine.charAt(x) == '.' || currentLine.charAt(x) == 'G' || currentLine.charAt(x) == 'S') {
-                        map.switchPassable(new Coordinate(x,y));    //Mark passable fields
+                        map.switchPassable(new Vector(x,y));    //Mark passable fields
                     }
                 }
             }
@@ -159,12 +159,12 @@ class MapFactory {
         return map;
     }
 
-    private Map close(CellType[][] map, Coordinate dimension) throws MapInitialisationException {
+    private Map close(CellType[][] map, Vector dimension) throws MapInitialisationException {
         Map res = new Map(dimension, false);
         for (int x = 0; x < map.length; x++) {
             for (int y = 0; y < map[0].length; y++) {
                 if (!map[x][y].isObstacle()) try {
-                    res.switchPassable(new Coordinate(x, y));
+                    res.switchPassable(new Vector(x, y));
                 } catch (InvalidCoordinateException e) {
                     // TODO: no idea
                     e.printStackTrace();

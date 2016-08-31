@@ -6,7 +6,7 @@ import map.heuristic.HeuristicStrategy;
 import map.movingRule.MovingRuleStrategy;
 import map.shortestpath.ShortestPathResult;
 import map.shortestpath.ShortestPathStrategy;
-import util.Coordinate;
+import util.Vector;
 
 import java.io.File;
 
@@ -22,37 +22,37 @@ public class MapController {
 
     /* ------- MapFactory Operations ------- */
 
-    public MapFacade setEmptyMap(Coordinate dimension) throws MapInitialisationException {
+    public MapFacade setEmptyMap(Vector dimension) throws MapInitialisationException {
         this.map = mapFactory.createEmptyMap(dimension);
         return this.map;
     }
 
-    public MapFacade setRandomMap(Coordinate dimension, double pPassable) throws MapInitialisationException {
+    public MapFacade setRandomMap(Vector dimension, double pPassable) throws MapInitialisationException {
         this.map = mapFactory.createRandomMap(dimension, pPassable);
         return this.map;
     }
 
-    public MapFacade setMazeMap(Coordinate dimension) throws MapInitialisationException {
+    public MapFacade setMazeMap(Vector dimension) throws MapInitialisationException {
         this.map = mapFactory.createMazeMap(dimension);
         return this.map;
     }
 
-    public MapFacade setMazeRoomMap(Coordinate dimension) throws MapInitialisationException {
+    public MapFacade setMazeRoomMap(Vector dimension) throws MapInitialisationException {
         this.map = mapFactory.createMazeRoomMap(dimension);
         return this.map;
     }
 
-    public MapFacade setSingleRoomMap(Coordinate dimension) throws MapInitialisationException {
+    public MapFacade setSingleRoomMap(Vector dimension) throws MapInitialisationException {
         this.map = mapFactory.createSingleRoomMap(dimension);
         return this.map;
     }
 
-    public MapFacade setDoubleRoomMap(Coordinate dimension) throws MapInitialisationException {
+    public MapFacade setDoubleRoomMap(Vector dimension) throws MapInitialisationException {
         this.map = mapFactory.createDoubleRoomMap(dimension);
         return this.map;
     }
 
-    public MapFacade setLoopRoomMap(Coordinate dimension) throws MapInitialisationException {
+    public MapFacade setLoopRoomMap(Vector dimension) throws MapInitialisationException {
         this.map = mapFactory.createLoopRoomMap(dimension);
         return this.map;
     }
@@ -65,7 +65,7 @@ public class MapController {
 
     /* ------- Map Operations ------- */
 
-    public void switchPassable(Coordinate coordinate) throws InvalidCoordinateException {
+    public void switchPassable(Vector coordinate) throws InvalidCoordinateException {
         this.map.switchPassable(coordinate);
     }
 
@@ -128,7 +128,7 @@ public class MapController {
         this.shortestPathStrategy.preprocess(this.map, this.movingRuleStrategy.getMovingRule());
     }
 
-    public ShortestPathResult runShortstPath(Coordinate start, Coordinate goal) {
+    public ShortestPathResult runShortstPath(Vector start, Vector goal) {
         return this.shortestPathStrategy.run(this.map, start, goal, this.heuristicStrategy.getHeuristic(), this.movingRuleStrategy.getMovingRule());
     }
 }

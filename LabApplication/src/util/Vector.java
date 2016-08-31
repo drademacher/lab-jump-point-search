@@ -3,12 +3,12 @@ package util;
 /**
  * Created by paloka on 13.06.16.
  */
-public class Coordinate {
+public class Vector {
 
     private int x;
     private int y;
 
-    public Coordinate(int x, int y) {
+    public Vector(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -21,16 +21,16 @@ public class Coordinate {
         return y;
     }
 
-    public Coordinate add(Coordinate adding) {
-        return new Coordinate(x + adding.getX(), y + adding.getY());
+    public Vector add(Vector adding) {
+        return new Vector(x + adding.getX(), y + adding.getY());
     }
 
-    public Coordinate sub(Coordinate substracting) {
-        return new Coordinate(x - substracting.getX(), y - substracting.getY());
+    public Vector sub(Vector substracting) {
+        return new Vector(x - substracting.getX(), y - substracting.getY());
     }
 
-    public Coordinate mult(int multiplicator){
-        return new Coordinate(x*multiplicator,y*multiplicator);
+    public Vector mult(int multiplicator){
+        return new Vector(x*multiplicator,y*multiplicator);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class Coordinate {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Coordinate that = (Coordinate) o;
+        Vector that = (Vector) o;
 
         if (x != that.x) return false;
         return y == that.y;

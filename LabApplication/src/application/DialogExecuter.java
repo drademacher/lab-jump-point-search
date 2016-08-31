@@ -4,7 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
-import util.Coordinate;
+import util.Vector;
 import util.Tuple2;
 
 import java.util.Iterator;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class DialogExecuter {
 
     //Todo: Vll kann man auf die tupel verzichten, wenn man einfach callbacks übergibt, vll geht das sogar abstrahiert
-    Coordinate executeMapDimensionDialog(String title) {
+    Vector executeMapDimensionDialog(String title) {
         ButtonType confirmButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         Map<String, TextField> fields = new LinkedHashMap<>();
         fields.put("xDim", new DimensionTextField().setWidth(55));
@@ -25,7 +25,7 @@ public class DialogExecuter {
 
         return executeDialog(title, confirmButton, fields, dialogButton -> {
             if (dialogButton == confirmButton) {
-                return new Coordinate(
+                return new Vector(
                         Integer.valueOf(fields.get("xDim").getText()),
                         Integer.valueOf(fields.get("yDim").getText()));
             }
@@ -34,7 +34,7 @@ public class DialogExecuter {
     }
 
     //Todo: can we abstract executeRandomDialog on executeMapDimensionDialog, because its just one textfield more =(
-    Tuple2<Coordinate, Double> executeRandomMapDialog() {
+    Tuple2<Vector, Double> executeRandomMapDialog() {
         ButtonType confirmButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         Map<String, TextField> fields = new LinkedHashMap<>();
         fields.put("xDim", new DimensionTextField().setWidth(55));
@@ -44,7 +44,7 @@ public class DialogExecuter {
         return executeDialog("New Random Map", confirmButton, fields, dialogButton -> {
             if (dialogButton == confirmButton) {
                 return new Tuple2<>(
-                        new Coordinate(Integer.valueOf(fields.get("xDim").getText()),Integer.valueOf(fields.get("yDim").getText())),
+                        new Vector(Integer.valueOf(fields.get("xDim").getText()),Integer.valueOf(fields.get("yDim").getText())),
                         Double.valueOf(fields.get("pPas").getText()));
             }
             return null;

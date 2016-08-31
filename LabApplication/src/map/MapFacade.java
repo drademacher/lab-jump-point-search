@@ -1,7 +1,6 @@
 package map;
 
-import exception.InvalidCoordinateException;
-import util.Coordinate;
+import util.Vector;
 
 /**
  * Created by paloka on 02.06.16.
@@ -12,5 +11,5 @@ public interface MapFacade {
 
     int getYDim();
 
-    boolean isPassable(Coordinate coordinate);
+    boolean isPassable(Vector vector);
 }

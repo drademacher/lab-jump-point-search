@@ -1,6 +1,6 @@
 package map.shortestpath;
 
-import util.Coordinate;
+import util.Vector;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -12,28 +12,28 @@ import java.util.Map;
  */
 public class ShortestPathResult {
 
-    private Coordinate start, goal;
-    private Collection<Coordinate> openList;
-    private Map<Coordinate, Coordinate> pathPredecessors;
+    private Vector start, goal;
+    private Collection<Vector> openList;
+    private Map<Vector, Vector> pathPredecessors;
 
-    public ShortestPathResult(Coordinate start, Coordinate goal, Collection<Coordinate> openList, Map<Coordinate, Coordinate> pathPredecessors) {
+    public ShortestPathResult(Vector start, Vector goal, Collection<Vector> openList, Map<Vector, Vector> pathPredecessors) {
         this.start  = start;
         this.goal   = goal;
         this.openList = openList;
         this.pathPredecessors = pathPredecessors;
     }
 
-    public Coordinate getStart(){
+    public Vector getStart(){
         return this.start;
     }
 
-    public Coordinate getGoal(){
+    public Vector getGoal(){
         return this.goal;
     }
 
-    public List<Coordinate> getShortestPath() {
-        List<Coordinate> path = new LinkedList<>();
-        Coordinate current  = goal;
+    public List<Vector> getShortestPath() {
+        List<Vector> path = new LinkedList<>();
+        Vector current  = goal;
         while (!current.equals(start)) {
             path.add(current);
             current = pathPredecessors.get(current);
@@ -41,11 +41,11 @@ public class ShortestPathResult {
         return path;
     }
 
-    public Collection<Coordinate> getVisited() {
+    public Collection<Vector> getVisited() {
         return pathPredecessors.keySet();
     }
 
-    public Collection<Coordinate> getOpenList() {
+    public Collection<Vector> getOpenList() {
         return this.openList;
     }
 }

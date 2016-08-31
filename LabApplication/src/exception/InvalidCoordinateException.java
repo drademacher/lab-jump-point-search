@@ -1,12 +1,12 @@
 package exception;
 
-import util.Coordinate;
+import util.Vector;
 
 /**
  * Created by paloka on 01.06.16.
  */
 public class InvalidCoordinateException extends Exception {
-    public InvalidCoordinateException(Coordinate coordinate) {
+    public InvalidCoordinateException(Vector coordinate) {
         super("Field is not part of the map: (" + coordinate.getX() + "," + coordinate.getY() + ")");
     }
 }

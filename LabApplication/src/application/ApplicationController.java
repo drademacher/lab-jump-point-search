@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import map.MapController;
-import util.Coordinate;
+import util.Vector;
 import util.Tuple2;
 
 import java.io.File;
@@ -92,7 +92,7 @@ public class ApplicationController implements Initializable {
 
     private void initEmptyMapMenuItem() {
         emptyMapMenuItem.setOnAction(event -> {
-            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Empty Map");
+            Vector dimension = dialogExecuter.executeMapDimensionDialog("New Empty Map");
             try {
                 this.mapHolder.setMap(mapController.setEmptyMap(dimension));
                 setEditMapMode();
@@ -106,7 +106,7 @@ public class ApplicationController implements Initializable {
 
     private void initRandomMapMenuItem() {
         randomMapMenuItem.setOnAction(event -> {
-            Tuple2<Coordinate, Double> params = dialogExecuter.executeRandomMapDialog();
+            Tuple2<Vector, Double> params = dialogExecuter.executeRandomMapDialog();
             try {
                 this.mapHolder.setMap(mapController.setRandomMap(params.getArg1(), params.getArg2()));
                 setEditMapMode();
@@ -119,7 +119,7 @@ public class ApplicationController implements Initializable {
 
     private void initMazeMapMenuItem() {
         mazeMapMenuItem.setOnAction(event -> {
-            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Maze Map");
+            Vector dimension = dialogExecuter.executeMapDimensionDialog("New Maze Map");
             try {
                 this.mapHolder.setMap(mapController.setMazeMap(dimension));
                 setEditMapMode();
@@ -132,7 +132,7 @@ public class ApplicationController implements Initializable {
 
     private void initMazeRoomMapMenuItem() {
         mazeRoomMapMenuItem.setOnAction(event -> {
-            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Maze Room Map");
+            Vector dimension = dialogExecuter.executeMapDimensionDialog("New Maze Room Map");
             try {
                 this.mapHolder.setMap(mapController.setMazeRoomMap(dimension));
                 setEditMapMode();
@@ -145,7 +145,7 @@ public class ApplicationController implements Initializable {
 
     private void initSingleRoomMapMenuItem() {
         singleRoomMapMenuItem.setOnAction(event -> {
-            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Single Room Map");
+            Vector dimension = dialogExecuter.executeMapDimensionDialog("New Single Room Map");
             try {
                 this.mapHolder.setMap(mapController.setSingleRoomMap(dimension));
                 setEditMapMode();
@@ -158,7 +158,7 @@ public class ApplicationController implements Initializable {
 
     private void initDoubleRoomMapMenuItem() {
         doubleRoomMapMenuItem.setOnAction(event -> {
-            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Double Room Map");
+            Vector dimension = dialogExecuter.executeMapDimensionDialog("New Double Room Map");
             try {
                 this.mapHolder.setMap(mapController.setDoubleRoomMap(dimension));
                 setEditMapMode();
@@ -171,7 +171,7 @@ public class ApplicationController implements Initializable {
 
     private void initLoopRoomMapMenuItem() {
         loopRoomMapMenuItem.setOnAction(event -> {
-            Coordinate dimension = dialogExecuter.executeMapDimensionDialog("New Loop Room Map");
+            Vector dimension = dialogExecuter.executeMapDimensionDialog("New Loop Room Map");
             try {
                 this.mapHolder.setMap(mapController.setLoopRoomMap(dimension));
                 setEditMapMode();
@@ -324,6 +324,6 @@ public class ApplicationController implements Initializable {
     /* ------- Callbacks ------- */
 
     private interface OnStartGoalSetCallback {
-        void call(Coordinate start, Coordinate goal);
+        void call(Vector start, Vector goal);
     }
 }

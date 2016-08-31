@@ -6,7 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import map.MapFacade;
 import map.shortestpath.ShortestPathResult;
-import util.Coordinate;
+import util.Vector;
 
 import static application.ApplicationConstants.*;
 import static application.FieldVisualisation.*;
@@ -50,7 +50,7 @@ public class MapHolder {
             if (onMouseClickedCallback == null) return;
             int x = new Double((event.getX() - 1) / this.fieldSize).intValue();
             int y = new Double((event.getY() - 2) / this.fieldSize).intValue();
-            this.onMouseClickedCallback.call(new Coordinate(xOffsetVis + x, yOffsetVis + y));
+            this.onMouseClickedCallback.call(new Vector(xOffsetVis + x, yOffsetVis + y));
         });
     }
 
@@ -63,15 +63,15 @@ public class MapHolder {
         renderMap();
     }
 
-    void switchPassable(Coordinate coordinate) {
+    void switchPassable(Vector coordinate) {
         renderField(gridCanvas, coordinate, map.isPassable(coordinate) ? GRID_POINT : OBSTACLE_POINT);
     }
 
-    void setStartPoint(Coordinate coordinate) {
+    void setStartPoint(Vector coordinate) {
         renderField(pathCanvas, coordinate, START_POINT);
     }
 
-    void setGoalPoint(Coordinate coordinate) {
+    void setGoalPoint(Vector coordinate) {
         renderField(pathCanvas, coordinate, GOAL_POINT);
     }
 
@@ -92,7 +92,7 @@ public class MapHolder {
         this.onMouseClickedCallback = callback;
     }
 
-    boolean isPassable(Coordinate coordinate) throws InvalidCoordinateException {
+    boolean isPassable(Vector coordinate) throws InvalidCoordinateException {
         return this.map.isPassable(coordinate);
     }
 
@@ -112,7 +112,7 @@ public class MapHolder {
         for (int x = 0; x < xDimVis; x++) {
             for (int y = 0; y < yDimVis; y++) {
                 // TODO: just print the grid point and discard the drawing of obstacles!
-                gc.setFill(this.map.isPassable(new Coordinate(xOffsetVis + x,yOffsetVis + y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
+                gc.setFill(this.map.isPassable(new Vector(xOffsetVis + x,yOffsetVis + y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
                 gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - padding, this.fieldSize - padding);
             }
         }
@@ -155,25 +155,25 @@ public class MapHolder {
         pathCanvas.getGraphicsContext2D().clearRect(0, 0, this.pathCanvas.getWidth(), this.pathCanvas.getHeight());
 
         if (shortestPathResult == null) return;
-        for (Coordinate jumpPoint : this.shortestPathResult.getOpenList()) {
+        for (Vector jumpPoint : this.shortestPathResult.getOpenList()) {
             renderField(openlistCanvas, jumpPoint, JUMP_POINT);
         }
-        for (Coordinate visitedPoint : this.shortestPathResult.getVisited()) {
+        for (Vector visitedPoint : this.shortestPathResult.getVisited()) {
             renderField(openlistCanvas, visitedPoint, VISITED_POINT);
         }
-        for (Coordinate pathPoint : this.shortestPathResult.getShortestPath()) {
+        for (Vector pathPoint : this.shortestPathResult.getShortestPath()) {
             renderField(pathCanvas, pathPoint, PATH_POINT);
         }
         setStartPoint(this.shortestPathResult.getStart());
         setGoalPoint(this.shortestPathResult.getGoal());
     }
 
-    private void renderField(Canvas canvas, Coordinate coordinate, FieldVisualisation field) {
+    private void renderField(Canvas canvas, Vector coordinate, FieldVisualisation field) {
         if (coordinate.getX() < xOffsetVis || coordinate.getY() < yOffsetVis
                 || xDimVis + xOffsetVis < coordinate.getX()
                 || yDimVis + yOffsetVis < coordinate.getY()) return;
 
-        coordinate = new Coordinate(coordinate.getX() - xOffsetVis, coordinate.getY() - yOffsetVis);
+        coordinate = new Vector(coordinate.getX() - xOffsetVis, coordinate.getY() - yOffsetVis);
 
         int padding = (fieldSize > 5) ? 1 : 0;
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -185,6 +185,6 @@ public class MapHolder {
     /* ------- Callback Type ------- */
 
     interface OnMouseClickedCallback {
-        void call(Coordinate coordinate);
+        void call(Vector coordinate);
     }
 }

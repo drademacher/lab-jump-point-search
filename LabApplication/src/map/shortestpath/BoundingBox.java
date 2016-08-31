@@ -1,6 +1,6 @@
 package map.shortestpath;
 
-import util.Coordinate;
+import util.Vector;
 
 /**
  * Created by paloka on 01.08.16.
@@ -28,7 +28,7 @@ public class BoundingBox {
         return this;
     }
 
-    boolean isInBoundingBox(Coordinate testPoint){
+    boolean isInBoundingBox(Vector testPoint){
         return  this.minX<=testPoint.getX() && testPoint.getX()<=this.maxX &&
                 this.minY<=testPoint.getY() && testPoint.getY()<=this.maxY;
     }

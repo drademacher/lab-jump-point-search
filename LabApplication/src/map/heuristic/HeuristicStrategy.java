@@ -1,6 +1,6 @@
 package map.heuristic;
 
-import util.Coordinate;
+import util.Vector;
 import util.MathUtil;
 
 /**
@@ -38,21 +38,21 @@ public class HeuristicStrategy {
 
     private class HeuristicZero implements Heuristic{
         @Override
-        public double estimateDistance(Coordinate p, Coordinate q) {
+        public double estimateDistance(Vector p, Vector q) {
             return 0;
         }
     }
 
     private class HeuristicManhatten implements Heuristic{
         @Override
-        public double estimateDistance(Coordinate p, Coordinate q) {
+        public double estimateDistance(Vector p, Vector q) {
             return Math.abs(p.getX() - q.getX()) + Math.abs(p.getY() + q.getY());
         }
     }
 
     private class HeuristicGrid implements Heuristic{
         @Override
-        public double estimateDistance(Coordinate p, Coordinate q) {
+        public double estimateDistance(Vector p, Vector q) {
             int deltaX = Math.abs(p.getX() - q.getX());
             int deltaY = Math.abs(p.getY() - q.getY());
             int min = Math.min(deltaX, deltaY);
@@ -63,7 +63,7 @@ public class HeuristicStrategy {
 
     private class HeuristicEuclidean implements Heuristic{
         @Override
-        public double estimateDistance(Coordinate p, Coordinate q) {
+        public double estimateDistance(Vector p, Vector q) {
             return Math.sqrt((p.getX() - q.getX()) * (p.getX() - q.getX()) + (p.getY() - q.getY()) * (p.getY() - q.getY()));
         }
 

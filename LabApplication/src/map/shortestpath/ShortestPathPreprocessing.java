@@ -2,7 +2,7 @@ package map.shortestpath;
 
 import map.MapFacade;
 import map.movingRule.MovingRule;
-import util.Coordinate;
+import util.Vector;
 import util.Tuple3;
 
 import java.util.HashMap;
@@ -12,15 +12,15 @@ import java.util.HashMap;
  */
 abstract class ShortestPathPreprocessing implements AbstractExploreStrategy {
 
-    private HashMap<Coordinate, HashMap<Coordinate,Tuple3<Coordinate,Double,Boolean>>> preprocessing    = new HashMap<>();
+    private HashMap<Vector, HashMap<Vector,Tuple3<Vector,Double,Boolean>>> preprocessing    = new HashMap<>();
 
     protected void doPreprocessing(MapFacade map, MovingRule movingRule) {
         this.preprocessing  = new HashMap<>();
         for(int x=0;x<map.getXDim();x++){
             for(int y=0;y<map.getYDim();y++){
-                Coordinate current  = new Coordinate(x,y);
+                Vector current  = new Vector(x,y);
                 if(map.isPassable(current)){
-                    for(Coordinate direction:movingRule.getAllDirections()){
+                    for(Vector direction:movingRule.getAllDirections()){
                         this.exploreStrategy(map, current, direction, 0.0, null, movingRule);
                     }
                 }
@@ -28,20 +28,20 @@ abstract class ShortestPathPreprocessing implements AbstractExploreStrategy {
         }
     }
 
-    protected Tuple3<Coordinate,Double,Boolean> getPreprocessing(Coordinate currentPoint, Coordinate direction){
+    protected Tuple3<Vector,Double,Boolean> getPreprocessing(Vector currentPoint, Vector direction){
         if(this.preprocessing.get(currentPoint)==null)  return null;
         return this.preprocessing.get(currentPoint).get(direction);
     }
 
-    protected void putPreprocessing(Coordinate currentPoint, Coordinate direction, Tuple3<Coordinate,Double,Boolean> nextPoint){
+    protected void putPreprocessing(Vector currentPoint, Vector direction, Tuple3<Vector,Double,Boolean> nextPoint){
         preprocessing.putIfAbsent(currentPoint,new HashMap<>());
         preprocessing.get(currentPoint).put(direction,nextPoint);
     }
 
-    protected boolean prune(Coordinate candidate, Coordinate direction, Coordinate goal){
+    protected boolean prune(Vector candidate, Vector direction, Vector goal){
         return false;
     }
 
     @Override
-    public abstract Tuple3<Coordinate, Double,Boolean> exploreStrategy(MapFacade map, Coordinate currentPoint, Coordinate direction, Double cost, Coordinate goal, MovingRule movingRule);
+    public abstract Tuple3<Vector, Double,Boolean> exploreStrategy(MapFacade map, Vector currentPoint, Vector direction, Double cost, Vector goal, MovingRule movingRule);
 }

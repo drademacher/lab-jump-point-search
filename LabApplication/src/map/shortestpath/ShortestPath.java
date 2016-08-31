@@ -3,7 +3,7 @@ package map.shortestpath;
 import map.MapFacade;
 import map.heuristic.Heuristic;
 import map.movingRule.MovingRule;
-import util.Coordinate;
+import util.Vector;
 import util.Tuple2;
 import util.Tuple3;
 
@@ -19,28 +19,28 @@ public abstract class ShortestPath implements AbstractExploreStrategy {
 
     protected void doPreprocessing(MapFacade map, MovingRule movingRule){}
 
-    protected boolean prune(Coordinate candidate, Coordinate direction, Coordinate goal){
+    protected boolean prune(Vector candidate, Vector direction, Vector goal){
         return false;
     }
 
 
     /* ------- ShortestPath ------- */
 
-    protected ShortestPathResult findShortestPath(MapFacade map, Coordinate start, Coordinate goal, Heuristic heuristic, MovingRule movingRule) {
+    protected ShortestPathResult findShortestPath(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) {
         System.out.println("start: "+start+"\t goal: "+goal);
 
-        Map<Coordinate, Coordinate> pathPredecessors = new HashMap<>();
+        Map<Vector, Vector> pathPredecessors = new HashMap<>();
 
-        PriorityQueue<Tuple3<Coordinate, Coordinate, Tuple2<Double,Double>>> openList = new PriorityQueue<>((p, q) -> {
+        PriorityQueue<Tuple3<Vector, Vector, Tuple2<Double,Double>>> openList = new PriorityQueue<>((p, q) -> {
             if (p.getArg3().getArg1() + p.getArg3().getArg2() > q.getArg3().getArg1() + q.getArg3().getArg2()) return 1;
             return -1;
         });
 
         openList.add(new Tuple3<>(start, null, new Tuple2<>(.0,heuristic.estimateDistance(start,goal))));
         while (!openList.isEmpty()) {
-            Tuple3<Coordinate, Coordinate, Tuple2<Double, Double>> currentPath = openList.poll();
-            Coordinate currentPoint         = currentPath.getArg1();
-            Coordinate currentPredecessor   = currentPath.getArg2();
+            Tuple3<Vector, Vector, Tuple2<Double, Double>> currentPath = openList.poll();
+            Vector currentPoint         = currentPath.getArg1();
+            Vector currentPredecessor   = currentPath.getArg2();
             double pathDistance             = currentPath.getArg3().getArg1();
             if (pathPredecessors.get(currentPoint) != null)     continue;
             pathPredecessors.put(currentPoint, currentPredecessor);
@@ -61,12 +61,12 @@ public abstract class ShortestPath implements AbstractExploreStrategy {
 
     /* ------- Algorithm Substeps ------- */
 
-    private Collection<Tuple2<Coordinate, Double>> getOpenListCandidates(MapFacade map, Coordinate currentPoint, Coordinate predecessor, Coordinate goal, MovingRule movingRule){
-        Collection<Coordinate> directions = getDirectionsStrategy(map, currentPoint, predecessor, movingRule);
+    private Collection<Tuple2<Vector, Double>> getOpenListCandidates(MapFacade map, Vector currentPoint, Vector predecessor, Vector goal, MovingRule movingRule){
+        Collection<Vector> directions = getDirectionsStrategy(map, currentPoint, predecessor, movingRule);
 
-        Collection<Tuple2<Coordinate, Double>> candidates = new ArrayList<>();
-        for(Coordinate dir:directions) {
-            Tuple2<Coordinate, Double> candidate = exploreStrategy(map, currentPoint, dir, 0.0, goal, movingRule);
+        Collection<Tuple2<Vector, Double>> candidates = new ArrayList<>();
+        for(Vector dir:directions) {
+            Tuple2<Vector, Double> candidate = exploreStrategy(map, currentPoint, dir, 0.0, goal, movingRule);
             if(candidate!=null) System.out.print("current: "+currentPoint);
             if (candidate != null && !prune(candidate.getArg1(),dir,goal)) candidates.add(candidate);
         }

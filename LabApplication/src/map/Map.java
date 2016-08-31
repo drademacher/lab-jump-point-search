@@ -2,7 +2,7 @@ package map;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
-import util.Coordinate;
+import util.Vector;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ class Map implements MapFacade {
     private int xDim;
     private int yDim;
 
-    Map(Coordinate dimension, boolean areFieldsPassable) throws MapInitialisationException {
+    Map(Vector dimension, boolean areFieldsPassable) throws MapInitialisationException {
         this.xDim = dimension.getX();
         this.yDim = dimension.getY();
         if (this.xDim < 1 || this.yDim < 1) throw new MapInitialisationException(dimension);
@@ -44,7 +44,7 @@ class Map implements MapFacade {
     }
 
     @Override
-    public boolean isPassable(Coordinate coordinate){
+    public boolean isPassable(Vector coordinate){
         try {
             isValideCoordinate(coordinate);
             return map[coordinate.getX()][coordinate.getY()];
@@ -53,7 +53,7 @@ class Map implements MapFacade {
         }
     }
 
-    void switchPassable(Coordinate coordinate) throws InvalidCoordinateException {
+    void switchPassable(Vector coordinate) throws InvalidCoordinateException {
         isValideCoordinate(coordinate);
         map[coordinate.getX()][coordinate.getY()] = !map[coordinate.getX()][coordinate.getY()];
     }
@@ -80,7 +80,7 @@ class Map implements MapFacade {
 
     /* ------- Helper ------- */
 
-    private void isValideCoordinate(Coordinate coordinate) throws InvalidCoordinateException {
+    private void isValideCoordinate(Vector coordinate) throws InvalidCoordinateException {
         if (coordinate.getX() < 0 || coordinate.getY() < 0 || coordinate.getX() >= this.xDim || coordinate.getY() >= this.yDim) throw new InvalidCoordinateException(coordinate);
     }
 }
