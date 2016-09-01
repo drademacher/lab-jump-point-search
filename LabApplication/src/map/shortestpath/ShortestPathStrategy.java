@@ -8,8 +8,7 @@ import util.MathUtil;
 import util.Tuple2;
 import util.Tuple3;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Created by paloka on 08.06.16.
@@ -211,8 +210,70 @@ public class ShortestPathStrategy {
     private class BruteForceBoundingBoxesShortestPathPruning extends BoundingBoxesShortestPathPruning{
         @Override
         public void doPreprocessing(MapFacade map, MovingRule movingRule) {
-            //Todo: Baue BoundingBoxes Brute Force
+            super.doPreprocessing(map,movingRule);
+            for(int x=0;x<map.getXDim();x++){
+                for(int y=0;y<map.getYDim();y++){
+                    Vector current  = new Vector(x,y);
+                    if(map.isPassable(current)) {
+                        boolean[][] reachedPoints = new boolean[map.getXDim()][map.getYDim()];
+                        reachedPoints[current.getX()][current.getY()] = true;
+                        HashMap<Vector, BoundingBox> directions = new HashMap<>();
+                        PriorityQueue<Tuple2<Tuple3<Vector, Vector, Double>, BoundingBox>> priorityQueue = new PriorityQueue<>((p, q) -> {
+                            if (p.getArg1().getArg3() > q.getArg1().getArg3()) return 1;
+                            return -1;
+                        });
+                        for (Vector direction : movingRule.getAllDirections()) {
+                            BoundingBox boundingBox = new BoundingBox(current);
+                            Vector candidate = current.add(direction);
+                            directions.put(direction, boundingBox);
+                            if (map.isPassable(candidate))
+                                priorityQueue.add(new Tuple2<>(new Tuple3<>(candidate, direction, Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()))), boundingBox));
+                        }
+                        while (!priorityQueue.isEmpty()) {
+                            Tuple2<Tuple3<Vector, Vector, Double>, BoundingBox> nextEntry = priorityQueue.poll();
+                            Vector nextVector = nextEntry.getArg1().getArg1();
+                            Vector nextDirection = nextEntry.getArg1().getArg2();
+                            BoundingBox nextBoundingBox = nextEntry.getArg2();
+                            if (!reachedPoints[nextVector.getX()][nextVector.getY()]) {
+                                reachedPoints[nextVector.getX()][nextVector.getY()] = true;
+                                nextBoundingBox.add(nextVector);
+                                priorityQueue.addAll(explore(map, nextVector, nextDirection, nextEntry.getArg1().getArg3(), nextBoundingBox, movingRule));
+                            }
+                        }
+
+                        for(Vector incommingDirection:movingRule.getAllDirections()){
+                            if(map.isPassable(current.sub(incommingDirection))){
+                                Collection<Vector> outgoingDirections   = movingRule.getForcedDirections(map,current,incommingDirection);
+                                outgoingDirections.addAll(movingRule.getSubDirections(incommingDirection));
+                                outgoingDirections.add(incommingDirection);
+                                for(Vector outgoingDirection:outgoingDirections){
+                                    unionBoundingBox(current,incommingDirection,directions.get(outgoingDirection));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
+
+        private List<Tuple2<Tuple3<Vector,Vector,Double>, BoundingBox>> explore(MapFacade map, Vector current, Vector direction, double cost, BoundingBox bb, MovingRule movingRule){
+            List<Tuple2<Tuple3<Vector,Vector,Double>, BoundingBox>> reachablePoints    = new ArrayList<>();
+
+            for(Vector forcedDirection:movingRule.getForcedDirections(map,current,direction)){
+                Vector candidate    = current.add(forcedDirection);
+                if(map.isPassable(candidate)) reachablePoints.add(new Tuple2<>(new Tuple3(candidate,direction,cost+Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()))),bb));
+            }
+
+            for(Vector subDirection:movingRule.getSubDirections(direction)){
+                Vector candidate    = current.add(subDirection);
+                if(map.isPassable(candidate)) reachablePoints.add(new Tuple2<>(new Tuple3(candidate,direction,cost+Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()))),bb));
+            }
+
+            Vector candidate    = current.add(direction);
+            if(map.isPassable(candidate)) reachablePoints.add(new Tuple2<>(new Tuple3(candidate,direction,cost+Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()))),bb));
+
+            return reachablePoints;
+        };
     }
 
 

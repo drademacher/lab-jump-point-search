@@ -1,5 +1,7 @@
 package map.shortestpath;
 
+import map.MapFacade;
+import map.movingRule.MovingRule;
 import util.Vector;
 
 import java.util.HashMap;
@@ -10,19 +12,16 @@ import java.util.HashMap;
 abstract class BoundingBoxesShortestPathPruning implements AbstractShortestPathPruning {
     private HashMap<Vector, HashMap<Vector,BoundingBox>> boundingBoxes  = new HashMap<>();
 
+    @Override
+    public void doPreprocessing(MapFacade map, MovingRule movingRule) {
+        this.boundingBoxes  = new HashMap<>();
+    }
+
     protected void unionBoundingBox(Vector currentPoint, Vector direction, BoundingBox newBB){
+        if(newBB==null) return;
         this.boundingBoxes.putIfAbsent(currentPoint,new HashMap<>());
-        BoundingBox oldBB = this.boundingBoxes.get(currentPoint).putIfAbsent(direction,newBB);
-        if(oldBB!=null)   oldBB.union(newBB);
-    }
-
-    protected void unionBoundingBox(Vector currentPoint, Vector direction, Vector bBPoint){
-        unionBoundingBox(currentPoint,direction,new BoundingBox(bBPoint.getX(),bBPoint.getX(),bBPoint.getY(),bBPoint.getY()));
-    }
-
-    protected BoundingBox getBoundingBox(Vector currentPoint, Vector direction){
-        if(this.boundingBoxes.get(currentPoint)==null)  return null;
-        return this.boundingBoxes.get(currentPoint).get(direction);
+        BoundingBox oldBB = this.boundingBoxes.get(currentPoint).putIfAbsent(direction,new BoundingBox(newBB));
+        if(oldBB!=null) this.boundingBoxes.get(currentPoint).get(direction).union(newBB);
     }
 
     @Override

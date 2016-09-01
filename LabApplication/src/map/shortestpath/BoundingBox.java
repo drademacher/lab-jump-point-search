@@ -11,21 +11,32 @@ public class BoundingBox {
     private int minY;
     private int maxY;
 
-    BoundingBox(int minX, int maxX, int minY, int maxY){
-        this.minX   = minX;
-        this.maxX   = maxX;
-        this.minY   = minY;
-        this.maxY   = maxY;
+    protected BoundingBox(Vector vector){
+        this.minX   = vector.getX();
+        this.maxX   = vector.getX();
+        this.minY   = vector.getY();
+        this.maxY   = vector.getY();
     }
 
-    BoundingBox union(BoundingBox summand){
-        if(summand!=null) {
-            this.minX = Math.min(this.minX, summand.getMinX());
-            this.maxX = Math.max(this.maxX, summand.getMaxX());
-            this.minY = Math.min(this.minY, summand.getMinY());
-            this.maxY = Math.max(this.maxY, summand.getMaxY());
-        }
-        return this;
+    protected BoundingBox(BoundingBox bb){
+        this.minX   = bb.getMinX();
+        this.maxX   = bb.getMaxX();
+        this.minY   = bb.getMinY();
+        this.maxY   = bb.getMaxY();
+    }
+
+    protected void add(Vector vector){
+        this.minX   = Math.min(vector.getX(),this.getMinX());
+        this.maxX   = Math.max(vector.getX(),this.getMaxX());
+        this.minY   = Math.min(vector.getY(),this.getMinY());
+        this.maxY   = Math.max(vector.getY(),this.getMaxY());
+    }
+
+    protected void union(BoundingBox bb){
+        this.minX   = Math.min(bb.getMinX(),this.getMinX());
+        this.maxX   = Math.max(bb.getMaxX(),this.getMaxX());
+        this.minY   = Math.min(bb.getMinY(),this.getMinY());
+        this.maxY   = Math.max(bb.getMaxY(),this.getMaxY());
     }
 
     boolean isInBoundingBox(Vector testPoint){
