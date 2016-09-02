@@ -13,8 +13,8 @@ enum FieldVisualisation {
     VISITED_POINT("#D9F0FF"),
     JUMP_POINT("#2298E6"),
 
-    GOAL_POINT("#A12D3C"),
-    START_POINT("#A12D3C"),
+    GOAL_POINT("#730B19"),
+    START_POINT("#730B19"),
     PATH_POINT("#A12D3C");
 
     // TODO: use color #D92BD3 for fields of jump points

@@ -2,6 +2,9 @@ package application;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -43,13 +46,13 @@ public class ApplicationController implements Initializable {
     private RadioMenuItem aStarShortestPathMenuItem, jpsShortestPathMenuItem, jpsPlusShortestPathMenuItem, jpsBBShortestPathMenuItem;
 
     @FXML
-    private CheckMenuItem viewObstacles, viewOpenlist, viewPath, viewDetails;
+    private CheckMenuItem viewClosedList, viewOpenList, viewPath, viewDetails;
 
     @FXML
-    private MenuItem runRunMenuItem, preprocessRunMenuItem;
+    private MenuItem runRunMenuItem, runSetStartMenuItem, runSetGoalMenuItem, preprocessRunMenuItem;
 
     @FXML
-    private Canvas gridCanvas, obstacleCanvas, openlistCanvas, pathCanvas, detailsCanvas;
+    private Canvas gridCanvas, closedListCanvas, openListCanvas, pathCanvas, detailsCanvas;
 
     private Stage primaryStage;
     private MapHolder mapHolder;
@@ -57,6 +60,8 @@ public class ApplicationController implements Initializable {
     private MapController mapController;
 
     private DialogExecuter dialogExecuter = new DialogExecuter();
+
+    private BooleanProperty mapModified = new SimpleBooleanProperty(false);
 
     /* ------- Initialisation ------- */
 
@@ -68,7 +73,7 @@ public class ApplicationController implements Initializable {
         this.mapController = new MapController();
 
         //Init mapHolder
-        this.mapHolder = new MapHolder(this.gridCanvas, this.obstacleCanvas, this.openlistCanvas, this.pathCanvas, this.detailsCanvas);
+        this.mapHolder = new MapHolder(this.gridCanvas, this.closedListCanvas, this.openListCanvas, this.pathCanvas, this.detailsCanvas);
 
         //Init Menu
         initEmptyMapMenuItem();
@@ -85,6 +90,8 @@ public class ApplicationController implements Initializable {
         initMovingRuleToggleGroup();
         initShortestPathToggleGroup();
         initRunRunMenuItem();
+        initRunSetStartPointMenuItem();
+        initRunSetGoalPointMenuItem();
         initPreprocessRunMenuItem();
         initViews();
         // initKeyEventListener();
@@ -235,6 +242,7 @@ public class ApplicationController implements Initializable {
             if (newT == this.orthogonalOnlyMovingRuleMenuItem) this.mapController.setMovingRuleNoDiagonal();
             if (newT == this.cornerCuttingMovingRuleMenuItem) this.mapController.setMovingRuleBasic();
             if (newT == this.noCornerCuttingMovingRuleMenuItem) this.mapController.setMovingRuleNoCornerCutting();
+            if (oldT != newT) mapModified.set(true);
         });
         this.movingRuleToggleGroup.selectToggle(this.noCornerCuttingMovingRuleMenuItem);
     }
@@ -245,21 +253,62 @@ public class ApplicationController implements Initializable {
             if (newT == this.jpsShortestPathMenuItem) this.mapController.setShortestPathJPS();
             if (newT == this.jpsPlusShortestPathMenuItem) this.mapController.setShortestPathJPSPlus();
             if (newT == this.jpsBBShortestPathMenuItem) this.mapController.setShortestPathJPSBB();
+            if (oldT != newT) mapModified.set(true);
         });
         this.shortestPathToggleGroup.selectToggle(this.aStarShortestPathMenuItem);
     }
 
     private void initRunRunMenuItem(){
         runRunMenuItem.setOnAction(event ->{
-           setSetStartGoalMode((start, goal) ->{
-               this.mapHolder.setShortestPath(this.mapController.runShortstPath(start,goal));
-           });
+            this.mapHolder.setShortestPath(this.mapController.runShortstPath(this.mapHolder.getStartPoint(), this.mapHolder.getGoalPoint()));
+        });
+
+        runRunMenuItem.disableProperty().bind((preprocessRunMenuItem.disableProperty().and(this.mapHolder.isSetGoalPoint().and(this.mapHolder.isSetStartPoint()))).not());
+    }
+
+
+    private void initRunSetStartPointMenuItem(){
+
+        runSetStartMenuItem.setOnAction(event ->{
+            this.mapHolder.setOnMouseClickedCallback((coordinate) -> {
+                try {
+                    if (!this.mapHolder.isPassable(coordinate)) return;
+                    this.mapHolder.setStartPoint(coordinate);
+                    this.mapHolder.setOnMouseClickedCallback(null);
+                } catch (InvalidCoordinateException e) {
+                    e.printStackTrace();
+                }
+            });
         });
     }
 
+    private void initRunSetGoalPointMenuItem(){
+        runSetGoalMenuItem.setOnAction(event ->{
+            this.mapHolder.setOnMouseClickedCallback((coordinate) -> {
+                try {
+                    if (!this.mapHolder.isPassable(coordinate) || (this.mapHolder.getStartPoint() != null && this.mapHolder.getStartPoint().equals(coordinate))) return;
+                    this.mapHolder.setGoalPoint(coordinate);
+                    this.mapHolder.setOnMouseClickedCallback(null);
+                } catch (InvalidCoordinateException e) {
+                    e.printStackTrace();
+                }
+            });
+        });
+    }
+
+
     private void initPreprocessRunMenuItem(){
+        BooleanBinding proprossessingNeeded = jpsPlusShortestPathMenuItem.selectedProperty().or(jpsBBShortestPathMenuItem.selectedProperty()).not();
+
+        preprocessRunMenuItem.disableProperty().bind(proprossessingNeeded.or(mapModified.not()));
+
         preprocessRunMenuItem.setOnAction(event ->{
             this.mapController.preprocessShortestPath();
+            // TODO: add alert dialog
+            this.mapHolder.setOnMouseClickedCallback(null);
+            mapModified.set(false);
+            System.out.println(mapModified.get());
+            System.out.println(preprocessRunMenuItem.disableProperty().get());
         });
     }
 
@@ -269,13 +318,13 @@ public class ApplicationController implements Initializable {
     private void initViews() {
 
 
-        obstacleCanvas.visibleProperty().bind(viewObstacles.selectedProperty());
-        openlistCanvas.visibleProperty().bind(viewOpenlist.selectedProperty());
+        closedListCanvas.visibleProperty().bind(viewClosedList.selectedProperty());
+        openListCanvas.visibleProperty().bind(viewOpenList.selectedProperty());
         pathCanvas.visibleProperty().bind(viewPath.selectedProperty());
         detailsCanvas.visibleProperty().bind(viewDetails.selectedProperty());
 
-        obstacleCanvas.setMouseTransparent(true);
-        openlistCanvas.setMouseTransparent(true);
+        closedListCanvas.setMouseTransparent(true);
+        openListCanvas.setMouseTransparent(true);
         pathCanvas.setMouseTransparent(true);
         detailsCanvas.setMouseTransparent(true);
     }
@@ -288,6 +337,7 @@ public class ApplicationController implements Initializable {
             try {
                 this.mapController.switchPassable(coordinate);
                 this.mapHolder.switchPassable(coordinate);
+                // mapModified.set(true);
             } catch (InvalidCoordinateException e) {
                 e.printStackTrace();
                 //Todo: setEditMapMode.mapConroller.switchPassable - InvalidCoordinateException
@@ -296,29 +346,6 @@ public class ApplicationController implements Initializable {
         this.mapHolder.refreshMap();
     }
 
-    private void setSetStartGoalMode(OnStartGoalSetCallback callback) {
-        this.mapHolder.setOnMouseClickedCallback((start) -> {
-            try {
-                if (!this.mapHolder.isPassable(start)) return;
-                this.mapHolder.setOnMouseClickedCallback((goal) -> {
-                    try {
-                        if (!this.mapHolder.isPassable(goal) || (start.equals(goal))) return;
-                        this.mapHolder.setGoalPoint(goal);
-                        this.mapHolder.setOnMouseClickedCallback(null);
-                        callback.call(start, goal);
-                    } catch (InvalidCoordinateException e) {
-                        e.printStackTrace();
-                        //Todo InvalidCoordinateException
-                    }
-                });
-                this.mapHolder.setStartPoint(start);
-            } catch (InvalidCoordinateException e) {
-                e.printStackTrace();
-                //Todo InvalidCoordinateException
-            }
-        });
-        this.mapHolder.refreshMap();
-    }
 
 
     /* ------- Callbacks ------- */

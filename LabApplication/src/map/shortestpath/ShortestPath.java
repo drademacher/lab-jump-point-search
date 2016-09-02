@@ -65,7 +65,7 @@ public abstract class ShortestPath implements AbstractExploreStrategy {
                     map(candidate -> new Tuple3<>(candidate.getArg1(), currentPoint, new Tuple2<>(pathDistance + candidate.getArg2(),heuristic.estimateDistance(candidate.getArg1(),goal)))).
                     collect(Collectors.toList()));
         }
-        //Todo: throw NoPathFoundException
+        //Todo: show dialog no path could be found
         throw new NullPointerException("No Path");
     }
 
