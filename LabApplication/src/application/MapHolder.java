@@ -17,8 +17,6 @@ import static application.FieldVisualisation.*;
  * Created by paloka on 06.06.16.
  */
 public class MapHolder {
-    private static MapHolder ourInstance;
-
     private int xDimVis;
     private int xOffsetVis = 0;
     private int yDimVis;
@@ -34,8 +32,6 @@ public class MapHolder {
     private int fieldSize = 10;
 
     MapHolder(Canvas gridCanvas, Canvas closedListCanvas, Canvas openListCanvas, Canvas pathCanvas, Canvas detailsCanvas) {
-        ourInstance = this;
-
         this.gridCanvas = gridCanvas;
         this.openlistCanvas = openListCanvas;
         this.closedListCanvas = closedListCanvas;
@@ -59,10 +55,6 @@ public class MapHolder {
             int y = new Double((event.getY() - 2) / this.fieldSize).intValue();
             this.onMouseClickedCallback.call(new Vector(xOffsetVis + x, yOffsetVis + y));
         });
-    }
-
-    public static MapHolder getOurInstance() {
-        return ourInstance;
     }
 
     void refreshMap() {

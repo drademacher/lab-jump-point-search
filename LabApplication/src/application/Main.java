@@ -37,14 +37,5 @@ public class Main extends Application {
         primaryStage.setWidth(ApplicationConstants.WINDOW_WIDTH);
         primaryStage.setHeight(ApplicationConstants.WINDOW_HEIGHT);
         primaryStage.show();
-
-        // TODO: konnte ich leider nur in main aufrufen - scene ist erst nach primaryStage.show() verfügbar :-S
-        scene.setOnKeyPressed((KeyEvent e) -> {
-            if (e.getCode() == KeyCode.RIGHT)    MapHolder.getOurInstance().setCamera(1, 0);
-            if (e.getCode() == KeyCode.LEFT)    MapHolder.getOurInstance().setCamera(-1, 0);
-            if (e.getCode() == KeyCode.UP)    MapHolder.getOurInstance().setCamera(0, -1);
-            if (e.getCode() == KeyCode.DOWN)    MapHolder.getOurInstance().setCamera(0, 1);
-            e.consume();
-        });
     }
 }

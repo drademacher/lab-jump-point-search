@@ -2,13 +2,19 @@ package application;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
+import javafx.animation.KeyValue;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import map.MapController;
@@ -23,6 +29,8 @@ import java.util.ResourceBundle;
  * Created by paloka on 01.06.16.
  */
 public class ApplicationController implements Initializable {
+    @FXML
+    private BorderPane mainPane;
 
     @FXML
     private MenuItem emptyMapMenuItem, randomMapMenuItem, mazeMapMenuItem, mazeRoomMapMenuItem, singleRoomMapMenuItem, doubleRoomMapMenuItem, loopRoomMapMenuItem;
@@ -74,6 +82,20 @@ public class ApplicationController implements Initializable {
 
         //Init mapHolder
         this.mapHolder = new MapHolder(this.gridCanvas, this.closedListCanvas, this.openListCanvas, this.pathCanvas, this.detailsCanvas);
+
+        final EventHandler<KeyEvent> keyEventHandler = e -> {
+            if (e.getCode() == KeyCode.RIGHT)    this.mapHolder.setCamera(1, 0);
+            if (e.getCode() == KeyCode.LEFT)    this.mapHolder.setCamera(-1, 0);
+            if (e.getCode() == KeyCode.UP)    this.mapHolder.setCamera(0, -1);
+            if (e.getCode() == KeyCode.DOWN)    this.mapHolder.setCamera(0, 1);
+            e.consume();
+        };
+
+        mainPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
+            if (oldScene != null) oldScene.removeEventHandler(KeyEvent.KEY_PRESSED, keyEventHandler);
+            if (newScene != null) newScene.addEventHandler(KeyEvent.KEY_PRESSED, keyEventHandler);
+        });
+
 
         //Init Menu
         initEmptyMapMenuItem();
