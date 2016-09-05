@@ -2,6 +2,7 @@ package map;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
+import exception.NoPathFoundExeception;
 import map.heuristic.HeuristicStrategy;
 import map.movingRule.MovingRuleStrategy;
 import map.shortestpath.ShortestPathResult;
@@ -128,7 +129,7 @@ public class MapController {
         this.shortestPathStrategy.preprocess(this.map, this.movingRuleStrategy.getMovingRule());
     }
 
-    public ShortestPathResult runShortstPath(Vector start, Vector goal) {
+    public ShortestPathResult runShortstPath(Vector start, Vector goal) throws NoPathFoundExeception {
         return this.shortestPathStrategy.run(this.map, start, goal, this.heuristicStrategy.getHeuristic(), this.movingRuleStrategy.getMovingRule());
     }
 }

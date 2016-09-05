@@ -1,5 +1,6 @@
 package map.shortestpath;
 
+import exception.NoPathFoundExeception;
 import map.MapFacade;
 import map.heuristic.Heuristic;
 import map.movingRule.MovingRule;
@@ -37,7 +38,7 @@ public abstract class ShortestPath implements AbstractExploreStrategy {
 
     /* ------- ShortestPath ------- */
 
-    protected ShortestPathResult findShortestPath(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) {
+    protected ShortestPathResult findShortestPath(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) throws NoPathFoundExeception {
         System.out.println("start: "+start+"\t goal: "+goal);
 
         Map<Vector, Vector> pathPredecessors = new HashMap<>();
@@ -66,7 +67,7 @@ public abstract class ShortestPath implements AbstractExploreStrategy {
                     collect(Collectors.toList()));
         }
         //Todo: show dialog no path could be found
-        throw new NullPointerException("No Path");
+        throw new NoPathFoundExeception();
     }
 
 

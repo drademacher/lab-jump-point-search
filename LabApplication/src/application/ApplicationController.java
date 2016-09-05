@@ -2,6 +2,7 @@ package application;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
+import exception.NoPathFoundExeception;
 import javafx.animation.KeyValue;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -282,7 +283,11 @@ public class ApplicationController implements Initializable {
 
     private void initRunRunMenuItem(){
         runRunMenuItem.setOnAction(event ->{
-            this.mapHolder.setShortestPath(this.mapController.runShortstPath(this.mapHolder.getStartPoint(), this.mapHolder.getGoalPoint()));
+            try {
+                this.mapHolder.setShortestPath(this.mapController.runShortstPath(this.mapHolder.getStartPoint(), this.mapHolder.getGoalPoint()));
+            } catch (NoPathFoundExeception noPathFoundExeception) {
+                dialogExecuter.executeAlertDialog("No path found.", "There is no path between the chosen start and goal point.");
+            }
         });
 
         runRunMenuItem.disableProperty().bind((preprocessRunMenuItem.disableProperty().and(this.mapHolder.isSetGoalPoint().and(this.mapHolder.isSetStartPoint()))).not());
@@ -326,7 +331,7 @@ public class ApplicationController implements Initializable {
 
         preprocessRunMenuItem.setOnAction(event ->{
             this.mapController.preprocessShortestPath();
-            // TODO: add alert dialog
+            dialogExecuter.executeAlertDialog("Preprocessing", "You successfully completed the proprocessing computation.");
             this.mapHolder.setOnMouseClickedCallback(null);
             mapModified.set(false);
             System.out.println(mapModified.get());

@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import map.MapFacade;
 import map.shortestpath.ShortestPathResult;
+import util.Tuple2;
 import util.Vector;
 
 import static application.ApplicationConstants.*;
@@ -119,6 +120,7 @@ public class MapHolder {
         goalPoint = null;
         hasGoalPoint.set(false);
         updateDimVis();
+        refreshMap();
     }
 
     void setOnMouseClickedCallback(OnMouseClickedCallback callback) {
@@ -138,13 +140,11 @@ public class MapHolder {
 
         int padding = (fieldSize > 5) ? 1 : 0;
 
-        // TODO: this removes the grid structure are large obstacle groups
         gc.setFill(OBSTACLE_POINT.getColor());
         gc.fillRect(0, 0, this.gridCanvas.getWidth(), this.gridCanvas.getHeight());
 
         for (int x = 0; x < xDimVis; x++) {
             for (int y = 0; y < yDimVis; y++) {
-                // TODO: just print the grid point and discard the drawing of obstacles!
                 gc.setFill(this.map.isPassable(new Vector(xOffsetVis + x,yOffsetVis + y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
                 gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - padding, this.fieldSize - padding);
             }
@@ -196,11 +196,10 @@ public class MapHolder {
         }
         for (Vector visitedPoint : this.shortestPathResult.getVisited()) {
             renderField(openlistCanvas, visitedPoint, VISITED_POINT);
-            // TODO: ensure that its okay to just cut out invisible fields
             clearField(closedListCanvas, visitedPoint);
         }
-        for (Vector pathPoint : this.shortestPathResult.getShortestPath()) {
-            renderField(pathCanvas, pathPoint, PATH_POINT);
+        for (Tuple2<Vector, Boolean> pathPoint : this.shortestPathResult.getShortestPath()) {
+            renderField(pathPoint.getArg2() ? pathCanvas : detailsCanvas, pathPoint.getArg1(), PATH_POINT);
         }
     }
 

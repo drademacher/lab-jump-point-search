@@ -15,6 +15,13 @@ import java.util.Map;
  * Created by paloka on 02.06.16.
  */
 public class DialogExecuter {
+    void executeAlertDialog(String title, String text) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(text);
+        alert.showAndWait();
+    }
 
     //Todo: Vll kann man auf die tupel verzichten, wenn man einfach callbacks übergibt, vll geht das sogar abstrahiert
     Vector executeMapDimensionDialog(String title) {

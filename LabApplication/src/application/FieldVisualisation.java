@@ -17,8 +17,6 @@ enum FieldVisualisation {
     START_POINT("#730B19"),
     PATH_POINT("#A12D3C");
 
-    // TODO: use color #D92BD3 for fields of jump points
-
     private Color color;
 
     FieldVisualisation(String paint) {

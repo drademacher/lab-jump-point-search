@@ -1,11 +1,10 @@
 package map.shortestpath;
 
+import util.Tuple2;
 import util.Vector;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by paloka on 08.06.16.
@@ -31,22 +30,24 @@ public class ShortestPathResult {
         return this.goal;
     }
 
-    public List<Vector> getShortestPath() {
-        List<Vector> path = new LinkedList<>();
+    public List<Tuple2<Vector, Boolean>> getShortestPath() {
+        List<Tuple2<Vector, Boolean>> path = new LinkedList<>();
         Vector current  = goal;
         do {
             Vector next = pathPredecessors.get(current);
             Vector direction = current.getDirectionTo(next);
+            Boolean flag = true;
             while(!current.equals(next)) {
-                path.add(current);
+                path.add(new Tuple2<>(current, flag));
                 current = current.add(direction);
+                flag = false;
             }
         } while (!current.equals(start));
         return path;
     }
 
     public Collection<Vector> getVisited() {
-        return pathPredecessors.keySet();
+        return pathPredecessors.keySet().stream().filter(v -> !openList.contains(v)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public Collection<Vector> getOpenList() {
