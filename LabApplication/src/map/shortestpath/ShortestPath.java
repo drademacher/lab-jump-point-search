@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Created by paloka on 06.06.16.
  */
-public abstract class ShortestPath implements AbstractExploreStrategy {
+abstract class ShortestPath implements AbstractExploreStrategy {
 
     private AbstractShortestPathPreprocessing   preprocessing   = null;
     private AbstractShortestPathPruning         pruning         = null;

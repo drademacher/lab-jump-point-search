@@ -5,7 +5,7 @@ import util.Vector;
 /**
  * Created by paloka on 01.08.16.
  */
-public class BoundingBox {
+class BoundingBox {
     private int minX;
     private int maxX;
     private int minY;
