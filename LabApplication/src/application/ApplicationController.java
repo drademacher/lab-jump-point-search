@@ -3,7 +3,6 @@ package application;
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
 import exception.NoPathFoundExeception;
-import javafx.animation.KeyValue;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,7 +13,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -252,10 +250,10 @@ public class ApplicationController implements Initializable {
 
     private void initHeuristicToggleGroup() {
         heuristicToggleGroup.selectedToggleProperty().addListener((ov, oldT, newT) -> {
-            if (newT == this.zeroHeuristicMenuItem) this.mapController.setHeuristicZero();
-            if (newT == this.manhattanHeuristicMenuItem) this.mapController.setHeuristicManhattan();
-            if (newT == this.gridHeuristicMenuItem) this.mapController.setHeuristicGrid();
-            if (newT == this.euclideanHeuristicMenuItem) this.mapController.setHeuristicEuclidean();
+            if (newT == this.zeroHeuristicMenuItem) this.mapController.setZeroHeuristic();
+            if (newT == this.manhattanHeuristicMenuItem) this.mapController.setManhattanHeuristic();
+            if (newT == this.gridHeuristicMenuItem) this.mapController.setGridHeuristic();
+            if (newT == this.euclideanHeuristicMenuItem) this.mapController.setEuclideanHeuristic();
         });
         this.heuristicToggleGroup.selectToggle(this.gridHeuristicMenuItem);
     }

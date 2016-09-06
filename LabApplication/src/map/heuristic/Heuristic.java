@@ -3,29 +3,30 @@ package map.heuristic;
 import util.Vector;
 
 /**
- * Implements:
- * estimateDistance(Vector p,Vector q) - Estimates the distance between two points p, q without considering the map or obstacles between p and q by a heuristic.
+ * The Heuristic interface provides a method, to estimate the distance between two points based on a heuristic function.
  *
  * @author Patrick Loka
  * @version 1.0
  * @see HeuristicStrategy
  * @see map.shortestpath.ShortestPath
+ * @since 1.0
  */
 public interface Heuristic {
 
     /**
-     * Estimates the distance between two points p, q without considering the map or obstacles between p and q by a heuristic.
+     * Estimates the distance between two points p, q without considering a specific map or obstacles between p and q by a heuristic.<br>
+     * <br>
+     * A valid implementation fulfills following properties:<br>
+     * (p,q) >= 0 <br>
+     * (p,p) == 0 <br>
+     * (p,q) == (q,p) <br>
+     * (p,z) + (z,q) <= (p,q) <br>
      *
-     * A valid implementation fulfills following properties:
-     * (p,q) >= 0, (p,p) = 0
-     * (p,q) == (q,p)
-     * (p,z) + (z,q) <= (p,q)
-     *
-     * @param p,q Points on a Map.
-     * @return Estimated distance of p and q without considering the map or obstacles between p and q.
-     * @since 1.0
+     * @param p,q Points in a 2-dimensional vector space
+     * @return Estimated distance of p and q without considering a specific map or obstacles between p and q.
      * @see HeuristicStrategy
      * @see map.shortestpath.ShortestPath
+     * @since 1.0
      */
     double estimateDistance(Vector p, Vector q);
 }

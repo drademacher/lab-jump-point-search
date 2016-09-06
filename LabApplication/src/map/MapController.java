@@ -92,20 +92,20 @@ public class MapController {
 
     /* ------- MapHeuristic Operations ------- */
 
-    public void setHeuristicZero() {
-    this.heuristicStrategy.setHeuristicZero();
+    public void setZeroHeuristic() {
+    this.heuristicStrategy.setZeroHeuristic();
 }
 
-    public void setHeuristicManhattan() {
-    this.heuristicStrategy.setHeuristicManhattan();
+    public void setManhattanHeuristic() {
+    this.heuristicStrategy.setManhattanHeuristic();
 }
 
-    public void setHeuristicGrid() {
-    this.heuristicStrategy.setHeuristicGrid();
+    public void setGridHeuristic() {
+    this.heuristicStrategy.setGridHeuristic();
 }
 
-    public void setHeuristicEuclidean() {
-    this.heuristicStrategy.setHeuristicEuclidean();
+    public void setEuclideanHeuristic() {
+    this.heuristicStrategy.setEuclideanHeuristic();
 }
 
 

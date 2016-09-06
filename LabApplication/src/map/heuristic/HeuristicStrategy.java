@@ -1,10 +1,17 @@
 package map.heuristic;
 
-import util.Vector;
-import util.MathUtil;
-
 /**
- * Created by paloka on 08.07.16.
+ * HeuristicStrategy provides the opportunity to memorise a specific Heuristic implementation to give it back whenever needed.
+ *
+ * @author Patrick Loka
+ * @version 1.0
+ * @see map.MapController
+ * @see Heuristic
+ * @see ZeroHeuristic
+ * @see ManhattanHeuristic
+ * @see GridHeuristic
+ * @see EuclideanHeuristic
+ * @since 1.0
  */
 public class HeuristicStrategy {
 
@@ -13,59 +20,63 @@ public class HeuristicStrategy {
 
     /* ------- Heuristic Getter & Setter ------- */
 
+    /**
+     * Returns the memorised Heuristic implementation.
+     *
+     * @return The memorised Heuristic implementation. Returns null if no implementation was set.
+     * @see map.MapController
+     * @see Heuristic
+     * @since 1.0
+     */
     public Heuristic getHeuristic(){
         return this.heuristic;
     }
 
-    public void setHeuristicZero(){
-        this.heuristic = new HeuristicZero();
+    /**
+     * Memorises the ZeroHeuristic implementation.
+     *
+     * @see map.MapController
+     * @see ZeroHeuristic
+     * @see Heuristic
+     * @since 1.0
+     */
+    public void setZeroHeuristic(){
+        this.heuristic = new ZeroHeuristic();
     }
 
-    public void setHeuristicManhattan() {
-        this.heuristic = new HeuristicManhatten();
+    /**
+     * Memorises the ManhattanHeuristic implementation.
+     *
+     * @see map.MapController
+     * @see ManhattanHeuristic
+     * @see Heuristic
+     * @since 1.0
+     */
+    public void setManhattanHeuristic() {
+        this.heuristic = new ManhattanHeuristic();
     }
 
-    public void setHeuristicGrid(){
-        this.heuristic = new HeuristicGrid();
+    /**
+     * Memorises the GridHeuristic implementation.
+     *
+     * @see map.MapController
+     * @see GridHeuristic
+     * @see Heuristic
+     * @since 1.0
+     */
+    public void setGridHeuristic(){
+        this.heuristic = new GridHeuristic();
     }
 
-    public void setHeuristicEuclidean(){
-        this.heuristic = new HeuristicEuclidean();
-    }
-
-
-    /* ------- Heuristic Implementations ------- */
-
-    private class HeuristicZero implements Heuristic{
-        @Override
-        public double estimateDistance(Vector p, Vector q) {
-            return 0;
-        }
-    }
-
-    private class HeuristicManhatten implements Heuristic{
-        @Override
-        public double estimateDistance(Vector p, Vector q) {
-            return Math.abs(p.getX() - q.getX()) + Math.abs(p.getY() + q.getY());
-        }
-    }
-
-    private class HeuristicGrid implements Heuristic{
-        @Override
-        public double estimateDistance(Vector p, Vector q) {
-            int deltaX = Math.abs(p.getX() - q.getX());
-            int deltaY = Math.abs(p.getY() - q.getY());
-            int min = Math.min(deltaX, deltaY);
-            int max = Math.max(deltaX, deltaY);
-            return max - min + MathUtil.SQRT2 * min;
-        }
-    }
-
-    private class HeuristicEuclidean implements Heuristic{
-        @Override
-        public double estimateDistance(Vector p, Vector q) {
-            return Math.sqrt((p.getX() - q.getX()) * (p.getX() - q.getX()) + (p.getY() - q.getY()) * (p.getY() - q.getY()));
-        }
-
+    /**
+     * Memorises the EuclideanHeuristic implementation.
+     *
+     * @see map.MapController
+     * @see EuclideanHeuristic
+     * @see Heuristic
+     * @since 1.0
+     */
+    public void setEuclideanHeuristic(){
+        this.heuristic = new EuclideanHeuristic();
     }
 }
