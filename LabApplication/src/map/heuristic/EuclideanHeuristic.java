@@ -15,9 +15,9 @@ import util.Vector;
 class EuclideanHeuristic implements Heuristic{
 
     /**
-     * Implementation: Estimates the distance between p and q by calculating the euclidean distance.<br>
+     * {@inheritDoc}
      * <br>
-     * Specification: {@inheritDoc}
+     * Implementation: Estimates the distance between p and q by calculating the euclidean distance.
      *
      * @param p,q Points in a 2-dimensional vector space
      * @return Euclidean distance between p and q.

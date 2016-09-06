@@ -8,7 +8,10 @@ import util.Vector;
  * @author Patrick Loka
  * @version 1.0
  * @see HeuristicStrategy
- * @see map.shortestpath.ShortestPath
+ * @see ZeroHeuristic
+ * @see GridHeuristic
+ * @see ManhattanHeuristic
+ * @see EuclideanHeuristic
  * @since 1.0
  */
 public interface Heuristic {
@@ -24,8 +27,10 @@ public interface Heuristic {
      *
      * @param p,q Points in a 2-dimensional vector space
      * @return Estimated distance of p and q without considering a specific map or obstacles between p and q.
-     * @see HeuristicStrategy
-     * @see map.shortestpath.ShortestPath
+     * @see ZeroHeuristic
+     * @see GridHeuristic
+     * @see ManhattanHeuristic
+     * @see EuclideanHeuristic
      * @since 1.0
      */
     double estimateDistance(Vector p, Vector q);

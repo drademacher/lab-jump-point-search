@@ -260,9 +260,9 @@ public class ApplicationController implements Initializable {
 
     private void initMovingRuleToggleGroup() {
         movingRuleToggleGroup.selectedToggleProperty().addListener((ov, oldT, newT) -> {
-            if (newT == this.orthogonalOnlyMovingRuleMenuItem) this.mapController.setMovingRuleNoDiagonal();
-            if (newT == this.cornerCuttingMovingRuleMenuItem) this.mapController.setMovingRuleBasic();
-            if (newT == this.noCornerCuttingMovingRuleMenuItem) this.mapController.setMovingRuleNoCornerCutting();
+            if (newT == this.orthogonalOnlyMovingRuleMenuItem) this.mapController.setOrthogonalNeighborMovingRule();
+            if (newT == this.cornerCuttingMovingRuleMenuItem) this.mapController.setAllNeighborMovingRule();
+            if (newT == this.noCornerCuttingMovingRuleMenuItem) this.mapController.setUncutNeighborMovingRule();
             if (oldT != newT) mapModified.set(true);
         });
         this.movingRuleToggleGroup.selectToggle(this.noCornerCuttingMovingRuleMenuItem);

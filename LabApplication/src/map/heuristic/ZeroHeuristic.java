@@ -15,9 +15,9 @@ import util.Vector;
 class ZeroHeuristic implements Heuristic{
 
     /**
-     * Implementation: Estimates the distance between p and q with 0 independent on the input.<br>
+     * {@inheritDoc}
      * <br>
-     * Specification: {@inheritDoc}
+     * Implementation: Estimates the distance between p and q with 0 independent on the input.
      *
      * @param p,q Points in a 2-dimensional vector space
      * @return 0

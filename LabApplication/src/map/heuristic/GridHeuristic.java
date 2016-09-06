@@ -16,9 +16,9 @@ import util.Vector;
 class GridHeuristic implements Heuristic{
 
     /**
-     * Implementation: Estimates the distance between p and q by calculating the shortest path on a grid without obstacles.<br>
+     * {@inheritDoc}
      * <br>
-     * Specification: {@inheritDoc}
+     * Implementation: Estimates the distance between p and q by calculating the shortest path on a grid without obstacles.
      *
      * @param p,q Points in a 2-dimensional vector space
      * @return Distance of p and q on a grid without obstacles.

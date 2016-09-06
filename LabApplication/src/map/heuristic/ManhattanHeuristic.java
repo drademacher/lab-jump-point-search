@@ -15,9 +15,9 @@ import util.Vector;
 class ManhattanHeuristic implements Heuristic{
 
     /**
-     * Implementation: Estimates the distance between p and q by calculating the manhattan distance.<br>
+     * {@inheritDoc}
      * <br>
-     * Specification: {@inheritDoc}
+     * Implementation: Estimates the distance between p and q by calculating the manhattan distance.
      *
      * @param p,q Points in a 2-dimensional vector space
      * @return Manhattan distance between p and q.

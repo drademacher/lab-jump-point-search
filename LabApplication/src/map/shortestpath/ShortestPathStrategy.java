@@ -93,8 +93,8 @@ public class ShortestPathStrategy {
             if (movingRule.getForcedDirections(map, candidate, direction).size() > 0)
                 return new Tuple2<>(candidate, cost);
 
-            for (Vector subDirection : movingRule.getSubDirections(direction)) {
-                if (exploreStrategy(map, candidate, subDirection, cost, goal, movingRule) != null)
+            for (Vector subordinatedDirection : movingRule.getSubordinatedDirections(direction)) {
+                if (exploreStrategy(map, candidate, subordinatedDirection, cost, goal, movingRule) != null)
                     return new Tuple2<>(candidate, cost);
             }
 
@@ -135,8 +135,8 @@ public class ShortestPathStrategy {
                     Vector forcedPoint = currentPoint.add(direction.mult(steps));
                     if (forcedPoint.equals(goal))
                         return new Tuple2<>(forcedPoint, cost + steps * Math.sqrt(Math.abs(direction.getX())) + Math.abs(direction.getY()));
-                    for (Vector dir : movingRule.getSubDirections(direction)) {
-                        Tuple2<Vector, Double> NextInDir = exploreStrategy(map, forcedPoint, dir, 0.0, goal, movingRule);
+                    for (Vector subordinatedDirection : movingRule.getSubordinatedDirections(direction)) {
+                        Tuple2<Vector, Double> NextInDir = exploreStrategy(map, forcedPoint, subordinatedDirection, 0.0, goal, movingRule);
                         if (NextInDir != null && goal.equals(NextInDir.getArg1())) {
                             return new Tuple2<>(forcedPoint, cost + steps * Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY())));
                         }
@@ -182,8 +182,8 @@ public class ShortestPathStrategy {
                 return new Tuple3<>(candidate, cost + stepCost, true);
             }
 
-            for (Vector subDirection : movingRule.getSubDirections(direction)) {
-                if (exploreStrategy(map, candidate, subDirection, 1.0, goal, movingRule).getArg3()) {
+            for (Vector subordinatedDirection : movingRule.getSubordinatedDirections(direction)) {
+                if (exploreStrategy(map, candidate, subordinatedDirection, 1.0, goal, movingRule).getArg3()) {
                     putPreprocessing(currentPoint, direction, new Tuple3<>(candidate, stepCost, true));
                     return new Tuple3<>(candidate, cost + stepCost, true);
                 }
@@ -250,7 +250,7 @@ public class ShortestPathStrategy {
                         for (Vector incommingDirection : movingRule.getAllDirections()) {
                             if (map.isPassable(current.sub(incommingDirection))) {
                                 Collection<Vector> outgoingDirections = movingRule.getForcedDirections(map, current, incommingDirection);
-                                outgoingDirections.addAll(movingRule.getSubDirections(incommingDirection));
+                                outgoingDirections.addAll(movingRule.getSubordinatedDirections(incommingDirection));
                                 outgoingDirections.add(incommingDirection);
                                 for (Vector outgoingDirection : outgoingDirections) {
                                     unionBoundingBox(current, incommingDirection, directions.get(outgoingDirection));
@@ -271,10 +271,10 @@ public class ShortestPathStrategy {
                     reachablePoints.add(new Tuple2<>(new Tuple3(candidate, forcedDirection, cost + Math.sqrt(Math.abs(forcedDirection.getX()) + Math.abs(forcedDirection.getY()))), bb));
             }
 
-            for (Vector subDirection : movingRule.getSubDirections(direction)) {
-                Vector candidate = current.add(subDirection);
+            for (Vector subordinatedDirection : movingRule.getSubordinatedDirections(direction)) {
+                Vector candidate = current.add(subordinatedDirection);
                 if (map.isPassable(candidate))
-                    reachablePoints.add(new Tuple2<>(new Tuple3(candidate, subDirection, cost + Math.sqrt(Math.abs(subDirection.getX()) + Math.abs(subDirection.getY()))), bb));
+                    reachablePoints.add(new Tuple2<>(new Tuple3(candidate, subordinatedDirection, cost + Math.sqrt(Math.abs(subordinatedDirection.getX()) + Math.abs(subordinatedDirection.getY()))), bb));
             }
 
             Vector candidate = current.add(direction);
@@ -293,10 +293,10 @@ public class ShortestPathStrategy {
     private Collection<Vector> getDirectionsJPS(MapFacade map, Vector currentPoint, Vector predecessor, MovingRule movingRule) {
         if (predecessor != null) {
             Collection<Vector> directions = new ArrayList<>();
-            Vector direction = movingRule.getDirection(currentPoint, predecessor);
+            Vector direction = predecessor.getDirectionTo(currentPoint);
             directions.add(direction);
             directions.addAll(movingRule.getForcedDirections(map, currentPoint, direction));
-            directions.addAll(movingRule.getSubDirections(direction));
+            directions.addAll(movingRule.getSubordinatedDirections(direction));
             return directions;
         } else {
             return movingRule.getAllDirections();

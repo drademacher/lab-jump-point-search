@@ -77,16 +77,16 @@ public class MapController {
 
     /* ------- MapMovingRule Operations ------- */
 
-    public void setMovingRuleBasic(){
-        this.movingRuleStrategy.setMovingRuleBasic();
+    public void setAllNeighborMovingRule(){
+        this.movingRuleStrategy.setAllNeighborMovingRule();
     }
 
-    public void setMovingRuleNoCornerCutting(){
-        this.movingRuleStrategy.setMovingRuleNoCornerCutting();
+    public void setUncutNeighborMovingRule(){
+        this.movingRuleStrategy.setUncutNeighborMovingRule();
     }
 
-    public void setMovingRuleNoDiagonal(){
-        this.movingRuleStrategy.setMovingRuleNoDiagonal();
+    public void setOrthogonalNeighborMovingRule(){
+        this.movingRuleStrategy.setOrthogonalNeighborMovingRule();
     }
 
 
