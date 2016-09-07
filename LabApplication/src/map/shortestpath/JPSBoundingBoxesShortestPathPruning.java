@@ -1,7 +1,7 @@
 package map.shortestpath;
 
 import map.MapFacade;
-import map.movingRule.MovingRule;
+import map.movingrule.MovingRule;
 import util.BoundingBox;
 import util.Vector;
 

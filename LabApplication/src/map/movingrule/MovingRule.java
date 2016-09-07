@@ -1,4 +1,4 @@
-package map.movingRule;
+package map.movingrule;
 
 import map.MapFacade;
 import util.Vector;

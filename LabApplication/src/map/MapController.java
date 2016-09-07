@@ -4,7 +4,7 @@ import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
 import exception.NoPathFoundExeception;
 import map.heuristic.HeuristicStrategy;
-import map.movingRule.MovingRuleStrategy;
+import map.movingrule.MovingRuleStrategy;
 import map.shortestpath.ShortestPathResult;
 import map.shortestpath.ShortestPathStrategy;
 import util.Vector;

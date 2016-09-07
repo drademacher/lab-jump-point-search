@@ -1,4 +1,4 @@
-package map.movingRule;
+package map.movingrule;
 
 /**
  * MovingRuleStrategy provides the opportunity to memorise a specific MovingRule implementation to give it back whenever needed.

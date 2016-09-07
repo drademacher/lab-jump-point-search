@@ -3,10 +3,8 @@ package map.shortestpath;
 import exception.NoPathFoundExeception;
 import map.MapFacade;
 import map.heuristic.Heuristic;
-import map.movingRule.MovingRule;
+import map.movingrule.MovingRule;
 import util.Vector;
-
-import java.util.*;
 
 /**
  * Created by paloka on 08.06.16.
