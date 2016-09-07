@@ -6,10 +6,10 @@ Linux:
 
 You can execute the JavaFX application with the terminal:
 ```
-java -jar .../LabApplication.jar
+java -jar $PATH_TO_JAR$/LabApplication.jar
 ```
 
 You can execute a terminal only application alternatively:
 ```
-java -classpath .../LabApplication.jar terminalapplication.Main
+java -classpath $PATH_TO_JAR$/LabApplication.jar terminalapplication.Main §MY_MAP§.map startx starty goalx goaly
 ```

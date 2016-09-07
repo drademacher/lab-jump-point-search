@@ -39,7 +39,7 @@ abstract class ShortestPath implements ExploreStrategy {
     /* ------- ShortestPath ------- */
 
     protected ShortestPathResult findShortestPath(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) throws NoPathFoundExeception {
-        System.out.println("start: "+start+"\t goal: "+goal);
+        //Todo: System.out.println("start: "+start+"\t goal: "+goal);
 
         Map<Vector, Vector> pathPredecessors = new HashMap<>();
 
@@ -53,20 +53,20 @@ abstract class ShortestPath implements ExploreStrategy {
             Tuple3<Vector, Vector, Tuple2<Double, Double>> currentPath = openList.poll();
             Vector currentPoint         = currentPath.getArg1();
             Vector currentPredecessor   = currentPath.getArg2();
-            double pathDistance             = currentPath.getArg3().getArg1();
+            double pathDistance         = currentPath.getArg3().getArg1();
             if (pathPredecessors.get(currentPoint) != null)     continue;
             pathPredecessors.put(currentPoint, currentPredecessor);
             if (currentPoint.equals(goal)) {
                 return new ShortestPathResult(start, goal,
                         openList.stream().map(entry -> entry.getArg1()).collect(Collectors.toList()),
-                        pathPredecessors);
+                        pathPredecessors,
+                        pathDistance);
             }
             openList.addAll(getOpenListCandidates(map, currentPoint, currentPredecessor, goal, movingRule).stream().
                     filter(candidate -> pathPredecessors.get(candidate.getArg1()) == null).
                     map(candidate -> new Tuple3<>(candidate.getArg1(), currentPoint, new Tuple2<>(pathDistance + candidate.getArg2(),heuristic.estimateDistance(candidate.getArg1(),goal)))).
                     collect(Collectors.toList()));
         }
-        //Todo: show dialog no path could be found
         throw new NoPathFoundExeception();
     }
 
@@ -79,7 +79,7 @@ abstract class ShortestPath implements ExploreStrategy {
         Collection<Tuple2<Vector, Double>> candidates = new ArrayList<>();
         for(Vector dir:directions) {
             Tuple2<Vector, Double> candidate = exploreStrategy(map, currentPoint, dir, 0.0, goal, movingRule);
-            if(candidate!=null) System.out.print("current: "+currentPoint);
+            //Todo: if(candidate!=null) System.out.print("current: "+currentPoint);
             if (candidate != null && !prune(candidate.getArg1(),dir,goal)) candidates.add(candidate);
         }
         return candidates;

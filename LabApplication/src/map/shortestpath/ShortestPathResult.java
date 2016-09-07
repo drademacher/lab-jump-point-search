@@ -14,12 +14,14 @@ public class ShortestPathResult {
     private Vector start, goal;
     private Collection<Vector> openList;
     private Map<Vector, Vector> pathPredecessors;
+    private double cost;
 
-    public ShortestPathResult(Vector start, Vector goal, Collection<Vector> openList, Map<Vector, Vector> pathPredecessors) {
+    public ShortestPathResult(Vector start, Vector goal, Collection<Vector> openList, Map<Vector, Vector> pathPredecessors, double cost) {
         this.start  = start;
         this.goal   = goal;
         this.openList = openList;
         this.pathPredecessors = pathPredecessors;
+        this.cost   = cost;
     }
 
     public Vector getStart(){
@@ -52,5 +54,9 @@ public class ShortestPathResult {
 
     public Collection<Vector> getOpenList() {
         return this.openList;
+    }
+
+    public double getCost(){
+        return this.cost;
     }
 }

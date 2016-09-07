@@ -1,7 +1,8 @@
-application
 exception
+javafxapplication
 map
 map.heuristic
-map.movingRule
+map.movingrule
 map.shortestpath
+terminalapplication
 util

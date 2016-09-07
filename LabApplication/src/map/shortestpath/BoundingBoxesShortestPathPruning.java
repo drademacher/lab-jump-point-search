@@ -25,10 +25,10 @@ abstract class BoundingBoxesShortestPathPruning implements ShortestPathPruning {
     @Override
     public boolean prune(Vector candidate, Vector direction, Vector goal){
         if(this.boundingBoxes.get(candidate)==null || this.boundingBoxes.get(candidate).get(direction)==null){
-            System.out.println("candidate: "+candidate+"\t direction: "+direction+"\t No BoundingBox found");
+            //Todo: System.out.println("candidate: "+candidate+"\t direction: "+direction+"\t No BoundingBox found");
             return false;
         }
-        System.out.println("\t candidate: "+candidate+"\t direction: "+direction+"\t BoundingBox: "+this.boundingBoxes.get(candidate).get(direction)+"\t"+this.boundingBoxes.get(candidate).get(direction).isInBoundingBox(goal));
+        //Todo: System.out.println("\t candidate: "+candidate+"\t direction: "+direction+"\t BoundingBox: "+this.boundingBoxes.get(candidate).get(direction)+"\t"+this.boundingBoxes.get(candidate).get(direction).isInBoundingBox(goal));
         return !this.boundingBoxes.get(candidate).get(direction).isInBoundingBox(goal);
     }
 
