@@ -1,4 +1,4 @@
-package application;
+package javafxapplication;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;

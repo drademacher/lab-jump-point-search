@@ -1,4 +1,4 @@
-package application;
+package javafxapplication;
 
 import exception.InvalidCoordinateException;
 import javafx.beans.property.BooleanProperty;
@@ -11,8 +11,8 @@ import map.shortestpath.ShortestPathResult;
 import util.Tuple2;
 import util.Vector;
 
-import static application.ApplicationConstants.*;
-import static application.FieldVisualisation.*;
+import static javafxapplication.ApplicationConstants.*;
+import static javafxapplication.FieldVisualisation.*;
 
 /**
  * Created by paloka on 06.06.16.

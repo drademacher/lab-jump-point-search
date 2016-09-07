@@ -1,1 +1,0 @@
-# lab-jump-point-search

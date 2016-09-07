@@ -1,4 +1,4 @@
-package application;
+package javafxapplication;
 
 /**
  * Created by paloka on 01.06.16.
