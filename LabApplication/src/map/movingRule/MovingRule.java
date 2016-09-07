@@ -80,13 +80,13 @@ public abstract class MovingRule {
     }
 
     /**
-     * Returns true, if a corner is cut without permission by moving in input direction on input currentPoint. Otherwise returns false.<br>
+     * Returns true, if a corner is cut without permission by moving in input direction by leaving currentPoint. Otherwise returns false.<br>
      * <br>
      * Default Implementation(Corner Cutting is allowed): Corner is independent of the input never cut.<br>
      *
      * @param map map to apply moving rules.
      * @param currentPoint A passable point on the map.
-     * @param direction The direction vector in {-1,0,1}^2 in which the currentPoint should be left.
+     * @param direction The direction vector in {-1,0,1}^2 in which the currentPoint is leaving.
      * @return false
      * @see UncutNeighborMovingRule
      * @since 1.0

@@ -10,7 +10,7 @@ import java.util.HashMap;
 /**
  * Created by paloka on 21.07.16.
  */
-abstract class PreCalculationShortestPathPreprocessing implements AbstractExploreStrategy, AbstractShortestPathPreprocessing {
+abstract class PreCalculationShortestPathPreprocessing implements ExploreStrategy, ShortestPathPreprocessing {
 
     private HashMap<Vector, HashMap<Vector,Tuple3<Vector,Double,Boolean>>> preprocessing    = new HashMap<>();
 

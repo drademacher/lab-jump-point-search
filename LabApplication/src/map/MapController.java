@@ -125,6 +125,10 @@ public class MapController {
         this.shortestPathStrategy.setShortestPathJPSBB();
     }
 
+    public void setShortestpathAStarBB(){
+        this.shortestPathStrategy.setShortestPathAStarBB();
+    }
+
     public void preprocessShortestPath(){
         this.shortestPathStrategy.preprocess(this.map, this.movingRuleStrategy.getMovingRule());
     }

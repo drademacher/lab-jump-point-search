@@ -76,8 +76,8 @@ class UncutNeighborMovingRule extends MovingRule{
      *
      * @param map map to apply moving rules.
      * @param currentPoint A passable point on the map.
-     * @param direction The direction vector in {-1,0,1}^2 in which the currentPoint was reached.
-     * @return True, if a corner is cut by moving in input direction on input currentPoint. Otherwise return false.
+     * @param direction The direction vector in {-1,0,1}^2 in which the currentPoint is leaving.
+     * @return True, if a corner is cut by moving in input direction by leaving currentPoint. Otherwise return false.
      * @since 1.0
      */
     @Override

@@ -44,7 +44,11 @@ public class ShortestPathStrategy {
     }
 
     public void setShortestPathJPSBB() {
-        this.shortestPath = new PreCalculatedShortestPath(new JPSPlusPreCalculationShortestPathPreprocessing(), new BruteForceBoundingBoxesShortestPathPruning());
+        this.shortestPath = new PreCalculatedShortestPath(new JPSPlusPreCalculationShortestPathPreprocessing(), new JPSBoundingBoxesShortestPathPruning());
+    }
+
+    public void setShortestPathAStarBB() {
+        this.shortestPath   = new AStarShortestPath(new AStarBoundingBoxesShortestPathPruning());
     }
 
 
@@ -52,7 +56,7 @@ public class ShortestPathStrategy {
 
     private class AStarShortestPath extends ShortestPath {
 
-        protected AStarShortestPath(AbstractShortestPathPruning pruning) {
+        protected AStarShortestPath(ShortestPathPruning pruning) {
             super(new NoShortestPathPreprocessing(), pruning);
         }
 
@@ -74,7 +78,7 @@ public class ShortestPathStrategy {
 
     private class JPSShortestPath extends ShortestPath {
 
-        protected JPSShortestPath(AbstractShortestPathPruning pruning) {
+        protected JPSShortestPath(ShortestPathPruning pruning) {
             super(new NoShortestPathPreprocessing(), pruning);
         }
 
@@ -107,7 +111,7 @@ public class ShortestPathStrategy {
 
         PreCalculationShortestPathPreprocessing preprocessing;
 
-        PreCalculatedShortestPath(PreCalculationShortestPathPreprocessing preprocessing, AbstractShortestPathPruning pruning) {
+        PreCalculatedShortestPath(PreCalculationShortestPathPreprocessing preprocessing, ShortestPathPruning pruning) {
             super(preprocessing, pruning);
             this.preprocessing = preprocessing;
         }
@@ -151,7 +155,7 @@ public class ShortestPathStrategy {
 
     /* ------- ShortestPathPreprocessingImplementations ------- */
 
-    private class NoShortestPathPreprocessing implements AbstractShortestPathPreprocessing {
+    private class NoShortestPathPreprocessing implements ShortestPathPreprocessing {
         @Override
         public void doPreprocessing(MapFacade map, MovingRule movingRule) {
             //Do nothing because no preprocessing wanted
@@ -198,7 +202,7 @@ public class ShortestPathStrategy {
 
     /* ------- ShortestPathPruningImplementations ------- */
 
-    private class NoShortestPathPruning implements AbstractShortestPathPruning {
+    private class NoShortestPathPruning implements ShortestPathPruning {
         @Override
         public void doPreprocessing(MapFacade map, MovingRule movingRule) {
             //Do nothing because no pruning wanted
@@ -211,80 +215,29 @@ public class ShortestPathStrategy {
     }
 
 
-    private class BruteForceBoundingBoxesShortestPathPruning extends BoundingBoxesShortestPathPruning {
+    private class JPSBoundingBoxesShortestPathPruning extends BoundingBoxesShortestPathPruning {
         @Override
-        public void doPreprocessing(MapFacade map, MovingRule movingRule) {
-            super.doPreprocessing(map, movingRule);
-            for (int x = 0; x < map.getXDim(); x++) {
-                for (int y = 0; y < map.getYDim(); y++) {
-                    Vector current = new Vector(x, y);
-                    if (map.isPassable(current)) {
-                        boolean[][] reachedPoints = new boolean[map.getXDim()][map.getYDim()];
-                        reachedPoints[current.getX()][current.getY()] = true;
-                        HashMap<Vector, BoundingBox> directions = new HashMap<>();
-                        PriorityQueue<Tuple2<Tuple3<Vector, Vector, Double>, BoundingBox>> priorityQueue = new PriorityQueue<>((p, q) -> {
-                            if (p.getArg1().getArg3() > q.getArg1().getArg3()) return 1;
-                            return -1;
-                        });
-                        for (Vector direction : movingRule.getAllDirections()) {
-                            BoundingBox boundingBox = new BoundingBox(current);
-                            Vector candidate = current.add(direction);
-                            directions.put(direction, boundingBox);
-                            if (map.isPassable(candidate))
-                                priorityQueue.add(new Tuple2<>(new Tuple3<>(candidate, direction, Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()))), boundingBox));
-                        }
-
-                        while (!priorityQueue.isEmpty()) {
-                            Tuple2<Tuple3<Vector, Vector, Double>, BoundingBox> nextEntry = priorityQueue.poll();
-                            final Vector nextVector = nextEntry.getArg1().getArg1();
-                            final Vector nextDirection = nextEntry.getArg1().getArg2();
-                            final BoundingBox nextBoundingBox = nextEntry.getArg2();
-                            // TODO: Punkte mit gleicher Entfernung relevant?
-                            if (!reachedPoints[nextVector.getX()][nextVector.getY()]) {
-                                reachedPoints[nextVector.getX()][nextVector.getY()] = true;
-                                nextBoundingBox.add(nextVector);
-                                priorityQueue.addAll(explore(map, nextVector, nextDirection, nextEntry.getArg1().getArg3(), nextBoundingBox, movingRule));
-                            }
-                        }
-
-                        for (Vector incommingDirection : movingRule.getAllDirections()) {
-                            if (map.isPassable(current.sub(incommingDirection))) {
-                                Collection<Vector> outgoingDirections = movingRule.getForcedDirections(map, current, incommingDirection);
-                                outgoingDirections.addAll(movingRule.getSubordinatedDirections(incommingDirection));
-                                outgoingDirections.add(incommingDirection);
-                                for (Vector outgoingDirection : outgoingDirections) {
-                                    unionBoundingBox(current, incommingDirection, directions.get(outgoingDirection));
-                                }
-                            }
-                        }
+        void buildBoundingBoxes(MapFacade map, MovingRule movingRule, Vector currentPoint, HashMap<Vector, BoundingBox> outgoingDirectionBoundingBoxes) {
+            movingRule.getAllDirections().stream().filter(incomingDirection -> map.isPassable(currentPoint.sub(incomingDirection))).forEach(incomingDirection -> {
+                Collection<Vector> outgoingDirections = movingRule.getForcedDirections(map, currentPoint, incomingDirection);
+                    outgoingDirections.addAll(movingRule.getSubordinatedDirections(incomingDirection));
+                    outgoingDirections.add(incomingDirection);
+                    for (Vector outgoingDirection : outgoingDirections) {
+                        unionBoundingBox(currentPoint, incomingDirection, outgoingDirectionBoundingBoxes.get(outgoingDirection));
                     }
-                }
+                });
             }
         }
 
-        private Collection<Tuple2<Tuple3<Vector, Vector, Double>, BoundingBox>> explore(MapFacade map, Vector current, Vector direction, double cost, BoundingBox bb, MovingRule movingRule) {
-            List<Tuple2<Tuple3<Vector, Vector, Double>, BoundingBox>> reachablePoints = new ArrayList<>();
-
-            for (Vector forcedDirection : movingRule.getForcedDirections(map, current, direction)) {
-                Vector candidate = current.add(forcedDirection);
-                if (map.isPassable(candidate))
-                    reachablePoints.add(new Tuple2<>(new Tuple3(candidate, forcedDirection, cost + Math.sqrt(Math.abs(forcedDirection.getX()) + Math.abs(forcedDirection.getY()))), bb));
-            }
-
-            for (Vector subordinatedDirection : movingRule.getSubordinatedDirections(direction)) {
-                Vector candidate = current.add(subordinatedDirection);
-                if (map.isPassable(candidate))
-                    reachablePoints.add(new Tuple2<>(new Tuple3(candidate, subordinatedDirection, cost + Math.sqrt(Math.abs(subordinatedDirection.getX()) + Math.abs(subordinatedDirection.getY()))), bb));
-            }
-
-            Vector candidate = current.add(direction);
-            if (map.isPassable(candidate))
-                reachablePoints.add(new Tuple2<>(new Tuple3(candidate, direction, cost + Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()))), bb));
-
-            return reachablePoints;
+    private class AStarBoundingBoxesShortestPathPruning extends BoundingBoxesShortestPathPruning {
+        @Override
+        void buildBoundingBoxes(MapFacade map, MovingRule movingRule, Vector currentPoint, HashMap<Vector, BoundingBox> outgoingDirectionBoundingBoxes) {
+            movingRule.getAllDirections().stream().filter(incomingDirection -> map.isPassable(currentPoint.sub(incomingDirection))).forEach(incomingDirection -> {
+                movingRule.getAllDirections().stream().filter(outgoingDirection -> Math.abs(incomingDirection.getX() + outgoingDirection.getX()) + Math.abs(incomingDirection.getY() + outgoingDirection.getY()) > 1).forEach(outgoingDirection -> {
+                    unionBoundingBox(currentPoint, incomingDirection, outgoingDirectionBoundingBoxes.get(outgoingDirection));
+                });
+            });
         }
-
-        ;
     }
 
 

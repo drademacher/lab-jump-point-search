@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 /**
  * Created by paloka on 06.06.16.
  */
-abstract class ShortestPath implements AbstractExploreStrategy {
+abstract class ShortestPath implements ExploreStrategy {
 
-    private AbstractShortestPathPreprocessing   preprocessing   = null;
-    private AbstractShortestPathPruning         pruning         = null;
+    private ShortestPathPreprocessing   preprocessing   = null;
+    private ShortestPathPruning         pruning         = null;
 
-    protected ShortestPath(AbstractShortestPathPreprocessing preprocessing, AbstractShortestPathPruning pruning){
+    protected ShortestPath(ShortestPathPreprocessing preprocessing, ShortestPathPruning pruning){
         this.preprocessing  = preprocessing;
         this.pruning        = pruning;
     }
