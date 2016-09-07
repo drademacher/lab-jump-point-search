@@ -2,7 +2,7 @@ package javafxapplication;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
-import exception.NoPathFoundExeception;
+import exception.NoPathFoundException;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -282,8 +282,8 @@ public class ApplicationController implements Initializable {
     private void initRunRunMenuItem(){
         runRunMenuItem.setOnAction(event ->{
             try {
-                this.mapHolder.setShortestPath(this.mapController.runShortstPath(this.mapHolder.getStartPoint(), this.mapHolder.getGoalPoint()));
-            } catch (NoPathFoundExeception noPathFoundExeception) {
+                this.mapHolder.setShortestPath(this.mapController.runShortstPath(this.mapHolder.getStartPoint(), this.mapHolder.getGoalPoint()).getArg1());
+            } catch (NoPathFoundException noPathFoundException) {
                 dialogExecuter.executeAlertDialog("No path found.", "There is no path between the chosen start and goal point.");
             }
         });

@@ -1,9 +1,10 @@
 package map.shortestpath;
 
-import exception.NoPathFoundExeception;
+import exception.NoPathFoundException;
 import map.MapFacade;
 import map.heuristic.Heuristic;
 import map.movingrule.MovingRule;
+import util.Tuple2;
 import util.Vector;
 
 /**
@@ -15,12 +16,16 @@ public class ShortestPathStrategy {
 
     /* ------- ShortestPath Operations ------- */
 
-    public void preprocess(MapFacade map, MovingRule movingRule) {
+    public long preprocess(MapFacade map, MovingRule movingRule) {
+        long starttime  = -System.currentTimeMillis();
         this.shortestPath.doPreprocessing(map, movingRule);
+        return starttime + System.currentTimeMillis();
     }
 
-    public ShortestPathResult run(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) throws NoPathFoundExeception {
-        return this.shortestPath.findShortestPath(map, start, goal, heuristic, movingRule);
+    public Tuple2<ShortestPathResult,Long> run(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) throws NoPathFoundException {
+        long starttime  = -System.currentTimeMillis();
+        ShortestPathResult result   = this.shortestPath.findShortestPath(map, start, goal, heuristic, movingRule);
+        return new Tuple2<>(result,starttime + System.currentTimeMillis());
     }
 
 

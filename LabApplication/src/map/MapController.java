@@ -2,11 +2,12 @@ package map;
 
 import exception.InvalidCoordinateException;
 import exception.MapInitialisationException;
-import exception.NoPathFoundExeception;
+import exception.NoPathFoundException;
 import map.heuristic.HeuristicStrategy;
 import map.movingrule.MovingRuleStrategy;
 import map.shortestpath.ShortestPathResult;
 import map.shortestpath.ShortestPathStrategy;
+import util.Tuple2;
 import util.Vector;
 
 import java.io.File;
@@ -133,11 +134,11 @@ public class MapController {
         this.shortestPathStrategy.setJPSBBShortestPath();
     }
 
-    public void preprocessShortestPath(){
-        this.shortestPathStrategy.preprocess(this.map, this.movingRuleStrategy.getMovingRule());
+    public long preprocessShortestPath(){
+        return this.shortestPathStrategy.preprocess(this.map, this.movingRuleStrategy.getMovingRule());
     }
 
-    public ShortestPathResult runShortstPath(Vector start, Vector goal) throws NoPathFoundExeception {
+    public Tuple2<ShortestPathResult,Long> runShortstPath(Vector start, Vector goal) throws NoPathFoundException {
         return this.shortestPathStrategy.run(this.map, start, goal, this.heuristicStrategy.getHeuristic(), this.movingRuleStrategy.getMovingRule());
     }
 }
