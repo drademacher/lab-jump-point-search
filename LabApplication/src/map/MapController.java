@@ -111,22 +111,26 @@ public class MapController {
 
     /* ------- ShortestPath Operations ------- */
 
-    public void setShortestPathAStar(){
-        this.shortestPathStrategy.setShortestPathAStar();
+    public void setAStarShortestPath(){
+        this.shortestPathStrategy.setAStarShortestPath();
     }
 
-    public void setShortestPathJPS(){
-        this.shortestPathStrategy.setShortestPathJPS();
+    public void setJPSShortestPath(){
+        this.shortestPathStrategy.setJPSShortestPath();
     }
 
-    public void setShortestPathJPSPlus() { this.shortestPathStrategy.setShortestPathJPSPlus(); }
+    public void setJPSPlusShortestPath() { this.shortestPathStrategy.setJPSPlusShortestPath(); }
 
-    public void setShortestPathJPSBB(){
-        this.shortestPathStrategy.setShortestPathJPSBB();
+    public void setJPSPlusBBShortestPath(){
+        this.shortestPathStrategy.setJPSPlusBBShortestPath();
     }
 
-    public void setShortestpathAStarBB(){
-        this.shortestPathStrategy.setShortestPathAStarBB();
+    public void setAStarBBShortestPath(){
+        this.shortestPathStrategy.setAStarBBShortestPath();
+    }
+
+    public void setJPSBBShortestPath(){
+        this.shortestPathStrategy.setJPSBBShortestPath();
     }
 
     public void preprocessShortestPath(){

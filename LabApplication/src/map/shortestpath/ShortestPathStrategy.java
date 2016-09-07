@@ -4,10 +4,8 @@ import exception.NoPathFoundExeception;
 import map.MapFacade;
 import map.heuristic.Heuristic;
 import map.movingRule.MovingRule;
+import util.*;
 import util.Vector;
-import util.MathUtil;
-import util.Tuple2;
-import util.Tuple3;
 
 import java.util.*;
 
@@ -31,24 +29,28 @@ public class ShortestPathStrategy {
 
     /* ------- ShortestPath Setter ------- */
 
-    public void setShortestPathAStar() {
+    public void setAStarShortestPath() {
         this.shortestPath = new AStarShortestPath(new NoShortestPathPruning());
     }
 
-    public void setShortestPathJPS() {
+    public void setJPSShortestPath() {
         this.shortestPath = new JPSShortestPath(new NoShortestPathPruning());
     }
 
-    public void setShortestPathJPSPlus() {
+    public void setJPSPlusShortestPath() {
         this.shortestPath = new PreCalculatedShortestPath(new JPSPlusPreCalculationShortestPathPreprocessing(), new NoShortestPathPruning());
     }
 
-    public void setShortestPathJPSBB() {
+    public void setJPSPlusBBShortestPath() {
         this.shortestPath = new PreCalculatedShortestPath(new JPSPlusPreCalculationShortestPathPreprocessing(), new JPSBoundingBoxesShortestPathPruning());
     }
 
-    public void setShortestPathAStarBB() {
+    public void setAStarBBShortestPath() {
         this.shortestPath   = new AStarShortestPath(new AStarBoundingBoxesShortestPathPruning());
+    }
+
+    public void setJPSBBShortestPath(){
+        this.shortestPath   = new JPSShortestPath(new JPSBoundingBoxesShortestPathPruning());
     }
 
 
@@ -74,7 +76,6 @@ public class ShortestPathStrategy {
             return new Tuple2<>(candidate, Math.abs(direction.getX()) + Math.abs(direction.getY()) < 2 ? 1 : MathUtil.SQRT2);
         }
     }
-
 
     private class JPSShortestPath extends ShortestPath {
 
@@ -105,7 +106,6 @@ public class ShortestPathStrategy {
             return exploreStrategy(map, candidate, direction, cost, goal, movingRule);
         }
     }
-
 
     private class PreCalculatedShortestPath extends ShortestPath {
 
@@ -214,28 +214,28 @@ public class ShortestPathStrategy {
         }
     }
 
-
     private class JPSBoundingBoxesShortestPathPruning extends BoundingBoxesShortestPathPruning {
         @Override
         void buildBoundingBoxes(MapFacade map, MovingRule movingRule, Vector currentPoint, HashMap<Vector, BoundingBox> outgoingDirectionBoundingBoxes) {
             movingRule.getAllDirections().stream().filter(incomingDirection -> map.isPassable(currentPoint.sub(incomingDirection))).forEach(incomingDirection -> {
                 Collection<Vector> outgoingDirections = movingRule.getForcedDirections(map, currentPoint, incomingDirection);
-                    outgoingDirections.addAll(movingRule.getSubordinatedDirections(incomingDirection));
-                    outgoingDirections.add(incomingDirection);
-                    for (Vector outgoingDirection : outgoingDirections) {
-                        unionBoundingBox(currentPoint, incomingDirection, outgoingDirectionBoundingBoxes.get(outgoingDirection));
-                    }
-                });
-            }
+                outgoingDirections.addAll(movingRule.getSubordinatedDirections(incomingDirection));
+                outgoingDirections.add(incomingDirection);
+                for (Vector outgoingDirection : outgoingDirections) {
+                    unionBoundingBox(currentPoint, incomingDirection, outgoingDirectionBoundingBoxes.get(outgoingDirection));
+                }
+            });
         }
+    }
 
     private class AStarBoundingBoxesShortestPathPruning extends BoundingBoxesShortestPathPruning {
         @Override
         void buildBoundingBoxes(MapFacade map, MovingRule movingRule, Vector currentPoint, HashMap<Vector, BoundingBox> outgoingDirectionBoundingBoxes) {
             movingRule.getAllDirections().stream().filter(incomingDirection -> map.isPassable(currentPoint.sub(incomingDirection))).forEach(incomingDirection -> {
-                movingRule.getAllDirections().stream().filter(outgoingDirection -> Math.abs(incomingDirection.getX() + outgoingDirection.getX()) + Math.abs(incomingDirection.getY() + outgoingDirection.getY()) > 1).forEach(outgoingDirection -> {
-                    unionBoundingBox(currentPoint, incomingDirection, outgoingDirectionBoundingBoxes.get(outgoingDirection));
-                });
+                movingRule.getAllDirections().stream()
+                        .filter(outgoingDirection -> Math.abs(incomingDirection.getX() + outgoingDirection.getX()) + Math.abs(incomingDirection.getY() + outgoingDirection.getY()) > 1).forEach(outgoingDirection -> {
+                            unionBoundingBox(currentPoint, incomingDirection, outgoingDirectionBoundingBoxes.get(outgoingDirection));
+                        });
             });
         }
     }

@@ -2,6 +2,7 @@ package map.shortestpath;
 
 import map.MapFacade;
 import map.movingRule.MovingRule;
+import util.BoundingBox;
 import util.Tuple2;
 import util.Tuple3;
 import util.Vector;
@@ -12,7 +13,7 @@ import java.util.*;
  * Created by paloka on 01.08.16.
  */
 abstract class BoundingBoxesShortestPathPruning implements ShortestPathPruning {
-    private HashMap<Vector, HashMap<Vector,BoundingBox>> boundingBoxes  = new HashMap<>();
+    private HashMap<Vector, HashMap<Vector, BoundingBox>> boundingBoxes  = new HashMap<>();
 
     protected void unionBoundingBox(Vector currentPoint, Vector direction, BoundingBox newBB){
         if(newBB==null) return;

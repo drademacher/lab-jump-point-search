@@ -270,10 +270,10 @@ public class ApplicationController implements Initializable {
 
     private void initShortestPathToggleGroup() {
         shortestPathToggleGroup.selectedToggleProperty().addListener((ov, oldT, newT) -> {
-            if (newT == this.aStarShortestPathMenuItem) this.mapController.setShortestPathAStar();
-            if (newT == this.jpsShortestPathMenuItem) this.mapController.setShortestPathJPS();
-            if (newT == this.jpsPlusShortestPathMenuItem) this.mapController.setShortestPathJPSPlus();
-            if (newT == this.jpsBBShortestPathMenuItem) this.mapController.setShortestPathJPSBB();
+            if (newT == this.aStarShortestPathMenuItem) this.mapController.setAStarShortestPath();
+            if (newT == this.jpsShortestPathMenuItem) this.mapController.setJPSShortestPath();
+            if (newT == this.jpsPlusShortestPathMenuItem) this.mapController.setJPSPlusShortestPath();
+            if (newT == this.jpsBBShortestPathMenuItem) this.mapController.setJPSPlusBBShortestPath();
             if (oldT != newT) mapModified.set(true);
         });
         this.shortestPathToggleGroup.selectToggle(this.aStarShortestPathMenuItem);

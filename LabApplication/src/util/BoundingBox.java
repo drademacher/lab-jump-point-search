@@ -1,62 +1,60 @@
-package map.shortestpath;
-
-import util.Vector;
+package util;
 
 /**
  * Created by paloka on 01.08.16.
  */
-class BoundingBox {
+public class BoundingBox {
     private int minX;
     private int maxX;
     private int minY;
     private int maxY;
 
-    protected BoundingBox(Vector vector){
+    public BoundingBox(Vector vector){
         this.minX   = vector.getX();
         this.maxX   = vector.getX();
         this.minY   = vector.getY();
         this.maxY   = vector.getY();
     }
 
-    protected BoundingBox(BoundingBox bb){
+    public BoundingBox(BoundingBox bb){
         this.minX   = bb.getMinX();
         this.maxX   = bb.getMaxX();
         this.minY   = bb.getMinY();
         this.maxY   = bb.getMaxY();
     }
 
-    protected void add(Vector vector){
+    public void add(Vector vector){
         this.minX   = Math.min(vector.getX(),this.getMinX());
         this.maxX   = Math.max(vector.getX(),this.getMaxX());
         this.minY   = Math.min(vector.getY(),this.getMinY());
         this.maxY   = Math.max(vector.getY(),this.getMaxY());
     }
 
-    protected void union(BoundingBox bb){
+    public void union(BoundingBox bb){
         this.minX   = Math.min(bb.getMinX(),this.getMinX());
         this.maxX   = Math.max(bb.getMaxX(),this.getMaxX());
         this.minY   = Math.min(bb.getMinY(),this.getMinY());
         this.maxY   = Math.max(bb.getMaxY(),this.getMaxY());
     }
 
-    boolean isInBoundingBox(Vector testPoint){
+    public boolean isInBoundingBox(Vector testPoint){
         return  this.minX<=testPoint.getX() && testPoint.getX()<=this.maxX &&
                 this.minY<=testPoint.getY() && testPoint.getY()<=this.maxY;
     }
 
-    int getMaxX() {
+    public int getMaxX() {
         return maxX;
     }
 
-    int getMaxY() {
+    public int getMaxY() {
         return maxY;
     }
 
-    int getMinX() {
+    public int getMinX() {
         return minX;
     }
 
-    int getMinY() {
+    public int getMinY() {
         return minY;
     }
 
