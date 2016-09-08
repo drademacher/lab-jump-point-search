@@ -11,7 +11,10 @@ import java.util.Collection;
  * <br>
  * UncutNeighborMovingRule implements getForcedDirections(map,currentPoint,direction) of MovingRule by defining the two points behind an obstacle, placed diagonal behind to the currentPoint, as a forced points.<br>
  * <br>
- * UncutNeighborMovingRule overrides isCornerCut(map,currentPoint,direction) by forbidding Corner Cutting as an accepted movement on the map.
+ * UncutNeighborMovingRule overrides isCornerCut(map,currentPoint,direction) by forbidding Corner Cutting as an accepted movement on the map.<br>
+ * <br>
+ * All orthogonal movements are allowed as long as the reached point is passable.
+ * All diagonal movements are allowed as long as the reached point is passable and no obstacle is cut.
  *
  * @author Patrick Loka
  * @version 1.0

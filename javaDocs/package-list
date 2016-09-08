@@ -1,8 +1,8 @@
-exception
+core.exception
+core.map
+core.map.heuristic
+core.map.movingrule
+core.map.shortestpath
+core.util
 javafxapplication
-map
-map.heuristic
-map.movingrule
-map.shortestpath
 terminalapplication
-util

@@ -10,6 +10,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+//Todo: javaDocs by Danny
+/**
+ *
+ * @author Danny Rademacher
+ * @version 1.0
+ * @see MapController
+ * @since 1.0
+ */
 class MapFactory {
     private final int[][] NEIGHS_ALL = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 

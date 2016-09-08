@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 /**
  * AllNeighborMovingRule implements all MovingRule operations.<br>
  * <br>
- * AllNeighborMovingRule implements getForcedDirections(map,currentPoint,direction) of MovingRule by defining every point behind an obstacle, placed aside to the currentPoint, as a forced point.
+ * AllNeighborMovingRule implements getForcedDirections(map,currentPoint,direction) of MovingRule by defining every point behind an obstacle, placed aside to the currentPoint, as a forced point.<br>
+ * <br>
+ * All orthogonal and diagonal movements are allowed as long as the reached point is passable.
  *
  * @author Patrick Loka
  * @version 1.0

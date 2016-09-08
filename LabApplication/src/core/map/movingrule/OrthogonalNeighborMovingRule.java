@@ -13,7 +13,10 @@ import java.util.Collection;
  * <br>
  * OrthogonalNeighborMovingRule overrides getAllDirections() by just allowing orthogonal movements.<br>
  * <br>
- * OrthogonalNeighborMovingRule overrides getSubordinatedDirections(direction) by prioritizing the y-movements to the x-movements
+ * OrthogonalNeighborMovingRule overrides getSubordinatedDirections(direction) by prioritizing the y-movements to the x-movements<br>
+ * <br>
+ * All orthogonal movements are allowed as long as the reached point is passable.
+ * All diagonal movements are forbidden.
  *
  * @author Patrick Loka
  * @version 1.0

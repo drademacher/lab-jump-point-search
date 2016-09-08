@@ -40,6 +40,7 @@ abstract class ShortestPath implements ExploreStrategy {
 
     protected ShortestPathResult findShortestPath(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) throws NoPathFoundException {
         //Todo: System.out.println("start: "+start+"\t goal: "+goal);
+        if(!map.isPassable(start) || !map.isPassable(goal)) throw new NoPathFoundException();
 
         Map<Vector, Vector> pathPredecessors = new HashMap<>();
 

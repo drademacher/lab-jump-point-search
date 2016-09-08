@@ -6,7 +6,7 @@ import core.util.Vector;
 /**
  * GridHeuristic implements all Heuristic operations.<br>
  * <br>
- * GridHeuristic implements estimateDistance(p,q) of Heuristic by calculating the shortest path on a grid without obstacles.
+ * GridHeuristic implements estimateDistance(p,q) of Heuristic by calculating the shortest path on a grid without obstacles (diagonal movements allowed).
  *
  * @author Patrick Loka
  * @version 1.0
@@ -18,10 +18,10 @@ class GridHeuristic implements Heuristic{
     /**
      * {@inheritDoc}
      * <br>
-     * Implementation: Estimates the distance between p and q by calculating the shortest path on a grid without obstacles.
+     * Implementation: Estimates the distance between p and q by calculating the shortest path on a grid without obstacles (diagonal movements allowed).
      *
      * @param p,q Points in a 2-dimensional vector space
-     * @return Distance of p and q on a grid without obstacles.
+     * @return Distance of p and q on a grid without obstacles (diagonal movements allowed).
      * @since 1.0
      */
     @Override
