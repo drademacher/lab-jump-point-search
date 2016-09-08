@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="LabApplication">
+    <output-path>$PROJECT_DIR$/out/artifacts/LabApplication</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="javafxapplication.Main" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="LabApplication.jar">
+        <element id="module-output" name="LabApplication" />
+      </element>
+    </root>
+  </artifact>
+</component>
