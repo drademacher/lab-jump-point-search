@@ -211,7 +211,6 @@ public class MapController {
      * <br>
      * All orthogonal and diagonal movements are allowed as long as the reached point is passable.
      *
-     * @see core.map.movingrule.AllNeighborMovingRule
      * @see MovingRuleStrategy
      * @since 1.0
      */
@@ -225,7 +224,6 @@ public class MapController {
      * All orthogonal movements are allowed as long as the reached point is passable.
      * All diagonal movements are allowed as long as the reached point is passable and no obstacle is cut.
      *
-     * @see core.map.movingrule.UncutNeighborMovingRule
      * @see MovingRuleStrategy
      * @since 1.0
      */
@@ -239,7 +237,6 @@ public class MapController {
      * All orthogonal movements are allowed as long as the reached point is passable.
      * All diagonal movements are forbidden.
      *
-     * @see core.map.movingrule.OrthogonalNeighborMovingRule
      * @see MovingRuleStrategy
      * @since 1.0
      */
@@ -255,7 +252,6 @@ public class MapController {
      * <br>
      * Estimated the distance between two points on a grid is constant 0.
      *
-     * @see core.map.heuristic.ZeroHeuristic
      * @see HeuristicStrategy
      * @since 1.0
      */
@@ -268,7 +264,6 @@ public class MapController {
      * <br>
      * Estimates the distance between two points on a grid by calculating the manhattan distance.
      *
-     * @see core.map.heuristic.ManhattanHeuristic
      * @see HeuristicStrategy
      * @since 1.0
      */
@@ -281,7 +276,6 @@ public class MapController {
      * <br>
      * Estimates the distance between two points on a grid by calculating the distance on a grid without obstacles (diagonal movements allowed)
      *
-     * @see core.map.heuristic.GridHeuristic
      * @see HeuristicStrategy
      * @since 1.0
      */
@@ -294,7 +288,6 @@ public class MapController {
      * <br>
      * Estimates the distance between two points on a grid by calculating the euclidean distance.
      *
-     * @see core.map.heuristic.EuclideanHeuristic
      * @see HeuristicStrategy
      * @since 1.0
      */
@@ -310,7 +303,6 @@ public class MapController {
      * <br>
      * Uses AStar strategy only.
      *
-     * @see core.map.shortestpath.AStarShortestPath
      * @see ShortestPathStrategy
      * @since 1.0
      */
@@ -323,7 +315,6 @@ public class MapController {
      * <br>
      * Uses JPS strategy only.
      *
-     * @see core.map.shortestpath.JPSShortestPath
      * @see ShortestPathStrategy
      * @since 1.0
      */
@@ -338,8 +329,6 @@ public class MapController {
      * <br>
      * Preprocessing required: Calculates all jump points by JPS strategy and save them in a look up table to use it to find the shortest path without exploring the map in runtime.
      *
-     * @see core.map.shortestpath.PreCalculatedShortestPath
-     * @see core.map.shortestpath.JPSPreCalculationShortestPathPreprocessing
      * @see ShortestPathStrategy
      * @since 1.0
      */
@@ -353,9 +342,6 @@ public class MapController {
      * Preprocessing required: Calculates all jump points by JPS strategy and save them in a look up table to use it to find the shortest path without exploring the map in runtime.
      * Calculates bounding boxes by JPS strategy to estimate whether a specific point is on the shortest path between start and goal for pruning if not.
      *
-     * @see core.map.shortestpath.PreCalculatedShortestPath
-     * @see core.map.shortestpath.JPSPreCalculationShortestPathPreprocessing
-     * @see core.map.shortestpath.JPSBoundingBoxesShortestPathPruning
      * @see ShortestPathStrategy
      * @since 1.0
      */
@@ -370,8 +356,6 @@ public class MapController {
      * <br>
      * Preprocessing required: Calculates bounding boxes by AStar strategy to estimate whether a specific point is on the shortest path between start and goal for pruning if not.
      *
-     * @see core.map.shortestpath.AStarShortestPath
-     * @see core.map.shortestpath.AStarBoundingBoxesShortestPathPruning
      * @see ShortestPathStrategy
      * @since 1.0
      */
@@ -386,8 +370,6 @@ public class MapController {
      * <br>
      * Preprocessing required: Calculates bounding boxes by JPS strategy to estimate whether a specific point is on the shortest path between start and goal for pruning if not.
      *
-     * @see core.map.shortestpath.JPSShortestPath
-     * @see core.map.shortestpath.JPSBoundingBoxesShortestPathPruning
      * @see ShortestPathStrategy
      * @since 1.0
      */
@@ -400,8 +382,6 @@ public class MapController {
      *
      * @return time needed for preprocessing in milliseconds
      * @see ShortestPathStrategy
-     * @see core.map.shortestpath.ShortestPath
-     * @see core.map.shortestpath.ShortestPathPreprocessing
      * @since 1.0
      */
     public long preprocessShortestPath(){
@@ -413,10 +393,9 @@ public class MapController {
      *
      * @param start point on map to start
      * @param goal point on map to reach
-     * @return <Shortest Path between start and goal, time needed to find shortest path in milliseconds>
+     * @return &lt; Shortest Path between start and goal | time needed to find shortest path in milliseconds &gt;
      * @throws NoPathFoundException Thrown, if goal is not reachable from start point or if start or goal are nonpassable.
      * @see ShortestPathStrategy
-     * @see core.map.shortestpath.ShortestPath
      * @see ShortestPathResult
      * @since 1.0
      */

@@ -7,8 +7,6 @@ import core.util.Vector;
  *
  * @author Patrick Loka
  * @version 1.0
- * @see core.map.shortestpath.ShortestPath
- * @see core.map.MapController
  * @since 1.0
  */
 public class NoPathFoundException extends Exception {
@@ -16,10 +14,9 @@ public class NoPathFoundException extends Exception {
     /**
      * Init MapInitialisationException considering the given start and gold point of the required path causing the Exception.
      *
-     * @param start
-     * @param goal
-     * @see core.map.shortestpath.ShortestPath
-     * @see core.map.MapController
+     * @param start start point of searched shortest path
+     * @param goal goal point of searched shortest path
+     * @since 1.0
      */
     public NoPathFoundException(Vector start, Vector goal) {
         super("No path found between "+start+" and "+goal);

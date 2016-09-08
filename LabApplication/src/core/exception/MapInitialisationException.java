@@ -9,9 +9,6 @@ import java.io.File;
  *
  * @author Patrick Loka
  * @version 1.0
- * @see core.map.Map
- * @see core.map.MapFactory
- * @see core.map.MapController
  * @since 1.0
  */
 public class MapInitialisationException extends Exception {
@@ -20,8 +17,6 @@ public class MapInitialisationException extends Exception {
      * Init MapInitialisationException considering the given file causing the Exception.
      *
      * @param file invalid file causing the Exception
-     * @see core.map.MapFactory
-     * @see core.map.MapController
      * @since 1.0
      */
     public MapInitialisationException(File file) {
@@ -32,8 +27,6 @@ public class MapInitialisationException extends Exception {
      * Init MapInitialisationException considering the given Vector causing the Exception.
      *
      * @param dimension invalid dimension causing the Exception
-     * @see core.map.Map
-     * @see core.map.MapController
      * @since 1.0
      */
     public MapInitialisationException(Vector dimension) {
