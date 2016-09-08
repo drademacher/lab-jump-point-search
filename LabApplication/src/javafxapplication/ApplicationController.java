@@ -1,8 +1,8 @@
 package javafxapplication;
 
-import exception.InvalidCoordinateException;
-import exception.MapInitialisationException;
-import exception.NoPathFoundException;
+import core.exception.InvalidCoordinateException;
+import core.exception.MapInitialisationException;
+import core.exception.NoPathFoundException;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -16,9 +16,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import map.MapController;
-import util.Vector;
-import util.Tuple2;
+import core.map.MapController;
+import core.util.Vector;
+import core.util.Tuple2;
 
 import java.io.File;
 import java.net.URL;

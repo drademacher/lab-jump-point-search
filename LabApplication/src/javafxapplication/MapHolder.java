@@ -1,15 +1,15 @@
 package javafxapplication;
 
-import exception.InvalidCoordinateException;
+import core.exception.InvalidCoordinateException;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
-import map.MapFacade;
-import map.shortestpath.ShortestPathResult;
-import util.Tuple2;
-import util.Vector;
+import core.map.MapFacade;
+import core.map.shortestpath.ShortestPathResult;
+import core.util.Tuple2;
+import core.util.Vector;
 
 import static javafxapplication.ApplicationConstants.*;
 import static javafxapplication.FieldVisualisation.*;

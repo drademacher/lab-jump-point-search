@@ -4,8 +4,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
-import util.Vector;
-import util.Tuple2;
+import core.util.Vector;
+import core.util.Tuple2;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

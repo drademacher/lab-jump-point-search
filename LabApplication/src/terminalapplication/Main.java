@@ -1,11 +1,11 @@
 package terminalapplication;
 
-import exception.MapInitialisationException;
-import exception.NoPathFoundException;
-import map.MapController;
-import map.shortestpath.ShortestPathResult;
-import util.Tuple2;
-import util.Vector;
+import core.exception.MapInitialisationException;
+import core.exception.NoPathFoundException;
+import core.map.MapController;
+import core.map.shortestpath.ShortestPathResult;
+import core.util.Tuple2;
+import core.util.Vector;
 
 import java.io.File;
 
