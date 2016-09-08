@@ -144,7 +144,7 @@ class MapFactory {
             }
             return map;
         } catch (Exception e) {
-            throw new MapInitialisationException();
+            throw new MapInitialisationException(file);
         }
     }
 
