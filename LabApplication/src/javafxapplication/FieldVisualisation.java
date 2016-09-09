@@ -8,7 +8,7 @@ import javafx.scene.paint.Paint;
  */
 enum FieldVisualisation {
     GRID_POINT("#FFFFFF"),
-    OBSTACLE_POINT("#999999"),
+    OBSTACLE_POINT("#A1A1A1"),
 
     VISITED_POINT("#D9F0FF"),
     JUMP_POINT("#2298E6"),

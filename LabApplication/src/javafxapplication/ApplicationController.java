@@ -50,7 +50,7 @@ public class ApplicationController implements Initializable {
     private RadioMenuItem orthogonalOnlyMovingRuleMenuItem, cornerCuttingMovingRuleMenuItem, noCornerCuttingMovingRuleMenuItem;
 
     @FXML
-    private RadioMenuItem aStarShortestPathMenuItem, jpsShortestPathMenuItem, jpsPlusShortestPathMenuItem, jpsBBShortestPathMenuItem;
+    private RadioMenuItem aStarShortestPathMenuItem, jpsShortestPathMenuItem, jpsPlusShortestPathMenuItem, jpsPlusBBShortestPathMenuItem;
 
     @FXML
     private CheckMenuItem viewClosedList, viewOpenList, viewPath, viewDetails;
@@ -83,10 +83,10 @@ public class ApplicationController implements Initializable {
         this.mapHolder = new MapHolder(this.gridCanvas, this.closedListCanvas, this.openListCanvas, this.pathCanvas, this.detailsCanvas);
 
         final EventHandler<KeyEvent> keyEventHandler = e -> {
-            if (e.getCode() == KeyCode.RIGHT)    this.mapHolder.setCamera(1, 0);
-            if (e.getCode() == KeyCode.LEFT)    this.mapHolder.setCamera(-1, 0);
-            if (e.getCode() == KeyCode.UP)    this.mapHolder.setCamera(0, -1);
-            if (e.getCode() == KeyCode.DOWN)    this.mapHolder.setCamera(0, 1);
+            if (e.getCode() == KeyCode.RIGHT)    this.mapHolder.moveCamera(new Vector(1, 0));
+            if (e.getCode() == KeyCode.LEFT)    this.mapHolder.moveCamera(new Vector(-1, 0));
+            if (e.getCode() == KeyCode.UP)    this.mapHolder.moveCamera(new Vector(0, -1));
+            if (e.getCode() == KeyCode.DOWN)    this.mapHolder.moveCamera(new Vector(0, 1));
             e.consume();
         };
 
@@ -273,7 +273,7 @@ public class ApplicationController implements Initializable {
             if (newT == this.aStarShortestPathMenuItem) this.mapController.setAStarShortestPath();
             if (newT == this.jpsShortestPathMenuItem) this.mapController.setJPSShortestPath();
             if (newT == this.jpsPlusShortestPathMenuItem) this.mapController.setJPSPlusShortestPath();
-            if (newT == this.jpsBBShortestPathMenuItem) this.mapController.setJPSPlusBBShortestPath();
+            if (newT == this.jpsPlusBBShortestPathMenuItem) this.mapController.setJPSPlusBBShortestPath();
             if (oldT != newT) mapModified.set(true);
         });
         this.shortestPathToggleGroup.selectToggle(this.aStarShortestPathMenuItem);
@@ -296,13 +296,9 @@ public class ApplicationController implements Initializable {
 
         runSetStartMenuItem.setOnAction(event ->{
             this.mapHolder.setOnMouseClickedCallback((coordinate) -> {
-                try {
-                    if (!this.mapHolder.isPassable(coordinate)) return;
-                    this.mapHolder.setStartPoint(coordinate);
-                    this.mapHolder.setOnMouseClickedCallback(null);
-                } catch (InvalidCoordinateException e) {
-                    e.printStackTrace();
-                }
+                if (!this.mapHolder.isPassable(coordinate)) return;
+                this.mapHolder.setStartPoint(coordinate);
+                this.mapHolder.setOnMouseClickedCallback(null);
             });
         });
     }
@@ -310,20 +306,16 @@ public class ApplicationController implements Initializable {
     private void initRunSetGoalPointMenuItem(){
         runSetGoalMenuItem.setOnAction(event ->{
             this.mapHolder.setOnMouseClickedCallback((coordinate) -> {
-                try {
-                    if (!this.mapHolder.isPassable(coordinate) || (this.mapHolder.getStartPoint() != null && this.mapHolder.getStartPoint().equals(coordinate))) return;
-                    this.mapHolder.setGoalPoint(coordinate);
-                    this.mapHolder.setOnMouseClickedCallback(null);
-                } catch (InvalidCoordinateException e) {
-                    e.printStackTrace();
-                }
+                if (!this.mapHolder.isPassable(coordinate) || (this.mapHolder.getStartPoint() != null && this.mapHolder.getStartPoint().equals(coordinate))) return;
+                this.mapHolder.setGoalPoint(coordinate);
+                this.mapHolder.setOnMouseClickedCallback(null);
             });
         });
     }
 
 
     private void initPreprocessRunMenuItem(){
-        BooleanBinding proprossessingNeeded = jpsPlusShortestPathMenuItem.selectedProperty().or(jpsBBShortestPathMenuItem.selectedProperty()).not();
+        BooleanBinding proprossessingNeeded = aStarShortestPathMenuItem.selectedProperty().or(jpsShortestPathMenuItem.selectedProperty());
 
         preprocessRunMenuItem.disableProperty().bind(proprossessingNeeded.or(mapModified.not()));
 
@@ -361,11 +353,11 @@ public class ApplicationController implements Initializable {
         this.mapHolder.setOnMouseClickedCallback((coordinate) -> {
             try {
                 this.mapController.switchPassable(coordinate);
-                this.mapHolder.switchPassable(coordinate);
+                this.mapHolder.updateField(coordinate);
                 // mapModified.set(true);
             } catch (InvalidCoordinateException e) {
                 e.printStackTrace();
-                //Todo: setEditMapMode.mapConroller.switchPassable - InvalidCoordinateException
+                //Todo: setEditMapMode.mapConroller.updateField - InvalidCoordinateException
             }
         });
         this.mapHolder.refreshMap();

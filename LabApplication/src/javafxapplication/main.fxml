@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.canvas.*?>
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
 <BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxapplication.ApplicationController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -38,9 +36,11 @@
                                       <ToggleGroup fx:id="shortestPathToggleGroup" />
                                   </toggleGroup>
                               </RadioMenuItem>
+                              <RadioMenuItem fx:id="aStarBBShortestPathMenuItem" mnemonicParsing="false" text="A-Star + BB" toggleGroup="$shortestPathToggleGroup" />
                               <RadioMenuItem fx:id="jpsShortestPathMenuItem" mnemonicParsing="false" text="JPS" toggleGroup="$shortestPathToggleGroup" />
+                              <RadioMenuItem fx:id="jpsBBShortestPathMenuItem" mnemonicParsing="false" text="JPS + BB" toggleGroup="$shortestPathToggleGroup" />
                               <RadioMenuItem fx:id="jpsPlusShortestPathMenuItem" mnemonicParsing="false" text="JPS-Plus" toggleGroup="$shortestPathToggleGroup" />
-                              <RadioMenuItem fx:id="jpsBBShortestPathMenuItem" mnemonicParsing="false" text="JPS-Plus + BB" toggleGroup="$shortestPathToggleGroup" />
+                              <RadioMenuItem fx:id="jpsPlusBBShortestPathMenuItem" mnemonicParsing="false" text="JPS-Plus + BB" toggleGroup="$shortestPathToggleGroup" />
                           </items>
                        </Menu>
                        <Menu mnemonicParsing="false" text="Moving Rule">
@@ -82,6 +82,7 @@
                        <MenuItem fx:id="runSetStartMenuItem" mnemonicParsing="false" text="Set Start Point" />
                        <MenuItem fx:id="runSetGoalMenuItem" mnemonicParsing="false" text="Set Goal Point" />
                        <MenuItem fx:id="runRunMenuItem" mnemonicParsing="false" text="Run" />
+                       <MenuItem fx:id="runShowResultsMenuItem" mnemonicParsing="false" text="Show Results" />
                    </items>
                 </Menu>
             </menus>
@@ -91,7 +92,7 @@
 
     </bottom>
     <center>
-        <StackPane style="-fx-background-color: #B3B3B3;">
+        <StackPane style="-fx-background-color: #999999;">
             <children>
                 <Canvas fx:id="gridCanvas" />
                 <Canvas fx:id="closedListCanvas" />

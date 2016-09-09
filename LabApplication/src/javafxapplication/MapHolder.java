@@ -14,27 +14,24 @@ import core.util.Vector;
 import static javafxapplication.ApplicationConstants.*;
 import static javafxapplication.FieldVisualisation.*;
 
-/**
- * Created by paloka on 06.06.16.
- */
+
 public class MapHolder {
-    private int xDimVis;
-    private int xOffsetVis = 0;
-    private int yDimVis;
-    private int yOffsetVis = 0;
+    private Vector cameraDim;
+    private Vector cameraPos = new Vector(0, 0);
 
     private MapFacade map;
     private Vector startPoint, goalPoint;
     private BooleanProperty hasStartPoint, hasGoalPoint;
     private ShortestPathResult shortestPathResult;
 
-    private Canvas gridCanvas, openlistCanvas, closedListCanvas, pathCanvas, detailsCanvas;
+    private Canvas gridCanvas, openListCanvas, closedListCanvas, pathCanvas, detailsCanvas;
     private OnMouseClickedCallback onMouseClickedCallback;
     private int fieldSize = 10;
+    private int padding = (fieldSize > 5) ? 1 : 0;
 
     MapHolder(Canvas gridCanvas, Canvas closedListCanvas, Canvas openListCanvas, Canvas pathCanvas, Canvas detailsCanvas) {
         this.gridCanvas = gridCanvas;
-        this.openlistCanvas = openListCanvas;
+        this.openListCanvas = openListCanvas;
         this.closedListCanvas = closedListCanvas;
         this.pathCanvas = pathCanvas;
         this.detailsCanvas = detailsCanvas;
@@ -46,7 +43,8 @@ public class MapHolder {
             if (event.getDeltaY() == 0) return;
             if (event.getDeltaY() > 0 && fieldSize + ZOOM_FACTOR <= ZOOM_MAX) this.fieldSize += ZOOM_FACTOR;
             if (event.getDeltaY() < 0 && fieldSize - ZOOM_FACTOR >= ZOOM_MIN) this.fieldSize -= ZOOM_FACTOR;
-            updateDimVis();
+            padding = (fieldSize > 5) ? 1 : 0;
+            updateCamera();
             renderMap();
         });
 
@@ -54,45 +52,14 @@ public class MapHolder {
             if (onMouseClickedCallback == null) return;
             int x = new Double((event.getX() - 1) / this.fieldSize).intValue();
             int y = new Double((event.getY() - 2) / this.fieldSize).intValue();
-            this.onMouseClickedCallback.call(new Vector(xOffsetVis + x, yOffsetVis + y));
+            try {
+                this.onMouseClickedCallback.call(new Vector(x, y).add(cameraPos));
+            } catch (InvalidCoordinateException e) {
+                e.printStackTrace();
+            }
         });
     }
 
-    void refreshMap() {
-        this.shortestPathResult = null;
-        renderMap();
-    }
-
-    void switchPassable(Vector coordinate) {
-        renderField(gridCanvas, coordinate, map.isPassable(coordinate) ? GRID_POINT : OBSTACLE_POINT);
-    }
-
-    void setStartPoint(Vector coordinate) {
-        hasStartPoint.set(true);
-        if (startPoint != null) clearField(pathCanvas, startPoint);
-        startPoint = coordinate;
-        if (shortestPathResult != null) {
-            refreshMap();
-        } else {
-            renderField(pathCanvas, startPoint, START_POINT);
-        }
-    }
-
-    void setGoalPoint(Vector coordinate) {
-        hasGoalPoint.set(true);
-        if (goalPoint != null) clearField(pathCanvas, goalPoint);
-        goalPoint = coordinate;
-        if (shortestPathResult != null) {
-            refreshMap();
-        } else {
-            renderField(pathCanvas, goalPoint, GOAL_POINT);
-        }
-    }
-
-    void setShortestPath(ShortestPathResult shortestPath) {
-        this.shortestPathResult = shortestPath;
-        renderMap();
-    }
 
 
     /* ------- Getter & Setter ------- */
@@ -119,119 +86,133 @@ public class MapHolder {
         hasStartPoint.set(false);
         goalPoint = null;
         hasGoalPoint.set(false);
-        updateDimVis();
+        updateCamera();
         refreshMap();
+    }
+
+    void setStartPoint(Vector coordinate) {
+        hasStartPoint.set(true);
+        startPoint = coordinate;
+        refreshMap();
+    }
+
+    void setGoalPoint(Vector coordinate) {
+        hasGoalPoint.set(true);
+        goalPoint = coordinate;
+        refreshMap();
+    }
+
+    void setShortestPath(ShortestPathResult shortestPath) {
+        this.shortestPathResult = shortestPath;
+        renderMap();
     }
 
     void setOnMouseClickedCallback(OnMouseClickedCallback callback) {
         this.onMouseClickedCallback = callback;
     }
 
-    boolean isPassable(Vector coordinate) throws InvalidCoordinateException {
+    boolean isPassable(Vector coordinate) {
         return this.map.isPassable(coordinate);
     }
 
 
-    /* ------- Helper ------- */
+    /* ------- Functions for rendering canvas ------- */
 
     private void renderMap() {
-        if (map == null || gridCanvas == null) return;
+        if (map == null) return;
+
+        openListCanvas.getGraphicsContext2D().clearRect(0, 0, this.openListCanvas.getWidth(), this.openListCanvas.getHeight());
+        closedListCanvas.getGraphicsContext2D().clearRect(0, 0, this.closedListCanvas.getWidth(), this.closedListCanvas.getHeight());
+        pathCanvas.getGraphicsContext2D().clearRect(0, 0, this.pathCanvas.getWidth(), this.pathCanvas.getHeight());
+        detailsCanvas.getGraphicsContext2D().clearRect(0, 0, this.detailsCanvas.getWidth(), this.detailsCanvas.getHeight());
+
         GraphicsContext gc = this.gridCanvas.getGraphicsContext2D();
-
-        int padding = (fieldSize > 5) ? 1 : 0;
-
         gc.setFill(OBSTACLE_POINT.getColor());
         gc.fillRect(0, 0, this.gridCanvas.getWidth(), this.gridCanvas.getHeight());
 
-        for (int x = 0; x < xDimVis; x++) {
-            for (int y = 0; y < yDimVis; y++) {
-                gc.setFill(this.map.isPassable(new Vector(xOffsetVis + x,yOffsetVis + y)) ? GRID_POINT.getColor() : OBSTACLE_POINT.getColor());
-                gc.fillRect(x * this.fieldSize + 1, y * this.fieldSize + 1, this.fieldSize - padding, this.fieldSize - padding);
+        for (int x = 0; x < cameraDim.getX(); x++) {
+            for (int y = 0; y < cameraDim.getY(); y++) {
+                renderField(gridCanvas, new Vector(x, y).add(cameraPos), isPassable(new Vector(x, y).add(cameraPos)) ? GRID_POINT : OBSTACLE_POINT);
             }
         }
-        renderShortestPathResult();
-        if (startPoint != null) renderField(pathCanvas, startPoint, START_POINT);
-        if (goalPoint != null) renderField(pathCanvas, goalPoint, GOAL_POINT);
+
+        if (shortestPathResult != null) {
+            for (Vector point : this.shortestPathResult.getClosedList())
+                renderField(closedListCanvas, point, JUMP_POINT);
+            for (Vector point : this.shortestPathResult.getOpenList())
+                renderField(openListCanvas, point, VISITED_POINT);
+            for (Tuple2<Vector, Boolean> pathPoint : this.shortestPathResult.getShortestPath())
+                renderField(pathPoint.getArg2() ? pathCanvas : detailsCanvas, pathPoint.getArg1(), PATH_POINT);
+        } else {
+            if (startPoint != null) renderField(pathCanvas, startPoint, START_POINT);
+            if (goalPoint != null) renderField(pathCanvas, goalPoint, GOAL_POINT);
+        }
     }
 
-    private void updateDimVis() {
-        StackPane pane = (StackPane) gridCanvas.getParent();
-        xDimVis = (int) ((pane.getWidth() - 1) / fieldSize);
-        xDimVis = Math.min(xDimVis, map.getXDim());
-        yDimVis = (int) ((pane.getHeight() - 1) / fieldSize);
-        yDimVis = Math.min(yDimVis, map.getYDim());
 
-        this.gridCanvas.setWidth(this.fieldSize * xDimVis + 1);
-        this.gridCanvas.setHeight(this.fieldSize * yDimVis + 1);
-        this.closedListCanvas.setWidth(this.fieldSize * xDimVis + 1);
-        this.closedListCanvas.setHeight(this.fieldSize * yDimVis + 1);
-        this.openlistCanvas.setWidth(this.fieldSize * xDimVis + 1);
-        this.openlistCanvas.setHeight(this.fieldSize * yDimVis + 1);
-        this.pathCanvas.setWidth(this.fieldSize * xDimVis + 1);
-        this.pathCanvas.setHeight(this.fieldSize * yDimVis + 1);
-        this.detailsCanvas.setWidth(this.fieldSize * xDimVis + 1);
-        this.detailsCanvas.setHeight(this.fieldSize * yDimVis + 1);
-
-        // adjust offsets if they are broken!
-        setCamera(0, 0);
-    }
-
-    public void setCamera(int diffX, int diffY) {
-        if (map == null) return;
-        xOffsetVis += diffX;
-        xOffsetVis = Math.min(Math.max(0, xOffsetVis), map.getXDim() - xDimVis);
-        yOffsetVis += diffY;
-        yOffsetVis = Math.min(Math.max(0, yOffsetVis), map.getYDim() - yDimVis);
+    void refreshMap() {
+        this.shortestPathResult = null;
         renderMap();
     }
 
-    private void renderShortestPathResult() {
-        openlistCanvas.getGraphicsContext2D().clearRect(0, 0, this.openlistCanvas.getWidth(), this.openlistCanvas.getHeight());
-        closedListCanvas.getGraphicsContext2D().clearRect(0, 0, this.closedListCanvas.getWidth(), this.closedListCanvas.getHeight());
-        pathCanvas.getGraphicsContext2D().clearRect(0, 0, this.pathCanvas.getWidth(), this.pathCanvas.getHeight());
-
-        if (shortestPathResult == null) return;
-        for (Vector jumpPoint : this.shortestPathResult.getOpenList()) {
-            renderField(closedListCanvas, jumpPoint, JUMP_POINT);
-        }
-        for (Vector visitedPoint : this.shortestPathResult.getVisited()) {
-            renderField(openlistCanvas, visitedPoint, VISITED_POINT);
-            clearField(closedListCanvas, visitedPoint);
-        }
-        for (Tuple2<Vector, Boolean> pathPoint : this.shortestPathResult.getShortestPath()) {
-            renderField(pathPoint.getArg2() ? pathCanvas : detailsCanvas, pathPoint.getArg1(), PATH_POINT);
-        }
+    void updateField(Vector coordinate) {
+        renderField(gridCanvas, coordinate, isPassable(coordinate) ? GRID_POINT : OBSTACLE_POINT);
     }
 
     private void renderField(Canvas canvas, Vector coordinate, FieldVisualisation field) {
-        if (coordinate.getX() < xOffsetVis || coordinate.getY() < yOffsetVis
-                || xDimVis + xOffsetVis < coordinate.getX()
-                || yDimVis + yOffsetVis < coordinate.getY()) return;
+        coordinate = coordinate.sub(cameraPos);
+        if (coordinate.getX() < 0 || coordinate.getY() < 0 || cameraDim.getX() < coordinate.getX() || cameraDim.getY() < coordinate.getY()) return;
 
-        coordinate = new Vector(coordinate.getX() - xOffsetVis, coordinate.getY() - yOffsetVis);
-
-        int padding = (fieldSize > 5) ? 1 : 0;
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(field.getColor());
         gc.fillRect(coordinate.getX() * this.fieldSize + 1, coordinate.getY() * this.fieldSize + 1, this.fieldSize - padding, this.fieldSize - padding);
     }
 
-    private void clearField(Canvas canvas, Vector coordinate) {
-        if (coordinate.getX() < xOffsetVis || coordinate.getY() < yOffsetVis
-                || xDimVis + xOffsetVis < coordinate.getX()
-                || yDimVis + yOffsetVis < coordinate.getY()) return;
 
-        coordinate = new Vector(coordinate.getX() - xOffsetVis, coordinate.getY() - yOffsetVis);
+    /* ------- Camera logic ------- */
 
-        int padding = (fieldSize > 5) ? 1 : 0;
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(coordinate.getX() * this.fieldSize + 1, coordinate.getY() * this.fieldSize + 1, this.fieldSize - padding, this.fieldSize - padding);
+    public void moveCamera(Vector diff) {
+        int factor = 1; // TODO: implement logic for a nice multiplier
+        cameraPos = cameraPos.add(diff.mult(factor));
+        adjustCamera();
+        renderMap();
     }
+
+    private void updateCamera() {
+        StackPane pane = (StackPane) gridCanvas.getParent();
+
+        cameraDim = new Vector((int) Math.min(((pane.getWidth() - 1) / fieldSize), map.getXDim()), (int) Math.min(((pane.getHeight() - 1) / fieldSize), map.getYDim()));
+
+        this.gridCanvas.setWidth(this.fieldSize * cameraDim.getX() + 1);
+        this.gridCanvas.setHeight(this.fieldSize * cameraDim.getY() + 1);
+        this.closedListCanvas.setWidth(this.fieldSize * cameraDim.getX() + 1);
+        this.closedListCanvas.setHeight(this.fieldSize * cameraDim.getY() + 1);
+        this.openListCanvas.setWidth(this.fieldSize * cameraDim.getX() + 1);
+        this.openListCanvas.setHeight(this.fieldSize * cameraDim.getY() + 1);
+        this.pathCanvas.setWidth(this.fieldSize * cameraDim.getX() + 1);
+        this.pathCanvas.setHeight(this.fieldSize * cameraDim.getY() + 1);
+        this.detailsCanvas.setWidth(this.fieldSize * cameraDim.getX() + 1);
+        this.detailsCanvas.setHeight(this.fieldSize * cameraDim.getY() + 1);
+
+        adjustCamera();
+    }
+
+    /**
+     * Adjusts the camera in case the camera position does not match the windows or map boundaries.
+     */
+    private void adjustCamera() {
+        if (map == null) return;
+        cameraPos = new Vector(
+                Math.min(Math.max(0, cameraPos.getX()), map.getXDim() - cameraDim.getX()),
+                Math.min(Math.max(0, cameraPos.getY()), map.getYDim() - cameraDim.getY()));
+    }
+
+
 
 
     /* ------- Callback Type ------- */
 
     interface OnMouseClickedCallback {
-        void call(Vector coordinate);
+        void call(Vector coordinate) throws InvalidCoordinateException;
     }
 }
