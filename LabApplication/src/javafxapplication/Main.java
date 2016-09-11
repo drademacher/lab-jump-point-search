@@ -8,6 +8,13 @@ import javafx.stage.Stage;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 
+/**
+ * Main class to start up the application.
+ *
+ * @author Danny Rademacher
+ * @version 1.0
+ * @since 1.0
+ */
 public class Main extends Application {
 
     public static void main(String[] args) {

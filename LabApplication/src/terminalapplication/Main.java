@@ -12,6 +12,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
+/**
+ * Alternative application which provides a nice way to benchmark every algorithm for given scenarios.
+ *
+ * @author Danny Rademacher
+ * @version 1.0
+ * @since 1.0
+ */
 public class Main {
     private static HashMap<String, File> maps = new HashMap<>();
     private static HashMap<String, File> scenarios = new HashMap<>();

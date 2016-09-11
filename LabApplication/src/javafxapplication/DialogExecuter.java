@@ -12,7 +12,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by paloka on 02.06.16.
+ * Provides dialogs for the JavaFX application.
+ *
+ * @author Danny Rademacher, Patrick Loka
+ * @version 1.0
+ * @since 1.0
  */
 public class DialogExecuter {
     void executeAlertDialog(String title, String text) {

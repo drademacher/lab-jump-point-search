@@ -25,7 +25,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * Created by paloka on 01.06.16.
+ * Controller for the whole JavaFX application.
+ *
+ * @author Danny Rademacher, Patrick Loka
+ * @version 1.0
+ * @since 1.0
  */
 public class ApplicationController implements Initializable {
     @FXML

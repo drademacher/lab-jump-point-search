@@ -14,7 +14,13 @@ import javafx.scene.layout.StackPane;
 import static javafxapplication.ApplicationConstants.*;
 import static javafxapplication.FieldVisualisation.*;
 
-
+/**
+ *
+ *
+ * @author Danny Rademacher, Patrick Loka
+ * @version 1.0
+ * @since 1.0
+ */
 public class MapHolder {
     private Vector cameraDim;
     private Vector cameraPos = new Vector(0, 0);

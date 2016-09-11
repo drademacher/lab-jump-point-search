@@ -4,7 +4,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /**
- * Created by paloka on 01.06.16.
+ * Enum type with additional color information for rendering the grid map.
+ *
+ * @author Danny Rademacher
+ * @version 1.0
+ * @since 1.0
  */
 enum FieldVisualisation {
     GRID_POINT("#FFFFFF"),
