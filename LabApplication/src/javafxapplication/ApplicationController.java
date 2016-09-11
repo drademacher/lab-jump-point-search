@@ -50,13 +50,14 @@ public class ApplicationController implements Initializable {
     private RadioMenuItem orthogonalOnlyMovingRuleMenuItem, cornerCuttingMovingRuleMenuItem, noCornerCuttingMovingRuleMenuItem;
 
     @FXML
-    private RadioMenuItem aStarShortestPathMenuItem, jpsShortestPathMenuItem, jpsPlusShortestPathMenuItem, jpsPlusBBShortestPathMenuItem;
+    private RadioMenuItem aStarShortestPathMenuItem, aStarBBShortestPathMenuItem, jpsShortestPathMenuItem, jpsBBShortestPathMenuItem, jpsPlusShortestPathMenuItem, jpsPlusBBShortestPathMenuItem;
 
     @FXML
     private CheckMenuItem viewClosedList, viewOpenList, viewPath, viewDetails;
 
+    // TODO: make names consistent
     @FXML
-    private MenuItem runRunMenuItem, runSetStartMenuItem, runSetGoalMenuItem, preprocessRunMenuItem;
+    private MenuItem runRunMenuItem, runSetStartMenuItem, runSetGoalMenuItem, runEnterStartMenuItem, runEnterGoalMenuItem, runPreprocessMenuItem, runShowResultsMenuItem;
 
     @FXML
     private Canvas gridCanvas, closedListCanvas, openListCanvas, pathCanvas, detailsCanvas;
@@ -113,7 +114,10 @@ public class ApplicationController implements Initializable {
         initRunRunMenuItem();
         initRunSetStartPointMenuItem();
         initRunSetGoalPointMenuItem();
+        initRunEnterStartPointMenuItem();
+        initRunEnterGoalPointMenuItem();
         initPreprocessRunMenuItem();
+        initRunShowResultsMenuItem();
         initViews();
         // initKeyEventListener();
     }
@@ -271,7 +275,9 @@ public class ApplicationController implements Initializable {
     private void initShortestPathToggleGroup() {
         shortestPathToggleGroup.selectedToggleProperty().addListener((ov, oldT, newT) -> {
             if (newT == this.aStarShortestPathMenuItem) this.mapController.setAStarShortestPath();
+            if (newT == this.aStarBBShortestPathMenuItem) this.mapController.setAStarBBShortestPath();
             if (newT == this.jpsShortestPathMenuItem) this.mapController.setJPSShortestPath();
+            if (newT == this.jpsBBShortestPathMenuItem) this.mapController.setJPSBBShortestPath();
             if (newT == this.jpsPlusShortestPathMenuItem) this.mapController.setJPSPlusShortestPath();
             if (newT == this.jpsPlusBBShortestPathMenuItem) this.mapController.setJPSPlusBBShortestPath();
             if (oldT != newT) mapModified.set(true);
@@ -282,18 +288,17 @@ public class ApplicationController implements Initializable {
     private void initRunRunMenuItem(){
         runRunMenuItem.setOnAction(event ->{
             try {
-                this.mapHolder.setShortestPath(this.mapController.runShortstPath(this.mapHolder.getStartPoint(), this.mapHolder.getGoalPoint()).getArg1());
+                this.mapHolder.setShortestPath(this.mapController.runShortstPath(this.mapHolder.getStartPoint(), this.mapHolder.getGoalPoint()));
             } catch (NoPathFoundException noPathFoundException) {
                 dialogExecuter.executeAlertDialog("No path found.", "There is no path between the chosen start and goal point.");
             }
         });
 
-        runRunMenuItem.disableProperty().bind((preprocessRunMenuItem.disableProperty().and(this.mapHolder.isSetGoalPoint().and(this.mapHolder.isSetStartPoint()))).not());
+        runRunMenuItem.disableProperty().bind((runPreprocessMenuItem.disableProperty().and(this.mapHolder.hasGoalPoint.and(this.mapHolder.hasStartPoint))).not());
     }
 
 
     private void initRunSetStartPointMenuItem(){
-
         runSetStartMenuItem.setOnAction(event ->{
             this.mapHolder.setOnMouseClickedCallback((coordinate) -> {
                 if (!this.mapHolder.isPassable(coordinate)) return;
@@ -314,20 +319,48 @@ public class ApplicationController implements Initializable {
     }
 
 
+    private void initRunEnterStartPointMenuItem(){
+        runEnterStartMenuItem.setOnAction(event ->{
+            Vector coordinate = dialogExecuter.executeMapDimensionDialog("Enter Start Point");
+            if (!this.mapHolder.isPassable(coordinate)) return;
+            this.mapHolder.setStartPoint(coordinate);
+        });
+    }
+
+    private void initRunEnterGoalPointMenuItem(){
+        runEnterGoalMenuItem.setOnAction(event ->{
+            // TODO: abbrechen (X drücken) sollte keine Exception werfen
+            Vector coordinate = dialogExecuter.executeMapDimensionDialog("Enter Goal Point");
+            if (!this.mapHolder.isPassable(coordinate)) return;
+            this.mapHolder.setGoalPoint(coordinate);
+        });
+    }
+
+
     private void initPreprocessRunMenuItem(){
-        BooleanBinding proprossessingNeeded = aStarShortestPathMenuItem.selectedProperty().or(jpsShortestPathMenuItem.selectedProperty());
+        BooleanBinding proprocessingNeeded = aStarShortestPathMenuItem.selectedProperty().or(jpsShortestPathMenuItem.selectedProperty());
 
-        preprocessRunMenuItem.disableProperty().bind(proprossessingNeeded.or(mapModified.not()));
+        runPreprocessMenuItem.disableProperty().bind(proprocessingNeeded.or(mapModified.not()));
 
-        preprocessRunMenuItem.setOnAction(event ->{
+        runPreprocessMenuItem.setOnAction(event ->{
             this.mapController.preprocessShortestPath();
             dialogExecuter.executeAlertDialog("Preprocessing", "You successfully completed the proprocessing computation.");
             this.mapHolder.setOnMouseClickedCallback(null);
             mapModified.set(false);
-            System.out.println(mapModified.get());
-            System.out.println(preprocessRunMenuItem.disableProperty().get());
         });
     }
+
+
+    private void initRunShowResultsMenuItem(){
+        runShowResultsMenuItem.disableProperty().bind(this.mapHolder.hasShortestPathResult.not());
+
+        runShowResultsMenuItem.setOnAction(event ->{
+            dialogExecuter.executeAlertDialog("Shortest Path Result", this.mapHolder.getShortestPathResult());
+        });
+    }
+
+
+
 
 
     /* ------- View Selects ------- */

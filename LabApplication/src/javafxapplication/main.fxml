@@ -78,9 +78,16 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Run">
                    <items>
-                       <MenuItem fx:id="preprocessRunMenuItem" mnemonicParsing="false" text="Preprocess" />
-                       <MenuItem fx:id="runSetStartMenuItem" mnemonicParsing="false" text="Set Start Point" />
-                       <MenuItem fx:id="runSetGoalMenuItem" mnemonicParsing="false" text="Set Goal Point" />
+                       <Menu mnemonicParsing="false" text="Set">
+                           <MenuItem fx:id="runSetStartMenuItem" mnemonicParsing="false" text="Start Point" />
+                           <MenuItem fx:id="runSetGoalMenuItem" mnemonicParsing="false" text="Goal Point" />
+                       </Menu>
+                       <Menu mnemonicParsing="false" text="Enter">
+                           <MenuItem fx:id="runEnterStartMenuItem" mnemonicParsing="false" text="Start Point" />
+                           <MenuItem fx:id="runEnterGoalMenuItem" mnemonicParsing="false" text="Goal Point" />
+                       </Menu>
+                       <SeparatorMenuItem />
+                       <MenuItem fx:id="runPreprocessMenuItem" mnemonicParsing="false" text="Preprocess" />
                        <MenuItem fx:id="runRunMenuItem" mnemonicParsing="false" text="Run" />
                        <MenuItem fx:id="runShowResultsMenuItem" mnemonicParsing="false" text="Show Results" />
                    </items>

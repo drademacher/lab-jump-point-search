@@ -1,15 +1,15 @@
 package javafxapplication;
 
 import core.exception.InvalidCoordinateException;
+import core.map.MapFacade;
+import core.map.shortestpath.ShortestPathResult;
+import core.util.Tuple2;
+import core.util.Vector;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
-import core.map.MapFacade;
-import core.map.shortestpath.ShortestPathResult;
-import core.util.Tuple2;
-import core.util.Vector;
 
 import static javafxapplication.ApplicationConstants.*;
 import static javafxapplication.FieldVisualisation.*;
@@ -21,8 +21,9 @@ public class MapHolder {
 
     private MapFacade map;
     private Vector startPoint, goalPoint;
-    private BooleanProperty hasStartPoint, hasGoalPoint;
+    BooleanProperty hasStartPoint, hasGoalPoint, hasShortestPathResult;
     private ShortestPathResult shortestPathResult;
+    private long shortestPathTime;
 
     private Canvas gridCanvas, openListCanvas, closedListCanvas, pathCanvas, detailsCanvas;
     private OnMouseClickedCallback onMouseClickedCallback;
@@ -38,6 +39,7 @@ public class MapHolder {
 
         this.hasStartPoint = new SimpleBooleanProperty(false);
         this.hasGoalPoint = new SimpleBooleanProperty(false);
+        this.hasShortestPathResult = new SimpleBooleanProperty(false);
 
         gridCanvas.setOnScroll(event -> {
             if (event.getDeltaY() == 0) return;
@@ -64,14 +66,6 @@ public class MapHolder {
 
     /* ------- Getter & Setter ------- */
 
-    public BooleanProperty isSetStartPoint() {
-        return hasStartPoint;
-    }
-
-    public BooleanProperty isSetGoalPoint() {
-        return hasGoalPoint;
-    }
-
     public Vector getStartPoint() {
         return startPoint;
     }
@@ -80,6 +74,9 @@ public class MapHolder {
         return goalPoint;
     }
 
+    public String getShortestPathResult() {
+        return "The running time is " + shortestPathTime + " ms. \nThe cost of the shortest path are " + String.format("%1$,.2f ", shortestPathResult.getCost()) + ".";
+    }
     void setMap(MapFacade map) {
         this.map = map;
         startPoint = null;
@@ -102,8 +99,10 @@ public class MapHolder {
         refreshMap();
     }
 
-    void setShortestPath(ShortestPathResult shortestPath) {
-        this.shortestPathResult = shortestPath;
+    void setShortestPath(Tuple2<ShortestPathResult, Long> result) {
+        this.shortestPathResult = result.getArg1();
+        hasShortestPathResult.set(true);
+        shortestPathTime = result.getArg2();
         renderMap();
     }
 
@@ -152,6 +151,7 @@ public class MapHolder {
 
     void refreshMap() {
         this.shortestPathResult = null;
+        hasShortestPathResult.set(false);
         renderMap();
     }
 

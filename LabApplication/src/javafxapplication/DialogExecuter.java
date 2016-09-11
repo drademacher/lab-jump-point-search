@@ -59,6 +59,23 @@ public class DialogExecuter {
     }
 
 
+    Vector executePositionDialog(String title) {
+        ButtonType confirmButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        Map<String, TextField> fields = new LinkedHashMap<>();
+        fields.put("x coordinate", new DimensionTextField().setWidth(55));
+        fields.put("y coordinate", new DimensionTextField().setWidth(55));
+
+        return executeDialog(title, confirmButton, fields, dialogButton -> {
+            if (dialogButton == confirmButton) {
+                return new Vector(
+                        Integer.valueOf(fields.get("x coordinate").getText()),
+                        Integer.valueOf(fields.get("y coordinate").getText()));
+            }
+            return null;
+        });
+    }
+
+
     /* ------- DialogExecuter ------- */
 
     private <T> T executeDialog(String title, ButtonType confirmButton, Map<String, TextField> fields, Callback<ButtonType, T> callback) {
