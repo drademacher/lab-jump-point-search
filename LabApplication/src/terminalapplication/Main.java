@@ -7,72 +7,102 @@ import core.map.shortestpath.ShortestPathResult;
 import core.util.Tuple2;
 import core.util.Vector;
 
-import java.io.File;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
 
-/**
- * Created by paloka on 07.09.16.
- */
 public class Main {
+    private static HashMap<String, File> maps = new HashMap<>();
+    private static HashMap<String, File> scenarios = new HashMap<>();
 
     public static void main(String[] args) throws MapInitialisationException, NoPathFoundException {
-        System.out.println("Welcome to the terminal application of LabApplication:");
+        // System.out.println("Welcome to the terminal application of LabApplication:");
 
-        System.out.println("\n\nInput:\n");
+        init("wc3maps512");
 
-        File file   = new File(args[0]);
-        Vector start    = new Vector(Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-        Vector goal     = new Vector(Integer.parseInt(args[3]),Integer.parseInt(args[4]));
-        System.out.println("Mapfile\t"+file);
-        System.out.println("Start\t"+start);
-        System.out.println("Goal\t"+goal);
-
-        MapController controller    = new MapController();
+        MapController controller = new MapController();
         controller.setUncutNeighborMovingRule();
         controller.setEuclideanHeuristic();
-        controller.loadMap(file);
-
-        System.out.println("\n\nExecuting:\n");
-
         controller.setAStarShortestPath();
-        System.out.println("Run AStar...");
-        Tuple2<ShortestPathResult,Long> aStarResult  = controller.runShortstPath(start,goal);
 
-        controller.setJPSShortestPath();
-        System.out.println("Run JPS...");
-        Tuple2<ShortestPathResult,Long> jpsResult  = controller.runShortstPath(start,goal);
+        controller.loadMap(maps.get("bootybay"));
+        scenarioExecuter(controller);
+    }
 
-        controller.setJPSPlusShortestPath();
-        System.out.println("Preprocess JPS+...");
-        long jpsPlusPreprocessingTime   = controller.preprocessShortestPath();
-        System.out.println("Run JPS+...");
-        Tuple2<ShortestPathResult,Long> jpsPlusResult  = controller.runShortstPath(start,goal);
+    private static void init(String dir) {
+        try {
+            Files.walk(Paths.get("maps/" + dir))
+                    .filter(filePath -> Files.isRegularFile(filePath))
+                    .filter(filePath -> filePath.toString().substring(filePath.toString().lastIndexOf(".")).equals(".map"))
+                    .forEach(filePath -> maps.put(stripFileName(filePath.toString()), filePath.toFile()));
 
-        controller.setJPSPlusBBShortestPath();
-        System.out.println("Preprocess JPS+BB...");
-        long jpsPlusBBPreprocessingTime = controller.preprocessShortestPath();
-        System.out.println("Run JPS+BB...");
-        Tuple2<ShortestPathResult,Long> jpsPlusBBResult  = controller.runShortstPath(start,goal);
+            Files.walk(Paths.get("scenarios/" + dir))
+                    .filter(filePath -> Files.isRegularFile(filePath))
+                    .filter(filePath -> filePath.toString().substring(filePath.toString().lastIndexOf(".")).equals(".scen"))
+                    .forEach(filePath -> scenarios.put(stripFileName(filePath.toString()), filePath.toFile()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        controller.setAStarBBShortestPath();
-        System.out.println("Preprocess AStarBB...");
-        long aStarBBPreprocessingTime   = controller.preprocessShortestPath();
-        System.out.println("Run AStarBB...");
-        Tuple2<ShortestPathResult,Long> aStarBBResult  = controller.runShortstPath(start,goal);
+    static void scenarioExecuter(MapController controller) throws NoPathFoundException {
+        Vector start;
+        Vector goal;
 
-        controller.setJPSBBShortestPath();
-        System.out.println("Preprocess JPSBB...");
-        long jpsBBPreprocessingTime     = controller.preprocessShortestPath();
-        System.out.println("Run JPSBB...");
-        Tuple2<ShortestPathResult,Long> jpsBBResult  = controller.runShortstPath(start,goal);
+        String scen = "bootybay";
 
-        System.out.println("\n\nResults:\n");
-        System.out.println("Algorithm\tCosts    \tPreprocessing\tRunning");
-        System.out.println("--------------------------------------------------");
-        System.out.println("AStar    \t" + String.format("%1$,.4f ",aStarResult.getArg1().getCost())+"\t0 ms\t\t" + aStarResult.getArg2() + " ms");
-        System.out.println("JPS      \t" + String.format("%1$,.4f ",jpsResult.getArg1().getCost())+"\t0 ms\t\t" + jpsResult.getArg2() + " ms");
-        System.out.println("JPS+     \t" + String.format("%1$,.4f ",jpsPlusResult.getArg1().getCost()) +"\t"+jpsPlusPreprocessingTime+" ms\t\t" + jpsPlusResult.getArg2() + " ms");
-        System.out.println("JPS+BB   \t" + String.format("%1$,.4f ",jpsPlusBBResult.getArg1().getCost()) +"\t"+jpsPlusBBPreprocessingTime+" ms\t\t" + jpsPlusBBResult.getArg2() + " ms");
-        System.out.println("AStarBB  \t" + String.format("%1$,.4f ",aStarBBResult.getArg1().getCost()) +"\t"+aStarBBPreprocessingTime+" ms\t\t" + aStarBBResult.getArg2() + " ms");
-        System.out.println("JPSBB    \t" + String.format("%1$,.4f ",jpsBBResult.getArg1().getCost()) +"\t"+jpsBBPreprocessingTime+" ms\t\t" + jpsBBResult.getArg2() + " ms");
+        BufferedReader br = null;
+        String currentLine = "";
+
+        try {
+            br = new BufferedReader(new FileReader(scenarios.get(scen)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        for (int y = 0; ; y++) {
+            try {
+                currentLine = br.readLine();
+            } catch (IOException e) {
+
+            }
+
+            if (br == null) break;
+            String s[] = currentLine.split(" ");
+            if (s.length != 9) continue;
+
+
+
+            System.out.println();
+
+
+
+            // execute algorithm and benchmark it
+            start = new Vector(Integer.parseInt(s[4]), Integer.parseInt(s[5]));
+            goal = new Vector(Integer.parseInt(s[6]), Integer.parseInt(s[7]));
+            double cost = Double.parseDouble(s[8]);
+
+
+            System.out.print(start + " " + goal + " - ");
+            long preprocessingTime   = controller.preprocessShortestPath();
+            try {
+                Tuple2<ShortestPathResult, Long> result = controller.runShortstPath(start, goal);
+                double deviation = result.getArg1().getCost() - cost;
+                System.out.print(String.format("deviation: %1$,.2f", deviation));
+            } catch (NoPathFoundException e) {
+                System.out.print("no path found");
+            }
+
+
+        }
+    }
+
+    static String stripFileName(String in) {
+        String[] s = in.split("\\\\");
+        String name = s[s.length - 1];
+        name = name.substring(0, name.indexOf("."));
+        return name;
     }
 }
