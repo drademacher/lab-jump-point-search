@@ -58,6 +58,23 @@ public class DialogExecuter {
         });
     }
 
+    Tuple2<Vector, Integer> executeRoomNumberMapDialog() {
+        ButtonType confirmButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        Map<String, TextField> fields = new LinkedHashMap<>();
+        fields.put("xDim", new DimensionTextField().setWidth(55));
+        fields.put("yDim", new DimensionTextField().setWidth(55));
+        fields.put("max number of rooms", new DimensionTextField().setWidth(55));
+
+        return executeDialog("New Random Map", confirmButton, fields, dialogButton -> {
+            if (dialogButton == confirmButton) {
+                return new Tuple2<>(
+                        new Vector(Integer.valueOf(fields.get("xDim").getText()),Integer.valueOf(fields.get("yDim").getText())),
+                        Integer.valueOf(fields.get("pPas").getText()));
+            }
+            return null;
+        });
+    }
+
 
     Vector executePositionDialog(String title) {
         ButtonType confirmButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);

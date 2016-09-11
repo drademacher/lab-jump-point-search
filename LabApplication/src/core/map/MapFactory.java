@@ -10,21 +10,38 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-//Todo: javaDocs by Danny
 /**
  *
  * @author Danny Rademacher
  * @version 1.0
  * @see MapController
+ * @see CellType
  * @since 1.0
  */
 class MapFactory {
     private final int[][] NEIGHS_ALL = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
+    /**
+     * Returns a map with no obstacles at all.
+     *
+     * @param dimension The vector which defines the size of the map to be created.
+     * @return A map with no obstacles at all.
+     * @throws MapInitialisationException if the dimension entries are not > 0.
+     * @since 1.0
+     */
     Map createEmptyMap(Vector dimension) throws MapInitialisationException {
         return new Map(dimension, true);
     }
 
+    /**
+     * Returns a map where each cell is an obstacle randomly by a specified parameter.
+     *
+     * @param dimension The vector which defines the size of the map to be created.
+     * @param pPassable The probability that a single cell field is passable.
+     * @return A map with obstacles by random choice.
+     * @throws MapInitialisationException if the dimension entries are not > 0.
+     * @since 1.0
+     */
     Map createRandomMap(Vector dimension, double pPassable) throws MapInitialisationException {
         Map map = new Map(dimension, false);
         for (int x = 0; x < map.getXDim(); x++) {
@@ -42,9 +59,17 @@ class MapFactory {
         return map;
     }
 
+    /**
+     * Returns a map of a perfect maze. A perfect maze is a maze where there is for every pair of points exactly one connection.
+     *
+     * @param dimension The vector which defines the size of the map to be created.
+     * @return A map of a perfect maze.
+     * @throws MapInitialisationException if the dimension entries are not > 0.
+     * @since 1.0
+     */
     Map createMazeMap(Vector dimension) throws MapInitialisationException {
         // init structure
-        CellType[][] map = initCellType(dimension.getX(), dimension.getY());
+        CellType[][] map = initCellType(dimension);
 
         // gen maze with no dead ends at first
         genFloors(map, CCEmpty());
@@ -52,15 +77,20 @@ class MapFactory {
         return close(map, dimension);
     }
 
-    Map createMazeRoomMap(Vector dimension) throws MapInitialisationException {
+    /**
+     * Returns a map which consists of a maze where additional rooms have been added.
+     *
+     * @param dimension The vector which defines the size of the map to be created.
+     * @param roomNumber The number of rooms to be added.
+     * @return A map
+     * @throws MapInitialisationException if the dimension entries are not > 0.
+     * @since 1.0
+     */
+    Map createMazeRoomMap(Vector dimension, int roomNumber) throws MapInitialisationException {
 
         // init structure
-        CellType[][] map = initCellType(dimension.getX(), dimension.getY());
-
-        // gen rooms
-        // TODO: user input for isRoom number upper bound!
-        int userInput = 5;
-        ArrayList<Integer[]> rooms = genRooms(map, userInput);
+        CellType[][] map = initCellType(dimension);
+        ArrayList<Integer[]> rooms = genRooms(map, roomNumber);
 
         // gen maze with no dead ends at first
         genFloors(map, CCEachRoom(map, rooms));
@@ -68,10 +98,18 @@ class MapFactory {
         return close(map, dimension);
     }
 
+    /**
+     * Returns a room with a loot of rooms where each rooms is connected to another room in exactly one way.
+     *
+     * @param dimension The vector which defines the size of the map to be created.
+     * @return A room with a loot of rooms where each rooms is connected to another room in exactly one way.
+     * @throws MapInitialisationException if the dimension entries are not > 0.
+     * @since 1.0
+     */
     Map createSingleRoomMap(Vector dimension) throws MapInitialisationException {
 
         // init structure
-        CellType[][] map = initCellType(dimension.getX(), dimension.getY());
+        CellType[][] map = initCellType(dimension);
 
         // gen rooms
         ArrayList<Integer[]> rooms = genRooms(map);
@@ -83,10 +121,17 @@ class MapFactory {
         return close(map, dimension);
     }
 
+    /**
+     * Returns a room with a loot of rooms where each rooms is connected to at least two other rooms.
+     *
+     * @param dimension The vector which defines the size of the map to be created.
+     * @return A room with a loot of rooms where each rooms is connected to at least two other rooms.
+     * @throws MapInitialisationException if the dimension entries are not > 0.
+     * @since 1.0
+     */
     Map createDoubleRoomMap(Vector dimension) throws MapInitialisationException {
-
         // init structure
-        CellType[][] map = initCellType(dimension.getX(), dimension.getY());
+        CellType[][] map = initCellType(dimension);
 
         // gen rooms
         ArrayList<Integer[]> rooms = genRooms(map);
@@ -104,10 +149,18 @@ class MapFactory {
         return close(map, dimension);
     }
 
+    /**
+     * Returns a map with a lot of rooms where most rooms have two connections.
+     *
+     * @param dimension The vector which defines the size of the map to be created.
+     * @return A map with a lot of rooms where most rooms have two connections.
+     * @throws MapInitialisationException if the dimension entries are not > 0.
+     * @since 1.0
+     */
     Map createLoopRoomMap(Vector dimension) throws MapInitialisationException {
 
         // init structure
-        CellType[][] map = initCellType(dimension.getX(), dimension.getY());
+        CellType[][] map = initCellType(dimension);
 
         // gen rooms
         ArrayList<Integer[]> rooms = genRooms(map);
@@ -126,6 +179,14 @@ class MapFactory {
     }
 
 
+    /**
+     * Returns a map which is loaded from a file in the .map format. Those maps usually can be found on movingai.com/benchmarks/.
+     *
+     * @param file Map file with special encoding.
+     * @return A map which is loaded from a file.
+     * @throws MapInitialisationException if the dimension entries are not > 0.
+     * @since 1.0
+     */
     Map loadMap(File file) throws MapInitialisationException {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -151,10 +212,18 @@ class MapFactory {
 
     /* ------- Helper for Room Generation ------- */
 
-    private CellType[][] initCellType(int xDim, int yDim) {
+
+    /**
+     * Internal helper function to initialize the internal map structures.
+     *
+     * @param dimension The vector which defines the size of the map to be created.
+     * @return internal map
+     * @since 1.0
+     */
+    private CellType[][] initCellType(Vector dimension) {
         // design choice! ignore the last row / column if its even in the algorithm
-        xDim = xDim - (xDim + 1) % 2;
-        yDim = yDim - (yDim + 1) % 2;
+        int xDim = dimension.getX() - (dimension.getX() + 1) % 2;
+        int yDim = dimension.getY() - (dimension.getY() + 1) % 2;
 
         CellType[][] map = new CellType[xDim][yDim];
         for (int x = 0; x < xDim; x++) {
@@ -167,6 +236,15 @@ class MapFactory {
         return map;
     }
 
+    /**
+     * Internal helper function which creates a real map from the data of the internal map.
+     *
+     * @param map An internal map.
+     * @param dimension The vector which defines the size of the map to be created.
+     * @return A map from the internal structure.
+     * @throws MapInitialisationException if the dimension entries are not > 0.
+     * @since 1.0
+     */
     private Map close(CellType[][] map, Vector dimension) throws MapInitialisationException {
         Map res = new Map(dimension, false);
         for (int x = 0; x < map.length; x++) {
@@ -182,14 +260,20 @@ class MapFactory {
         return res;
     }
 
-    /**
-     * internal function which generated a random number of rooms the limit is
-     * just an upper bound and its not expected to be reached
-     */
+
+    // TODO: andere javadoc refenzieren
     private ArrayList<Integer[]> genRooms(CellType[][] map) {
         return genRooms(map, map.length * map[0].length / 25);
     }
 
+    /**
+     * Generate a number of rooms and returns a list where each room is listed with its size and position.
+     *
+     * @param map An internal map.
+     * @param limit The upper bound of the number of rooms in that map.
+     * @return A list where each room is listed with its size and position.
+     * @since 1.0
+     */
     private ArrayList<Integer[]> genRooms(CellType[][] map, int limit) {
         ArrayList<Integer[]> rooms = new ArrayList<>();
 
@@ -235,7 +319,15 @@ class MapFactory {
     }
 
     /**
-     * helper function to check for valid isRoom coordinates
+     * Internal function to determine whether a room placement is valid.
+     *
+     * @param map An internal map.
+     * @param xStart The x coordinate of the upper left corner.
+     * @param yStart The y coordinate of the upper left corner.
+     * @param xLen The length of the room on the x axis.
+     * @param yLen The length of the room on the y axis.
+     * @return True when the room could be placed on the map, so that there are no intersections with other rooms.
+     * @since 1.0
      */
     private boolean checkRoom(CellType[][] map, int xStart, int yStart, int xLen, int yLen) {
         // be sure to only check for odd numbers (xStart, yStart are odd)
@@ -257,14 +349,23 @@ class MapFactory {
     }
 
     /**
-     * create a disjoint set with no connected components at all
+     *
+     * @return An empty disjoint set.
+     * @since 1.0
      */
     private DisjointSet<CellType> CCEmpty() {
         return new DisjointSet<>();
     }
 
     /**
-     * create a disjoint set with a connected component for each isRoom
+     * Returns a disjoint set where each room is represented by a connected component.
+     * <br>
+     * An edge is between adjacent rooms, which means that there is a connection without passing another unrelated room.
+     *
+     * @param map An internal map.
+     * @param rooms A list of rooms.
+     * @return A disjoint set where each room is represented by a connected component.
+     * @since 1.0
      */
     private DisjointSet<CellType> CCEachRoom(CellType[][] map, ArrayList<Integer[]> rooms) {
         // create connected compontents
@@ -289,8 +390,16 @@ class MapFactory {
     }
 
 
+
     /**
-     * create a disjoint set with a connected component for each isRoom
+     * Returns a disjoint set where each room with only one outgoing way is represented by a connected component.
+     * <br>
+     * An edge is between rooms where both only have one connection so far.
+     *
+     * @param map An internal map.
+     * @param rooms A list of rooms.
+     * @return A disjoint set where each room with only one outgoing way is represented by a connected component.
+     * @since 1.0
      */
     private DisjointSet<CellType> CCEachDeadEndRoom(CellType[][] map, ArrayList<Integer[]> rooms) {
         // add for rooms which only one floor connection a connected component
@@ -342,10 +451,13 @@ class MapFactory {
     }
 
     /**
-     * internal function to generate a maze around the rooms
+     * Internal function to generate a maze around the rooms.
      * <p>
-     * this is done by a FloodFill algorithm instead of some over engineering
-     * with MST
+     * This is done by a FloodFill algorithm, so every free space is covered by a way of passable cells.
+     *
+     * @param map An internal map.
+     * @param cc Connected component of rooms to be connected.
+     * @since 1.0
      */
     private void genFloors(CellType[][] map, DisjointSet<CellType> cc) {
         ArrayList<int[]> q = new ArrayList<>();
@@ -390,7 +502,10 @@ class MapFactory {
     }
 
     /**
-     * internal function which deletes all dead ends of a maze
+     * Internal function to delete all dead ends of the maze inside the map.
+     *
+     * @param map An internal map.
+     * @since 1.0
      */
     private void clearDeadEndFloors(CellType[][] map) {
         int count;
@@ -432,29 +547,60 @@ class MapFactory {
         }
     }
 
+    /**
+     *
+     * @author Danny Rademacher
+     * @version 1.0
+     * @see MapController
+     * @since 1.0
+     */
     private class CellType {
         private int val;
 
+        /**
+         * Sets the type of the cell to room.
+         */
         void setRoom() {
             val = 1;
         }
 
+        /**
+         * Sets the type of the cell to floor.
+         */
         void setFloor() {
             val = 2;
         }
 
+        /**
+         * Sets the type of the cell to obstacle.
+         */
         void setObstacle() {
             val = -1;
         }
 
+        /**
+         * Determines for a given cell type whether it is a room.
+         *
+         * @return True if the type is room.
+         */
         boolean isRoom() {
             return val == 1;
         }
 
+        /**
+         * Determines for a given cell type whether it is a floor.
+         *
+         * @return True if the type is floor.
+         */
         boolean isFloor() {
             return val == 2;
         }
 
+        /**
+         * Determines for a given cell type whether it is a obstacle.
+         *
+         * @return True if the type is obstacle.
+         */
         boolean isObstacle() {
             return val == -1;
         }

@@ -107,8 +107,8 @@ public class MapController {
      * @see MapFacade
      * @since 1.0
      */
-    public MapFacade setMazeRoomMap(Vector dimension) throws MapInitialisationException {
-        this.map = mapFactory.createMazeRoomMap(dimension);
+    public MapFacade setMazeRoomMap(Vector dimension, int roomNumber) throws MapInitialisationException {
+        this.map = mapFactory.createMazeRoomMap(dimension, roomNumber);
         return this.map;
     }
 

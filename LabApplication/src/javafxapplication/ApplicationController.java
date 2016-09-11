@@ -164,9 +164,10 @@ public class ApplicationController implements Initializable {
 
     private void initMazeRoomMapMenuItem() {
         mazeRoomMapMenuItem.setOnAction(event -> {
-            Vector dimension = dialogExecuter.executeMapDimensionDialog("New Maze Room Map");
+            Tuple2<Vector, Integer> params = dialogExecuter.executeRoomNumberMapDialog();
             try {
-                this.mapHolder.setMap(mapController.setMazeRoomMap(dimension));
+
+                this.mapHolder.setMap(mapController.setMazeRoomMap(params.getArg1(), params.getArg2()));
                 setEditMapMode();
             } catch (MapInitialisationException e) {
                 e.printStackTrace();
@@ -321,7 +322,7 @@ public class ApplicationController implements Initializable {
 
     private void initRunEnterStartPointMenuItem(){
         runEnterStartMenuItem.setOnAction(event ->{
-            Vector coordinate = dialogExecuter.executeMapDimensionDialog("Enter Start Point");
+            Vector coordinate = dialogExecuter.executePositionDialog("Enter Start Point");
             if (!this.mapHolder.isPassable(coordinate)) return;
             this.mapHolder.setStartPoint(coordinate);
         });
@@ -330,7 +331,7 @@ public class ApplicationController implements Initializable {
     private void initRunEnterGoalPointMenuItem(){
         runEnterGoalMenuItem.setOnAction(event ->{
             // TODO: abbrechen (X drücken) sollte keine Exception werfen
-            Vector coordinate = dialogExecuter.executeMapDimensionDialog("Enter Goal Point");
+            Vector coordinate = dialogExecuter.executePositionDialog("Enter Goal Point");
             if (!this.mapHolder.isPassable(coordinate)) return;
             this.mapHolder.setGoalPoint(coordinate);
         });
