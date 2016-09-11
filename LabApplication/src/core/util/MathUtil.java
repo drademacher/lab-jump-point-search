@@ -9,6 +9,8 @@ package core.util;
  */
 public class MathUtil {
 
-    /** Constant value: square root of 2 */
-    public static final double SQRT2   = Math.sqrt(2.0);
+    /**
+     * Constant value: square root of 2
+     */
+    public static final double SQRT2 = Math.sqrt(2.0);
 }

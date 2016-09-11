@@ -74,8 +74,8 @@ public class Vector {
      * @return A new Vector instance representing the product of the input factor and this vector.
      * @since 1.0
      */
-    public Vector mult(int factor){
-        return new Vector(x*factor,y*factor);
+    public Vector mult(int factor) {
+        return new Vector(x * factor, y * factor);
     }
 
     /**
@@ -85,9 +85,9 @@ public class Vector {
      * @return direction d: this vector + sd = goal, for s steps in direction d.
      * @since 1.0
      */
-    public Vector getDirectionTo(Vector goal){
-        Vector dir  = goal.sub(this);
-        return new Vector((int)Math.signum(dir.getX()),(int)Math.signum(dir.getY()));
+    public Vector getDirectionTo(Vector goal) {
+        Vector dir = goal.sub(this);
+        return new Vector((int) Math.signum(dir.getX()), (int) Math.signum(dir.getY()));
     }
 
     @Override
@@ -110,7 +110,7 @@ public class Vector {
     }
 
     @Override
-    public String toString(){
-        return "("+x+","+y+")";
+    public String toString() {
+        return "(" + x + "," + y + ")";
     }
 }

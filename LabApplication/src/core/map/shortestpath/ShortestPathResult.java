@@ -18,29 +18,29 @@ public class ShortestPathResult {
     private double cost;
 
     public ShortestPathResult(Vector start, Vector goal, Collection<Vector> openList, Map<Vector, Vector> pathPredecessors, double cost) {
-        this.start  = start;
-        this.goal   = goal;
+        this.start = start;
+        this.goal = goal;
         this.openList = openList;
         this.pathPredecessors = pathPredecessors;
-        this.cost   = cost;
+        this.cost = cost;
     }
 
-    public Vector getStart(){
+    public Vector getStart() {
         return this.start;
     }
 
-    public Vector getGoal(){
+    public Vector getGoal() {
         return this.goal;
     }
 
     public List<Tuple2<Vector, Boolean>> getShortestPath() {
         List<Tuple2<Vector, Boolean>> path = new LinkedList<>();
-        Vector current  = goal;
+        Vector current = goal;
         do {
             Vector next = pathPredecessors.get(current);
             Vector direction = current.getDirectionTo(next);
             Boolean flag = true;
-            while(!current.equals(next)) {
+            while (!current.equals(next)) {
                 path.add(new Tuple2<>(current, flag));
                 current = current.add(direction);
                 flag = false;
@@ -58,7 +58,7 @@ public class ShortestPathResult {
         return pathPredecessors.keySet();
     }
 
-    public double getCost(){
+    public double getCost() {
         return this.cost;
     }
 }

@@ -19,11 +19,11 @@ public class BoundingBox {
      * @param vector first vector in the new bounding box.
      * @since 1.0
      */
-    public BoundingBox(Vector vector){
-        this.minX   = vector.getX();
-        this.maxX   = vector.getX();
-        this.minY   = vector.getY();
-        this.maxY   = vector.getY();
+    public BoundingBox(Vector vector) {
+        this.minX = vector.getX();
+        this.maxX = vector.getX();
+        this.minY = vector.getY();
+        this.maxY = vector.getY();
     }
 
     /**
@@ -32,11 +32,11 @@ public class BoundingBox {
      * @param bb bounding box which should be copied.
      * @since 1.0
      */
-    public BoundingBox(BoundingBox bb){
-        this.minX   = bb.getMinX();
-        this.maxX   = bb.getMaxX();
-        this.minY   = bb.getMinY();
-        this.maxY   = bb.getMaxY();
+    public BoundingBox(BoundingBox bb) {
+        this.minX = bb.getMinX();
+        this.maxX = bb.getMaxX();
+        this.minY = bb.getMinY();
+        this.maxY = bb.getMaxY();
     }
 
     /**
@@ -45,11 +45,11 @@ public class BoundingBox {
      * @param vector given vector to include to the bounding box.
      * @since 1.0
      */
-    public void add(Vector vector){
-        this.minX   = Math.min(vector.getX(),this.getMinX());
-        this.maxX   = Math.max(vector.getX(),this.getMaxX());
-        this.minY   = Math.min(vector.getY(),this.getMinY());
-        this.maxY   = Math.max(vector.getY(),this.getMaxY());
+    public void add(Vector vector) {
+        this.minX = Math.min(vector.getX(), this.getMinX());
+        this.maxX = Math.max(vector.getX(), this.getMaxX());
+        this.minY = Math.min(vector.getY(), this.getMinY());
+        this.maxY = Math.max(vector.getY(), this.getMaxY());
     }
 
     /**
@@ -58,11 +58,11 @@ public class BoundingBox {
      * @param bb bounding box to union to this bounding box.
      * @since 1.0
      */
-    public void union(BoundingBox bb){
-        this.minX   = Math.min(bb.getMinX(),this.getMinX());
-        this.maxX   = Math.max(bb.getMaxX(),this.getMaxX());
-        this.minY   = Math.min(bb.getMinY(),this.getMinY());
-        this.maxY   = Math.max(bb.getMaxY(),this.getMaxY());
+    public void union(BoundingBox bb) {
+        this.minX = Math.min(bb.getMinX(), this.getMinX());
+        this.maxX = Math.max(bb.getMaxX(), this.getMaxX());
+        this.minY = Math.min(bb.getMinY(), this.getMinY());
+        this.maxY = Math.max(bb.getMaxY(), this.getMaxY());
     }
 
     /**
@@ -72,9 +72,9 @@ public class BoundingBox {
      * @return true, if testPoint lies in the bounding box, else false
      * @since 1.0
      */
-    public boolean isInBoundingBox(Vector testPoint){
-        return  this.minX<=testPoint.getX() && testPoint.getX()<=this.maxX &&
-                this.minY<=testPoint.getY() && testPoint.getY()<=this.maxY;
+    public boolean isInBoundingBox(Vector testPoint) {
+        return this.minX <= testPoint.getX() && testPoint.getX() <= this.maxX &&
+                this.minY <= testPoint.getY() && testPoint.getY() <= this.maxY;
     }
 
     /**
@@ -118,7 +118,7 @@ public class BoundingBox {
     }
 
     @Override
-    public String toString(){
-        return "("+minX+"-"+maxX+","+minY+"-"+maxY+")";
+    public String toString() {
+        return "(" + minX + "-" + maxX + "," + minY + "-" + maxY + ")";
     }
 }

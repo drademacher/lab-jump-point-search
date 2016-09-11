@@ -30,16 +30,16 @@ public abstract class MovingRule {
      * @see OrthogonalNeighborMovingRule
      * @since 1.0
      */
-    public Collection<Vector> getAllDirections(){
-        Collection<Vector> directions   = new ArrayList<>();
-        directions.add(new Vector(0,-1));
-        directions.add(new Vector(1,-1));
-        directions.add(new Vector(1,0));
-        directions.add(new Vector(1,1));
-        directions.add(new Vector(0,1));
-        directions.add(new Vector(-1,1));
-        directions.add(new Vector(-1,0));
-        directions.add(new Vector(-1,-1));
+    public Collection<Vector> getAllDirections() {
+        Collection<Vector> directions = new ArrayList<>();
+        directions.add(new Vector(0, -1));
+        directions.add(new Vector(1, -1));
+        directions.add(new Vector(1, 0));
+        directions.add(new Vector(1, 1));
+        directions.add(new Vector(0, 1));
+        directions.add(new Vector(-1, 1));
+        directions.add(new Vector(-1, 0));
+        directions.add(new Vector(-1, -1));
         return directions;
     }
 
@@ -48,9 +48,9 @@ public abstract class MovingRule {
      * <br>
      * A valid implementation returns all forced directions considering the implementation specific definition of a forced point considering the accepted moving rules.<br>
      *
-     * @param map map to apply moving rules.
+     * @param map          map to apply moving rules.
      * @param currentPoint A passable point on the map.
-     * @param direction The direction vector in {-1,0,1}^2 in which the currentPoint was reached.
+     * @param direction    The direction vector in {-1,0,1}^2 in which the currentPoint was reached.
      * @return A set of all directions d: currentPoint + d = forced point.
      * @see AllNeighborMovingRule
      * @see UncutNeighborMovingRule
@@ -70,11 +70,11 @@ public abstract class MovingRule {
      * @see OrthogonalNeighborMovingRule
      * @since 1.0
      */
-    public Collection<Vector> getSubordinatedDirections(Vector direction){
-        Collection<Vector> subordinatedDirections    = new ArrayList<>();
-        if(Math.abs(direction.getX())+Math.abs(direction.getY())==2){
-            subordinatedDirections.add(new Vector(direction.getX(),0));
-            subordinatedDirections.add(new Vector(0,direction.getY()));
+    public Collection<Vector> getSubordinatedDirections(Vector direction) {
+        Collection<Vector> subordinatedDirections = new ArrayList<>();
+        if (Math.abs(direction.getX()) + Math.abs(direction.getY()) == 2) {
+            subordinatedDirections.add(new Vector(direction.getX(), 0));
+            subordinatedDirections.add(new Vector(0, direction.getY()));
         }
         return subordinatedDirections;
     }
@@ -84,14 +84,14 @@ public abstract class MovingRule {
      * <br>
      * Default Implementation(Corner Cutting is allowed): Corner is independent of the input never cut.<br>
      *
-     * @param map map to apply moving rules.
+     * @param map          map to apply moving rules.
      * @param currentPoint A passable point on the map.
-     * @param direction The direction vector in {-1,0,1}^2 in which the currentPoint is leaving.
+     * @param direction    The direction vector in {-1,0,1}^2 in which the currentPoint is leaving.
      * @return false
      * @see UncutNeighborMovingRule
      * @since 1.0
      */
-    public boolean isCornerCut(MapFacade map, Vector currentPoint, Vector direction){
+    public boolean isCornerCut(MapFacade map, Vector currentPoint, Vector direction) {
         return false;
     }
 }

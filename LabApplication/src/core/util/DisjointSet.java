@@ -33,8 +33,7 @@ import java.util.List;
  * McGraw-Hill, 1990. The disjoint set forest implementation in section 22.3.
  * </p>
  *
- * @param <T>
- *            element type
+ * @param <T> element type
  * @since 3.2
  */
 public class DisjointSet<T> {
@@ -43,9 +42,13 @@ public class DisjointSet<T> {
      * set, where the root of the tree is the set representative.
      */
     private static class Node<T> {
-        /** The node rank used for union by rank optimization */
+        /**
+         * The node rank used for union by rank optimization
+         */
         int rank;
-        /** The parent of this node in the tree. */
+        /**
+         * The parent of this node in the tree.
+         */
         T parent;
 
         Node(T parent, int rank) {
@@ -65,8 +68,7 @@ public class DisjointSet<T> {
      * not belong to any set. All object in the same set have an identical set
      * token.
      *
-     * @param o
-     *            The object to return the set token for
+     * @param o The object to return the set token for
      * @return The set token, or <code>null</code>
      */
     public T findSet(Object o) {
@@ -84,8 +86,7 @@ public class DisjointSet<T> {
      * Adds a new set to the group of disjoint sets for the given object. It is
      * assumed that the object does not yet belong to any set.
      *
-     * @param o
-     *            The object to add to the set
+     * @param o The object to add to the set
      */
     public void makeSet(T o) {
         objectsToNodes.put(o, new Node<>(o, 0));
@@ -94,15 +95,14 @@ public class DisjointSet<T> {
     /**
      * Removes all elements belonging to the set of the given object.
      *
-     * @param o
-     *            The object to remove
+     * @param o The object to remove
      */
     public void removeSet(Object o) {
         Object set = findSet(o);
         if (set == null) {
             return;
         }
-        for (Iterator<T> it = objectsToNodes.keySet().iterator(); it.hasNext();) {
+        for (Iterator<T> it = objectsToNodes.keySet().iterator(); it.hasNext(); ) {
             T next = it.next();
             // remove the set representative last, otherwise findSet will fail
             if (next != set && findSet(next) == set) {
@@ -115,8 +115,7 @@ public class DisjointSet<T> {
     /**
      * Copies all objects in the disjoint set to the provided list
      *
-     * @param list
-     *            The list to copy objects into
+     * @param list The list to copy objects into
      */
     public void toList(List<? super T> list) {
         list.addAll(objectsToNodes.keySet());
@@ -127,10 +126,8 @@ public class DisjointSet<T> {
      * y. Has no effect if either x or y is not in the disjoint set, or if they
      * already belong to the same set.
      *
-     * @param x
-     *            The first set to union
-     * @param y
-     *            The second set to union
+     * @param x The first set to union
+     * @param y The second set to union
      */
     public void union(T x, T y) {
         T setX = findSet(x);

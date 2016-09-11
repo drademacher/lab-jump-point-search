@@ -22,51 +22,51 @@ import java.util.Collection;
  * @see MovingRuleStrategy
  * @since 1.0
  */
-class UncutNeighborMovingRule extends MovingRule{
+class UncutNeighborMovingRule extends MovingRule {
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      * <br>
      * Implementation: Define every two points behind an obstacle, placed diagonal behind to the currentPoint, as a forced points.
      *
-     * @param map map to apply moving rules.
+     * @param map          map to apply moving rules.
      * @param currentPoint A passable point on the map.
-     * @param direction The direction vector in {-1,0,1}^2 in which the currentPoint was reached.
+     * @param direction    The direction vector in {-1,0,1}^2 in which the currentPoint was reached.
      * @return A set of all directions d: currentPoint + d = forced point.
      * @since 1.0
      */
     @Override
     public Collection<Vector> getForcedDirections(MapFacade map, Vector currentPoint, Vector direction) {
         Collection<Vector> forcedDirections = new ArrayList<>();
-        int dirX    = direction.getX();
-        int dirY    = direction.getY();
-        if(Math.abs(dirX)+Math.abs(dirY)==2)    return forcedDirections;
+        int dirX = direction.getX();
+        int dirY = direction.getY();
+        if (Math.abs(dirX) + Math.abs(dirY) == 2) return forcedDirections;
 
-        int curX   = currentPoint.getX();
-        int curY   = currentPoint.getY();
+        int curX = currentPoint.getX();
+        int curY = currentPoint.getY();
 
         if (dirY == 0) {
-            if(!map.isPassable(new Vector(curX-dirX,curY-1))
-                    && map.isPassable(new Vector(curX,curY-1))) {
-                forcedDirections.add(new Vector(0,-1));
-                forcedDirections.add(new Vector(dirX,-1));
+            if (!map.isPassable(new Vector(curX - dirX, curY - 1))
+                    && map.isPassable(new Vector(curX, curY - 1))) {
+                forcedDirections.add(new Vector(0, -1));
+                forcedDirections.add(new Vector(dirX, -1));
             }
-            if(!map.isPassable(new Vector(curX-dirX,curY+1))
-                    && map.isPassable(new Vector(curX,curY+1))){
-                forcedDirections.add(new Vector(0,1));
-                forcedDirections.add(new Vector(dirX,1));
+            if (!map.isPassable(new Vector(curX - dirX, curY + 1))
+                    && map.isPassable(new Vector(curX, curY + 1))) {
+                forcedDirections.add(new Vector(0, 1));
+                forcedDirections.add(new Vector(dirX, 1));
             }
         }
         if (dirX == 0) {
-            if(!map.isPassable(new Vector(curX-1,curY-dirY))
-                    && map.isPassable(new Vector(curX-1,curY))){
-                forcedDirections.add(new Vector(-1,0));
-                forcedDirections.add(new Vector(-1,dirY));
+            if (!map.isPassable(new Vector(curX - 1, curY - dirY))
+                    && map.isPassable(new Vector(curX - 1, curY))) {
+                forcedDirections.add(new Vector(-1, 0));
+                forcedDirections.add(new Vector(-1, dirY));
             }
-            if(!map.isPassable(new Vector(curX+1,curY-dirY))
-                    && map.isPassable(new Vector(curX+1,curY))){
-                forcedDirections.add(new Vector(1,0));
-                forcedDirections.add(new Vector(1,dirY));
+            if (!map.isPassable(new Vector(curX + 1, curY - dirY))
+                    && map.isPassable(new Vector(curX + 1, curY))) {
+                forcedDirections.add(new Vector(1, 0));
+                forcedDirections.add(new Vector(1, dirY));
             }
         }
         return forcedDirections;
@@ -77,16 +77,16 @@ class UncutNeighborMovingRule extends MovingRule{
      * <br>
      * Implementation(Corner Cutting is forbidden): A Corner is cut, iff there is an obstacle in any subordinatedDirection.
      *
-     * @param map map to apply moving rules.
+     * @param map          map to apply moving rules.
      * @param currentPoint A passable point on the map.
-     * @param direction The direction vector in {-1,0,1}^2 in which the currentPoint is leaving.
+     * @param direction    The direction vector in {-1,0,1}^2 in which the currentPoint is leaving.
      * @return True, if a corner is cut by moving in input direction by leaving currentPoint. Otherwise return false.
      * @since 1.0
      */
     @Override
     public boolean isCornerCut(MapFacade map, Vector currentPoint, Vector direction) {
-        for(Vector subordinatedDirection: getSubordinatedDirections(direction)){
-            if(!map.isPassable(currentPoint.add(subordinatedDirection)))   return true;
+        for (Vector subordinatedDirection : getSubordinatedDirections(direction)) {
+            if (!map.isPassable(currentPoint.add(subordinatedDirection))) return true;
         }
         return false;
     }

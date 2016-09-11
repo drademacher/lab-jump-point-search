@@ -24,7 +24,7 @@ import java.util.Collection;
  * @see MovingRuleStrategy
  * @since 1.0
  */
-class OrthogonalNeighborMovingRule extends MovingRule{
+class OrthogonalNeighborMovingRule extends MovingRule {
 
     /**
      * {@inheritDoc}
@@ -36,51 +36,51 @@ class OrthogonalNeighborMovingRule extends MovingRule{
      */
     @Override
     public Collection<Vector> getAllDirections() {
-        Collection<Vector> directions   = new ArrayList<>();
-        directions.add(new Vector(0,-1));
-        directions.add(new Vector(1,0));
-        directions.add(new Vector(0,1));
-        directions.add(new Vector(-1,0));
+        Collection<Vector> directions = new ArrayList<>();
+        directions.add(new Vector(0, -1));
+        directions.add(new Vector(1, 0));
+        directions.add(new Vector(0, 1));
+        directions.add(new Vector(-1, 0));
         return directions;
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      * <br>
      * Implementation: Define every point behind an obstacle, placed diagonal behind to the currentPoint, as a forced point.
      *
-     * @param map map to apply moving rules.
+     * @param map          map to apply moving rules.
      * @param currentPoint A passable point on the map.
-     * @param direction The direction vector in {-1,0,1}^2 in which the currentPoint was reached.
+     * @param direction    The direction vector in {-1,0,1}^2 in which the currentPoint was reached.
      * @return A set of all directions d: currentPoint + d = forced point.
      * @since 1.0
      */
     @Override
     public Collection<Vector> getForcedDirections(MapFacade map, Vector currentPoint, Vector direction) {
         Collection<Vector> forcedDirections = new ArrayList<>();
-        int dirX    = direction.getX();
-        int dirY    = direction.getY();
-        int curX    = currentPoint.getX();
-        int curY    = currentPoint.getY();
+        int dirX = direction.getX();
+        int dirY = direction.getY();
+        int curX = currentPoint.getX();
+        int curY = currentPoint.getY();
 
         if (dirY == 0) {
-            if(!map.isPassable(new Vector(curX+(-1)*dirX,curY-1))
-                    && map.isPassable(new Vector(curX,curY-1))) {
-                forcedDirections.add(new Vector(0,-1));
+            if (!map.isPassable(new Vector(curX + (-1) * dirX, curY - 1))
+                    && map.isPassable(new Vector(curX, curY - 1))) {
+                forcedDirections.add(new Vector(0, -1));
             }
-            if(!map.isPassable(new Vector(curX+(-1)*dirX,curY+1))
-                    && map.isPassable(new Vector(curX,curY+1))){
-                forcedDirections.add(new Vector(0,1));
+            if (!map.isPassable(new Vector(curX + (-1) * dirX, curY + 1))
+                    && map.isPassable(new Vector(curX, curY + 1))) {
+                forcedDirections.add(new Vector(0, 1));
             }
         }
         if (dirX == 0) {
-            if(!map.isPassable(new Vector(curX-1,curY+(-1)*dirY))
-                    && map.isPassable(new Vector(curX-1,curY))){
-                forcedDirections.add(new Vector(-1,0));
+            if (!map.isPassable(new Vector(curX - 1, curY + (-1) * dirY))
+                    && map.isPassable(new Vector(curX - 1, curY))) {
+                forcedDirections.add(new Vector(-1, 0));
             }
-            if(!map.isPassable(new Vector(curX+1,curY+(-1)*dirY))
-                    && map.isPassable(new Vector(curX+1,curY))){
-                forcedDirections.add(new Vector(1,0));
+            if (!map.isPassable(new Vector(curX + 1, curY + (-1) * dirY))
+                    && map.isPassable(new Vector(curX + 1, curY))) {
+                forcedDirections.add(new Vector(1, 0));
             }
         }
         return forcedDirections;
@@ -97,11 +97,11 @@ class OrthogonalNeighborMovingRule extends MovingRule{
      * @since 1.0
      */
     @Override
-    public Collection<Vector> getSubordinatedDirections(Vector direction){
-        Collection<Vector> subDirections    = new ArrayList<>();
-        if(direction.getX()==0){
-            subDirections.add(new Vector(1,0));
-            subDirections.add(new Vector(-1,0));
+    public Collection<Vector> getSubordinatedDirections(Vector direction) {
+        Collection<Vector> subDirections = new ArrayList<>();
+        if (direction.getX() == 0) {
+            subDirections.add(new Vector(1, 0));
+            subDirections.add(new Vector(-1, 0));
         }
         return subDirections;
     }

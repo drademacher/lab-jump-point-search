@@ -29,7 +29,7 @@ public class MovingRuleStrategy {
      * @see MovingRule
      * @since 1.0
      */
-    public MovingRule getMovingRule(){
+    public MovingRule getMovingRule() {
         return this.movingRule;
     }
 
@@ -41,7 +41,7 @@ public class MovingRuleStrategy {
      * @see MovingRule
      * @since 1.0
      */
-    public void setAllNeighborMovingRule(){
+    public void setAllNeighborMovingRule() {
         this.movingRule = new AllNeighborMovingRule();
     }
 
@@ -53,7 +53,7 @@ public class MovingRuleStrategy {
      * @see MovingRule
      * @since 1.0
      */
-    public void setUncutNeighborMovingRule(){
+    public void setUncutNeighborMovingRule() {
         this.movingRule = new UncutNeighborMovingRule();
     }
 
@@ -65,7 +65,7 @@ public class MovingRuleStrategy {
      * @see MovingRule
      * @since 1.0
      */
-    public void setOrthogonalNeighborMovingRule(){
+    public void setOrthogonalNeighborMovingRule() {
         this.movingRule = new OrthogonalNeighborMovingRule();
     }
 }

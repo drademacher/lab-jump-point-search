@@ -20,7 +20,7 @@ public class MapInitialisationException extends Exception {
      * @since 1.0
      */
     public MapInitialisationException(File file) {
-        super("Error while Map initialisation by loading file "+file);
+        super("Error while Map initialisation by loading file " + file);
     }
 
     /**

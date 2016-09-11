@@ -13,18 +13,18 @@ import java.util.*;
  * Created by paloka on 01.08.16.
  */
 abstract class BoundingBoxesShortestPathPruning implements ShortestPathPruning {
-    private HashMap<Vector, HashMap<Vector, BoundingBox>> boundingBoxes  = new HashMap<>();
+    private HashMap<Vector, HashMap<Vector, BoundingBox>> boundingBoxes = new HashMap<>();
 
-    protected void unionBoundingBox(Vector currentPoint, Vector direction, BoundingBox newBB){
-        if(newBB==null) return;
-        this.boundingBoxes.putIfAbsent(currentPoint,new HashMap<>());
-        BoundingBox oldBB = this.boundingBoxes.get(currentPoint).putIfAbsent(direction,new BoundingBox(newBB));
-        if(oldBB!=null) this.boundingBoxes.get(currentPoint).get(direction).union(newBB);
+    protected void unionBoundingBox(Vector currentPoint, Vector direction, BoundingBox newBB) {
+        if (newBB == null) return;
+        this.boundingBoxes.putIfAbsent(currentPoint, new HashMap<>());
+        BoundingBox oldBB = this.boundingBoxes.get(currentPoint).putIfAbsent(direction, new BoundingBox(newBB));
+        if (oldBB != null) this.boundingBoxes.get(currentPoint).get(direction).union(newBB);
     }
 
     @Override
-    public boolean prune(Vector candidate, Vector direction, Vector goal){
-        if(this.boundingBoxes.get(candidate)==null || this.boundingBoxes.get(candidate).get(direction)==null){
+    public boolean prune(Vector candidate, Vector direction, Vector goal) {
+        if (this.boundingBoxes.get(candidate) == null || this.boundingBoxes.get(candidate).get(direction) == null) {
             //Todo: System.out.println("candidate: "+candidate+"\t direction: "+direction+"\t No BoundingBox found");
             return false;
         }
@@ -34,7 +34,7 @@ abstract class BoundingBoxesShortestPathPruning implements ShortestPathPruning {
 
     @Override
     public void doPreprocessing(MapFacade map, MovingRule movingRule) {
-        this.boundingBoxes  = new HashMap<>();
+        this.boundingBoxes = new HashMap<>();
         for (int x = 0; x < map.getXDim(); x++) {
             for (int y = 0; y < map.getYDim(); y++) {
                 Vector currentPoint = new Vector(x, y);
@@ -67,7 +67,7 @@ abstract class BoundingBoxesShortestPathPruning implements ShortestPathPruning {
                         }
                     }
 
-                    buildBoundingBoxes(map,movingRule,currentPoint,outgoingDirectionBoundingBoxes);
+                    buildBoundingBoxes(map, movingRule, currentPoint, outgoingDirectionBoundingBoxes);
                 }
             }
         }
@@ -81,18 +81,18 @@ abstract class BoundingBoxesShortestPathPruning implements ShortestPathPruning {
 
         for (Vector forcedDirection : movingRule.getForcedDirections(map, currentPoint, direction)) {
             Vector candidate = currentPoint.add(forcedDirection);
-            if (map.isPassable(candidate) && !movingRule.isCornerCut(map,currentPoint,forcedDirection))
+            if (map.isPassable(candidate) && !movingRule.isCornerCut(map, currentPoint, forcedDirection))
                 reachablePoints.add(new Tuple2<>(new Tuple3(candidate, forcedDirection, cost + Math.sqrt(Math.abs(forcedDirection.getX()) + Math.abs(forcedDirection.getY()))), bb));
         }
 
         for (Vector subordinatedDirection : movingRule.getSubordinatedDirections(direction)) {
             Vector candidate = currentPoint.add(subordinatedDirection);
-            if (map.isPassable(candidate) && !movingRule.isCornerCut(map,currentPoint,subordinatedDirection))
+            if (map.isPassable(candidate) && !movingRule.isCornerCut(map, currentPoint, subordinatedDirection))
                 reachablePoints.add(new Tuple2<>(new Tuple3(candidate, subordinatedDirection, cost + Math.sqrt(Math.abs(subordinatedDirection.getX()) + Math.abs(subordinatedDirection.getY()))), bb));
         }
 
         Vector candidate = currentPoint.add(direction);
-        if (map.isPassable(candidate) && !movingRule.isCornerCut(map,currentPoint,direction))
+        if (map.isPassable(candidate) && !movingRule.isCornerCut(map, currentPoint, direction))
             reachablePoints.add(new Tuple2<>(new Tuple3(candidate, direction, cost + Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()))), bb));
 
         return reachablePoints;

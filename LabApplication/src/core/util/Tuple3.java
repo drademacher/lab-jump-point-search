@@ -3,11 +3,11 @@ package core.util;
 /**
  * Tuple3 is a 3-Tuple of three mate values of generic attribute types.
  *
- * @author Patrick Loka
- * @version 1.0
  * @param <A> Attribute Type of Argument arg1.
  * @param <B> Attribute Type of Argument arg2.
  * @param <C> Attribute Type of Argument arg3.
+ * @author Patrick Loka
+ * @version 1.0
  * @since 1.0
  */
 public class Tuple3<A, B, C> extends Tuple2<A, B> {

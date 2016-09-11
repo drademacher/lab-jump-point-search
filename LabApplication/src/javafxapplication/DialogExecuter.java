@@ -1,11 +1,11 @@
 package javafxapplication;
 
+import core.util.Tuple2;
+import core.util.Vector;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
-import core.util.Vector;
-import core.util.Tuple2;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -55,7 +55,7 @@ public class DialogExecuter {
         return executeDialog("New Random Map", confirmButton, fields, dialogButton -> {
             if (dialogButton == confirmButton) {
                 return new Tuple2<>(
-                        new Vector(Integer.valueOf(fields.get("xDim").getText()),Integer.valueOf(fields.get("yDim").getText())),
+                        new Vector(Integer.valueOf(fields.get("xDim").getText()), Integer.valueOf(fields.get("yDim").getText())),
                         Double.valueOf(fields.get("pPas").getText()));
             }
             return null;
@@ -72,7 +72,7 @@ public class DialogExecuter {
         return executeDialog("New Random Map", confirmButton, fields, dialogButton -> {
             if (dialogButton == confirmButton) {
                 return new Tuple2<>(
-                        new Vector(Integer.valueOf(fields.get("xDim").getText()),Integer.valueOf(fields.get("yDim").getText())),
+                        new Vector(Integer.valueOf(fields.get("xDim").getText()), Integer.valueOf(fields.get("yDim").getText())),
                         Integer.valueOf(fields.get("pPas").getText()));
             }
             return null;

@@ -4,93 +4,109 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
-<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxapplication.ApplicationController">
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxapplication.ApplicationController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
-                   <items>
-                       <Menu mnemonicParsing="false" text="New">
-                           <items>
-                               <MenuItem fx:id="emptyMapMenuItem" mnemonicParsing="false" text="Empty Map" />
-                               <MenuItem fx:id="randomMapMenuItem" mnemonicParsing="false" text="Random Map" />
-                               <MenuItem fx:id="mazeMapMenuItem" mnemonicParsing="false" text="Perfect Maze" />
-                               <MenuItem fx:id="mazeRoomMapMenuItem" mnemonicParsing="false" text="Maze with Rooms" />
-                               <MenuItem fx:id="singleRoomMapMenuItem" mnemonicParsing="false" text="Single connected Rooms" />
-                               <MenuItem fx:id="doubleRoomMapMenuItem" mnemonicParsing="false" text="Double connected Rooms" />
-                               <MenuItem fx:id="loopRoomMapMenuItem" mnemonicParsing="false" text="Rooms with loops" />
-                           </items>
-                       </Menu>
-                       <MenuItem fx:id="openMapMenuItem" mnemonicParsing="false" text="Open" />
-                       <MenuItem fx:id="saveMapMenuItem" mnemonicParsing="false" text="Save" />
-                   </items>
+                    <items>
+                        <Menu mnemonicParsing="false" text="New">
+                            <items>
+                                <MenuItem fx:id="emptyMapMenuItem" mnemonicParsing="false" text="Empty Map"/>
+                                <MenuItem fx:id="randomMapMenuItem" mnemonicParsing="false" text="Random Map"/>
+                                <MenuItem fx:id="mazeMapMenuItem" mnemonicParsing="false" text="Perfect Maze"/>
+                                <MenuItem fx:id="mazeRoomMapMenuItem" mnemonicParsing="false" text="Maze with Rooms"/>
+                                <MenuItem fx:id="singleRoomMapMenuItem" mnemonicParsing="false"
+                                          text="Single connected Rooms"/>
+                                <MenuItem fx:id="doubleRoomMapMenuItem" mnemonicParsing="false"
+                                          text="Double connected Rooms"/>
+                                <MenuItem fx:id="loopRoomMapMenuItem" mnemonicParsing="false" text="Rooms with loops"/>
+                            </items>
+                        </Menu>
+                        <MenuItem fx:id="openMapMenuItem" mnemonicParsing="false" text="Open"/>
+                        <MenuItem fx:id="saveMapMenuItem" mnemonicParsing="false" text="Save"/>
+                    </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
-                   <items>
-                       <MenuItem fx:id="editMapMenuItem" mnemonicParsing="false" text="Edit Map" />
-                       <SeparatorMenuItem />
-                       <Menu mnemonicParsing="false" text="ShortestPath">
-                          <items>
-                              <RadioMenuItem fx:id="aStarShortestPathMenuItem" mnemonicParsing="false" text="A-Star">
-                                  <toggleGroup>
-                                      <ToggleGroup fx:id="shortestPathToggleGroup" />
-                                  </toggleGroup>
-                              </RadioMenuItem>
-                              <RadioMenuItem fx:id="aStarBBShortestPathMenuItem" mnemonicParsing="false" text="A-Star + BB" toggleGroup="$shortestPathToggleGroup" />
-                              <RadioMenuItem fx:id="jpsShortestPathMenuItem" mnemonicParsing="false" text="JPS" toggleGroup="$shortestPathToggleGroup" />
-                              <RadioMenuItem fx:id="jpsBBShortestPathMenuItem" mnemonicParsing="false" text="JPS + BB" toggleGroup="$shortestPathToggleGroup" />
-                              <RadioMenuItem fx:id="jpsPlusShortestPathMenuItem" mnemonicParsing="false" text="JPS-Plus" toggleGroup="$shortestPathToggleGroup" />
-                              <RadioMenuItem fx:id="jpsPlusBBShortestPathMenuItem" mnemonicParsing="false" text="JPS-Plus + BB" toggleGroup="$shortestPathToggleGroup" />
-                          </items>
-                       </Menu>
-                       <Menu mnemonicParsing="false" text="Moving Rule">
-                          <items>
-                              <RadioMenuItem fx:id="orthogonalOnlyMovingRuleMenuItem" mnemonicParsing="false" text="Orthogonal Only">
-                                  <toggleGroup>
-                                      <ToggleGroup fx:id="movingRuleToggleGroup" />
-                                  </toggleGroup>
-                              </RadioMenuItem>
-                              <RadioMenuItem fx:id="cornerCuttingMovingRuleMenuItem" mnemonicParsing="false" text="Corner Cutting" toggleGroup="$movingRuleToggleGroup" />
-                              <RadioMenuItem fx:id="noCornerCuttingMovingRuleMenuItem" mnemonicParsing="false" text="No Corner Cutting" toggleGroup="$movingRuleToggleGroup" />
-                          </items>
-                       </Menu>
-                       <Menu mnemonicParsing="false" text="Heuristic">
-                          <items>
-                              <RadioMenuItem fx:id="zeroHeuristicMenuItem" mnemonicParsing="false" text="Zero Heuristic">
-                                  <toggleGroup>
-                                      <ToggleGroup fx:id="heuristicToggleGroup" />
-                                  </toggleGroup>
-                              </RadioMenuItem>
-                              <RadioMenuItem fx:id="manhattanHeuristicMenuItem" mnemonicParsing="false" text="Manhatten Heuristic" toggleGroup="$heuristicToggleGroup" />
-                              <RadioMenuItem fx:id="gridHeuristicMenuItem" mnemonicParsing="false" text="Grid Heuristic" toggleGroup="$heuristicToggleGroup" />
-                              <RadioMenuItem fx:id="euclideanHeuristicMenuItem" mnemonicParsing="false" text="Euclidean Heuristic" toggleGroup="$heuristicToggleGroup" />
-                          </items>
-                       </Menu>
-                   </items>
+                    <items>
+                        <MenuItem fx:id="editMapMenuItem" mnemonicParsing="false" text="Edit Map"/>
+                        <SeparatorMenuItem/>
+                        <Menu mnemonicParsing="false" text="ShortestPath">
+                            <items>
+                                <RadioMenuItem fx:id="aStarShortestPathMenuItem" mnemonicParsing="false" text="A-Star">
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="shortestPathToggleGroup"/>
+                                    </toggleGroup>
+                                </RadioMenuItem>
+                                <RadioMenuItem fx:id="aStarBBShortestPathMenuItem" mnemonicParsing="false"
+                                               text="A-Star + BB" toggleGroup="$shortestPathToggleGroup"/>
+                                <RadioMenuItem fx:id="jpsShortestPathMenuItem" mnemonicParsing="false" text="JPS"
+                                               toggleGroup="$shortestPathToggleGroup"/>
+                                <RadioMenuItem fx:id="jpsBBShortestPathMenuItem" mnemonicParsing="false" text="JPS + BB"
+                                               toggleGroup="$shortestPathToggleGroup"/>
+                                <RadioMenuItem fx:id="jpsPlusShortestPathMenuItem" mnemonicParsing="false"
+                                               text="JPS-Plus" toggleGroup="$shortestPathToggleGroup"/>
+                                <RadioMenuItem fx:id="jpsPlusBBShortestPathMenuItem" mnemonicParsing="false"
+                                               text="JPS-Plus + BB" toggleGroup="$shortestPathToggleGroup"/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Moving Rule">
+                            <items>
+                                <RadioMenuItem fx:id="orthogonalOnlyMovingRuleMenuItem" mnemonicParsing="false"
+                                               text="Orthogonal Only">
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="movingRuleToggleGroup"/>
+                                    </toggleGroup>
+                                </RadioMenuItem>
+                                <RadioMenuItem fx:id="cornerCuttingMovingRuleMenuItem" mnemonicParsing="false"
+                                               text="Corner Cutting" toggleGroup="$movingRuleToggleGroup"/>
+                                <RadioMenuItem fx:id="noCornerCuttingMovingRuleMenuItem" mnemonicParsing="false"
+                                               text="No Corner Cutting" toggleGroup="$movingRuleToggleGroup"/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Heuristic">
+                            <items>
+                                <RadioMenuItem fx:id="zeroHeuristicMenuItem" mnemonicParsing="false"
+                                               text="Zero Heuristic">
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="heuristicToggleGroup"/>
+                                    </toggleGroup>
+                                </RadioMenuItem>
+                                <RadioMenuItem fx:id="manhattanHeuristicMenuItem" mnemonicParsing="false"
+                                               text="Manhatten Heuristic" toggleGroup="$heuristicToggleGroup"/>
+                                <RadioMenuItem fx:id="gridHeuristicMenuItem" mnemonicParsing="false"
+                                               text="Grid Heuristic" toggleGroup="$heuristicToggleGroup"/>
+                                <RadioMenuItem fx:id="euclideanHeuristicMenuItem" mnemonicParsing="false"
+                                               text="Euclidean Heuristic" toggleGroup="$heuristicToggleGroup"/>
+                            </items>
+                        </Menu>
+                    </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="View">
-                   <items>
-                       <CheckMenuItem fx:id="viewOpenList" mnemonicParsing="false" selected="true" text="Closed List" />
-                       <CheckMenuItem fx:id="viewClosedList" mnemonicParsing="false" selected="true" text="Open List" />
-                       <CheckMenuItem fx:id="viewPath" mnemonicParsing="false" selected="true" text="Shortest Path" />
-                       <CheckMenuItem fx:id="viewDetails" mnemonicParsing="false" selected="true" text="Intermediate Points" />
-                   </items>
+                    <items>
+                        <CheckMenuItem fx:id="viewOpenList" mnemonicParsing="false" selected="true" text="Closed List"/>
+                        <CheckMenuItem fx:id="viewClosedList" mnemonicParsing="false" selected="true" text="Open List"/>
+                        <CheckMenuItem fx:id="viewPath" mnemonicParsing="false" selected="true" text="Shortest Path"/>
+                        <CheckMenuItem fx:id="viewDetails" mnemonicParsing="false" selected="true"
+                                       text="Intermediate Points"/>
+                    </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Run">
-                   <items>
-                       <Menu mnemonicParsing="false" text="Set">
-                           <MenuItem fx:id="runSetStartMenuItem" mnemonicParsing="false" text="Start Point" />
-                           <MenuItem fx:id="runSetGoalMenuItem" mnemonicParsing="false" text="Goal Point" />
-                       </Menu>
-                       <Menu mnemonicParsing="false" text="Enter">
-                           <MenuItem fx:id="runEnterStartMenuItem" mnemonicParsing="false" text="Start Point" />
-                           <MenuItem fx:id="runEnterGoalMenuItem" mnemonicParsing="false" text="Goal Point" />
-                       </Menu>
-                       <SeparatorMenuItem />
-                       <MenuItem fx:id="runPreprocessMenuItem" mnemonicParsing="false" text="Preprocess" />
-                       <MenuItem fx:id="runRunMenuItem" mnemonicParsing="false" text="Run" />
-                       <MenuItem fx:id="runShowResultsMenuItem" mnemonicParsing="false" text="Show Results" />
-                   </items>
+                    <items>
+                        <Menu mnemonicParsing="false" text="Set">
+                            <MenuItem fx:id="runSetStartMenuItem" mnemonicParsing="false" text="Start Point"/>
+                            <MenuItem fx:id="runSetGoalMenuItem" mnemonicParsing="false" text="Goal Point"/>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Enter">
+                            <MenuItem fx:id="runEnterStartMenuItem" mnemonicParsing="false" text="Start Point"/>
+                            <MenuItem fx:id="runEnterGoalMenuItem" mnemonicParsing="false" text="Goal Point"/>
+                        </Menu>
+                        <SeparatorMenuItem/>
+                        <MenuItem fx:id="runPreprocessMenuItem" mnemonicParsing="false" text="Preprocess"/>
+                        <MenuItem fx:id="runRunMenuItem" mnemonicParsing="false" text="Run"/>
+                        <MenuItem fx:id="runShowResultsMenuItem" mnemonicParsing="false" text="Show Results"/>
+                    </items>
                 </Menu>
             </menus>
         </MenuBar>
@@ -101,11 +117,11 @@
     <center>
         <StackPane style="-fx-background-color: #999999;">
             <children>
-                <Canvas fx:id="gridCanvas" />
-                <Canvas fx:id="closedListCanvas" />
-                <Canvas fx:id="openListCanvas" />
-                <Canvas fx:id="pathCanvas" />
-                <Canvas fx:id="detailsCanvas" />
+                <Canvas fx:id="gridCanvas"/>
+                <Canvas fx:id="closedListCanvas"/>
+                <Canvas fx:id="openListCanvas"/>
+                <Canvas fx:id="pathCanvas"/>
+                <Canvas fx:id="detailsCanvas"/>
             </children>
         </StackPane>
     </center>

@@ -38,10 +38,10 @@ public class MapController {
 
     private Map map;
 
-    private MapFactory mapFactory                       = new MapFactory();
-    private MovingRuleStrategy movingRuleStrategy       = new MovingRuleStrategy();
-    private HeuristicStrategy heuristicStrategy         = new HeuristicStrategy();
-    private ShortestPathStrategy shortestPathStrategy   = new ShortestPathStrategy();
+    private MapFactory mapFactory = new MapFactory();
+    private MovingRuleStrategy movingRuleStrategy = new MovingRuleStrategy();
+    private HeuristicStrategy heuristicStrategy = new HeuristicStrategy();
+    private ShortestPathStrategy shortestPathStrategy = new ShortestPathStrategy();
 
 
     //Todo: Wenn Danny die MapFactory mit JavaDocs versehen hat, soll er hier auch noch mal drübergucken! Ich weiß den Unterschied zwischen den einzeldenen Map Typen nicht wirklich. Bitte Beschreibungen zu allen Generierungsmethoden anpassen.
@@ -214,7 +214,7 @@ public class MapController {
      * @see MovingRuleStrategy
      * @since 1.0
      */
-    public void setAllNeighborMovingRule(){
+    public void setAllNeighborMovingRule() {
         this.movingRuleStrategy.setAllNeighborMovingRule();
     }
 
@@ -227,7 +227,7 @@ public class MapController {
      * @see MovingRuleStrategy
      * @since 1.0
      */
-    public void setUncutNeighborMovingRule(){
+    public void setUncutNeighborMovingRule() {
         this.movingRuleStrategy.setUncutNeighborMovingRule();
     }
 
@@ -240,7 +240,7 @@ public class MapController {
      * @see MovingRuleStrategy
      * @since 1.0
      */
-    public void setOrthogonalNeighborMovingRule(){
+    public void setOrthogonalNeighborMovingRule() {
         this.movingRuleStrategy.setOrthogonalNeighborMovingRule();
     }
 
@@ -256,8 +256,8 @@ public class MapController {
      * @since 1.0
      */
     public void setZeroHeuristic() {
-    this.heuristicStrategy.setZeroHeuristic();
-}
+        this.heuristicStrategy.setZeroHeuristic();
+    }
 
     /**
      * Sets new used heuristic function to estimate the distance of two points on a grid: ManhattanHeuristic.<br>
@@ -268,8 +268,8 @@ public class MapController {
      * @since 1.0
      */
     public void setManhattanHeuristic() {
-    this.heuristicStrategy.setManhattanHeuristic();
-}
+        this.heuristicStrategy.setManhattanHeuristic();
+    }
 
     /**
      * Sets new used heuristic function to estimate the distance of two points on a grid: GridHeuristic.<br>
@@ -280,8 +280,8 @@ public class MapController {
      * @since 1.0
      */
     public void setGridHeuristic() {
-    this.heuristicStrategy.setGridHeuristic();
-}
+        this.heuristicStrategy.setGridHeuristic();
+    }
 
     /**
      * Sets new used heuristic function to estimate the distance of two points on a grid: .<br>
@@ -292,8 +292,8 @@ public class MapController {
      * @since 1.0
      */
     public void setEuclideanHeuristic() {
-    this.heuristicStrategy.setEuclideanHeuristic();
-}
+        this.heuristicStrategy.setEuclideanHeuristic();
+    }
 
 
     /* ------- ShortestPath Operations ------- */
@@ -306,7 +306,7 @@ public class MapController {
      * @see ShortestPathStrategy
      * @since 1.0
      */
-    public void setAStarShortestPath(){
+    public void setAStarShortestPath() {
         this.shortestPathStrategy.setAStarShortestPath();
     }
 
@@ -318,7 +318,7 @@ public class MapController {
      * @see ShortestPathStrategy
      * @since 1.0
      */
-    public void setJPSShortestPath(){
+    public void setJPSShortestPath() {
         this.shortestPathStrategy.setJPSShortestPath();
     }
 
@@ -332,7 +332,9 @@ public class MapController {
      * @see ShortestPathStrategy
      * @since 1.0
      */
-    public void setJPSPlusShortestPath() { this.shortestPathStrategy.setJPSPlusShortestPath(); }
+    public void setJPSPlusShortestPath() {
+        this.shortestPathStrategy.setJPSPlusShortestPath();
+    }
 
     /**
      * Sets new used function to find the shortest path between two paints on a grid with passable and non passable points: JPS+BB.<br>
@@ -345,7 +347,7 @@ public class MapController {
      * @see ShortestPathStrategy
      * @since 1.0
      */
-    public void setJPSPlusBBShortestPath(){
+    public void setJPSPlusBBShortestPath() {
         this.shortestPathStrategy.setJPSPlusBBShortestPath();
     }
 
@@ -359,7 +361,7 @@ public class MapController {
      * @see ShortestPathStrategy
      * @since 1.0
      */
-    public void setAStarBBShortestPath(){
+    public void setAStarBBShortestPath() {
         this.shortestPathStrategy.setAStarBBShortestPath();
     }
 
@@ -373,7 +375,7 @@ public class MapController {
      * @see ShortestPathStrategy
      * @since 1.0
      */
-    public void setJPSBBShortestPath(){
+    public void setJPSBBShortestPath() {
         this.shortestPathStrategy.setJPSBBShortestPath();
     }
 
@@ -384,7 +386,7 @@ public class MapController {
      * @see ShortestPathStrategy
      * @since 1.0
      */
-    public long preprocessShortestPath(){
+    public long preprocessShortestPath() {
         return this.shortestPathStrategy.preprocess(this.map, this.movingRuleStrategy.getMovingRule());
     }
 
@@ -392,14 +394,14 @@ public class MapController {
      * Searches the shortest path from start to goal considering the selected shortest path strategy, the proprocessing data, the selected moving rule and the selected heuristic.
      *
      * @param start point on map to start
-     * @param goal point on map to reach
+     * @param goal  point on map to reach
      * @return &lt; Shortest Path between start and goal | time needed to find shortest path in milliseconds &gt;
      * @throws NoPathFoundException Thrown, if goal is not reachable from start point or if start or goal are nonpassable.
      * @see ShortestPathStrategy
      * @see ShortestPathResult
      * @since 1.0
      */
-    public Tuple2<ShortestPathResult,Long> runShortstPath(Vector start, Vector goal) throws NoPathFoundException {
+    public Tuple2<ShortestPathResult, Long> runShortstPath(Vector start, Vector goal) throws NoPathFoundException {
         return this.shortestPathStrategy.run(this.map, start, goal, this.heuristicStrategy.getHeuristic(), this.movingRuleStrategy.getMovingRule());
     }
 }

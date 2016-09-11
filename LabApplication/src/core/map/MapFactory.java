@@ -2,16 +2,17 @@ package core.map;
 
 import core.exception.InvalidCoordinateException;
 import core.exception.MapInitialisationException;
-import core.util.Vector;
 import core.util.DisjointSet;
 import core.util.RandomUtil;
+import core.util.Vector;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- *
  * @author Danny Rademacher
  * @version 1.0
  * @see MapController
@@ -48,7 +49,7 @@ class MapFactory {
             for (int y = 0; y < map.getYDim(); y++) {
                 if (RandomUtil.getRandomDouble() < pPassable) {
                     try {
-                        map.switchPassable(new Vector(x,y));
+                        map.switchPassable(new Vector(x, y));
                     } catch (InvalidCoordinateException e) {
                         e.printStackTrace();
                         //Todo: MapFactory.createRandomMap - InvalidCoordinateException
@@ -80,7 +81,7 @@ class MapFactory {
     /**
      * Returns a map which consists of a maze where additional rooms have been added.
      *
-     * @param dimension The vector which defines the size of the map to be created.
+     * @param dimension  The vector which defines the size of the map to be created.
      * @param roomNumber The number of rooms to be added.
      * @return A map
      * @throws MapInitialisationException if the dimension entries are not > 0.
@@ -193,13 +194,13 @@ class MapFactory {
             br.readLine();  //Skip type
             int yDim = Integer.valueOf(br.readLine().substring(7));  //Read height
             int xDim = Integer.valueOf(br.readLine().substring(6));  //Read width
-            Map map = new Map(new Vector(xDim,yDim), false); //init Map without passable fields
+            Map map = new Map(new Vector(xDim, yDim), false); //init Map without passable fields
             br.readLine();  //Skip map
             String currentLine;
             for (int y = 0; (currentLine = br.readLine()) != null; y++) { //Read in MapRow
                 for (int x = 0; x < currentLine.length(); x++) {
                     if (currentLine.charAt(x) == '.' || currentLine.charAt(x) == 'G' || currentLine.charAt(x) == 'S') {
-                        map.switchPassable(new Vector(x,y));    //Mark passable fields
+                        map.switchPassable(new Vector(x, y));    //Mark passable fields
                     }
                 }
             }
@@ -239,7 +240,7 @@ class MapFactory {
     /**
      * Internal helper function which creates a real map from the data of the internal map.
      *
-     * @param map An internal map.
+     * @param map       An internal map.
      * @param dimension The vector which defines the size of the map to be created.
      * @return A map from the internal structure.
      * @throws MapInitialisationException if the dimension entries are not > 0.
@@ -269,7 +270,7 @@ class MapFactory {
     /**
      * Generate a number of rooms and returns a list where each room is listed with its size and position.
      *
-     * @param map An internal map.
+     * @param map   An internal map.
      * @param limit The upper bound of the number of rooms in that map.
      * @return A list where each room is listed with its size and position.
      * @since 1.0
@@ -321,11 +322,11 @@ class MapFactory {
     /**
      * Internal function to determine whether a room placement is valid.
      *
-     * @param map An internal map.
+     * @param map    An internal map.
      * @param xStart The x coordinate of the upper left corner.
      * @param yStart The y coordinate of the upper left corner.
-     * @param xLen The length of the room on the x axis.
-     * @param yLen The length of the room on the y axis.
+     * @param xLen   The length of the room on the x axis.
+     * @param yLen   The length of the room on the y axis.
      * @return True when the room could be placed on the map, so that there are no intersections with other rooms.
      * @since 1.0
      */
@@ -349,7 +350,6 @@ class MapFactory {
     }
 
     /**
-     *
      * @return An empty disjoint set.
      * @since 1.0
      */
@@ -362,7 +362,7 @@ class MapFactory {
      * <br>
      * An edge is between adjacent rooms, which means that there is a connection without passing another unrelated room.
      *
-     * @param map An internal map.
+     * @param map   An internal map.
      * @param rooms A list of rooms.
      * @return A disjoint set where each room is represented by a connected component.
      * @since 1.0
@@ -390,13 +390,12 @@ class MapFactory {
     }
 
 
-
     /**
      * Returns a disjoint set where each room with only one outgoing way is represented by a connected component.
      * <br>
      * An edge is between rooms where both only have one connection so far.
      *
-     * @param map An internal map.
+     * @param map   An internal map.
      * @param rooms A list of rooms.
      * @return A disjoint set where each room with only one outgoing way is represented by a connected component.
      * @since 1.0
@@ -456,7 +455,7 @@ class MapFactory {
      * This is done by a FloodFill algorithm, so every free space is covered by a way of passable cells.
      *
      * @param map An internal map.
-     * @param cc Connected component of rooms to be connected.
+     * @param cc  Connected component of rooms to be connected.
      * @since 1.0
      */
     private void genFloors(CellType[][] map, DisjointSet<CellType> cc) {
@@ -548,7 +547,6 @@ class MapFactory {
     }
 
     /**
-     *
      * @author Danny Rademacher
      * @version 1.0
      * @see MapController

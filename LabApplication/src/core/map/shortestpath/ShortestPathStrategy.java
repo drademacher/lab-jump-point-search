@@ -17,15 +17,15 @@ public class ShortestPathStrategy {
     /* ------- ShortestPath Operations ------- */
 
     public long preprocess(MapFacade map, MovingRule movingRule) {
-        long starttime  = -System.currentTimeMillis();
+        long starttime = -System.currentTimeMillis();
         this.shortestPath.doPreprocessing(map, movingRule);
         return starttime + System.currentTimeMillis();
     }
 
-    public Tuple2<ShortestPathResult,Long> run(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) throws NoPathFoundException {
-        long starttime  = -System.currentTimeMillis();
-        ShortestPathResult result   = this.shortestPath.findShortestPath(map, start, goal, heuristic, movingRule);
-        return new Tuple2<>(result,starttime + System.currentTimeMillis());
+    public Tuple2<ShortestPathResult, Long> run(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) throws NoPathFoundException {
+        long starttime = -System.currentTimeMillis();
+        ShortestPathResult result = this.shortestPath.findShortestPath(map, start, goal, heuristic, movingRule);
+        return new Tuple2<>(result, starttime + System.currentTimeMillis());
     }
 
 
@@ -48,10 +48,10 @@ public class ShortestPathStrategy {
     }
 
     public void setAStarBBShortestPath() {
-        this.shortestPath   = new AStarShortestPath(this, new AStarBoundingBoxesShortestPathPruning());
+        this.shortestPath = new AStarShortestPath(this, new AStarBoundingBoxesShortestPathPruning());
     }
 
-    public void setJPSBBShortestPath(){
-        this.shortestPath   = new JPSShortestPath(this, new JPSBoundingBoxesShortestPathPruning());
+    public void setJPSBBShortestPath() {
+        this.shortestPath = new JPSShortestPath(this, new JPSBoundingBoxesShortestPathPruning());
     }
 }

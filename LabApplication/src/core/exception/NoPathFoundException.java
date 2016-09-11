@@ -15,10 +15,10 @@ public class NoPathFoundException extends Exception {
      * Init MapInitialisationException considering the given start and gold point of the required path causing the Exception.
      *
      * @param start start point of searched shortest path
-     * @param goal goal point of searched shortest path
+     * @param goal  goal point of searched shortest path
      * @since 1.0
      */
     public NoPathFoundException(Vector start, Vector goal) {
-        super("No path found between "+start+" and "+goal);
+        super("No path found between " + start + " and " + goal);
     }
 }

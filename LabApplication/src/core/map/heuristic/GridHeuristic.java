@@ -13,7 +13,7 @@ import core.util.Vector;
  * @see HeuristicStrategy
  * @since 1.0
  */
-class GridHeuristic implements Heuristic{
+class GridHeuristic implements Heuristic {
 
     /**
      * {@inheritDoc}

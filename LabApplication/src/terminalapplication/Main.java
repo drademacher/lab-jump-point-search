@@ -7,7 +7,10 @@ import core.map.shortestpath.ShortestPathResult;
 import core.util.Tuple2;
 import core.util.Vector;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -81,9 +84,7 @@ public class Main {
             if (s.length != 9) continue;
 
 
-
             System.out.println();
-
 
 
             // execute algorithm and benchmark it
@@ -93,7 +94,7 @@ public class Main {
 
 
             System.out.print(start + " " + goal + " - ");
-            long preprocessingTime   = controller.preprocessShortestPath();
+            long preprocessingTime = controller.preprocessShortestPath();
             try {
                 Tuple2<ShortestPathResult, Long> result = controller.runShortstPath(start, goal);
                 double deviation = result.getArg1().getCost() - cost;

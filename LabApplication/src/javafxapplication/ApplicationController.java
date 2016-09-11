@@ -3,6 +3,9 @@ package javafxapplication;
 import core.exception.InvalidCoordinateException;
 import core.exception.MapInitialisationException;
 import core.exception.NoPathFoundException;
+import core.map.MapController;
+import core.util.Tuple2;
+import core.util.Vector;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -10,15 +13,15 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import core.map.MapController;
-import core.util.Vector;
-import core.util.Tuple2;
 
 import java.io.File;
 import java.net.URL;
@@ -88,10 +91,10 @@ public class ApplicationController implements Initializable {
         this.mapHolder = new MapHolder(this.gridCanvas, this.closedListCanvas, this.openListCanvas, this.pathCanvas, this.detailsCanvas);
 
         final EventHandler<KeyEvent> keyEventHandler = e -> {
-            if (e.getCode() == KeyCode.RIGHT)    this.mapHolder.moveCamera(new Vector(1, 0));
-            if (e.getCode() == KeyCode.LEFT)    this.mapHolder.moveCamera(new Vector(-1, 0));
-            if (e.getCode() == KeyCode.UP)    this.mapHolder.moveCamera(new Vector(0, -1));
-            if (e.getCode() == KeyCode.DOWN)    this.mapHolder.moveCamera(new Vector(0, 1));
+            if (e.getCode() == KeyCode.RIGHT) this.mapHolder.moveCamera(new Vector(1, 0));
+            if (e.getCode() == KeyCode.LEFT) this.mapHolder.moveCamera(new Vector(-1, 0));
+            if (e.getCode() == KeyCode.UP) this.mapHolder.moveCamera(new Vector(0, -1));
+            if (e.getCode() == KeyCode.DOWN) this.mapHolder.moveCamera(new Vector(0, 1));
             e.consume();
         };
 
@@ -290,8 +293,8 @@ public class ApplicationController implements Initializable {
         this.shortestPathToggleGroup.selectToggle(this.aStarShortestPathMenuItem);
     }
 
-    private void initRunRunMenuItem(){
-        runRunMenuItem.setOnAction(event ->{
+    private void initRunRunMenuItem() {
+        runRunMenuItem.setOnAction(event -> {
             try {
                 this.mapHolder.setShortestPath(this.mapController.runShortstPath(this.mapHolder.getStartPoint(), this.mapHolder.getGoalPoint()));
             } catch (NoPathFoundException noPathFoundException) {
@@ -303,8 +306,8 @@ public class ApplicationController implements Initializable {
     }
 
 
-    private void initRunSetStartPointMenuItem(){
-        runSetStartMenuItem.setOnAction(event ->{
+    private void initRunSetStartPointMenuItem() {
+        runSetStartMenuItem.setOnAction(event -> {
             this.mapHolder.setOnMouseClickedCallback((coordinate) -> {
                 if (!this.mapHolder.isPassable(coordinate)) return;
                 this.mapHolder.setStartPoint(coordinate);
@@ -313,10 +316,11 @@ public class ApplicationController implements Initializable {
         });
     }
 
-    private void initRunSetGoalPointMenuItem(){
-        runSetGoalMenuItem.setOnAction(event ->{
+    private void initRunSetGoalPointMenuItem() {
+        runSetGoalMenuItem.setOnAction(event -> {
             this.mapHolder.setOnMouseClickedCallback((coordinate) -> {
-                if (!this.mapHolder.isPassable(coordinate) || (this.mapHolder.getStartPoint() != null && this.mapHolder.getStartPoint().equals(coordinate))) return;
+                if (!this.mapHolder.isPassable(coordinate) || (this.mapHolder.getStartPoint() != null && this.mapHolder.getStartPoint().equals(coordinate)))
+                    return;
                 this.mapHolder.setGoalPoint(coordinate);
                 this.mapHolder.setOnMouseClickedCallback(null);
             });
@@ -324,16 +328,16 @@ public class ApplicationController implements Initializable {
     }
 
 
-    private void initRunEnterStartPointMenuItem(){
-        runEnterStartMenuItem.setOnAction(event ->{
+    private void initRunEnterStartPointMenuItem() {
+        runEnterStartMenuItem.setOnAction(event -> {
             Vector coordinate = dialogExecuter.executePositionDialog("Enter Start Point");
             if (!this.mapHolder.isPassable(coordinate)) return;
             this.mapHolder.setStartPoint(coordinate);
         });
     }
 
-    private void initRunEnterGoalPointMenuItem(){
-        runEnterGoalMenuItem.setOnAction(event ->{
+    private void initRunEnterGoalPointMenuItem() {
+        runEnterGoalMenuItem.setOnAction(event -> {
             // TODO: abbrechen (X drücken) sollte keine Exception werfen
             Vector coordinate = dialogExecuter.executePositionDialog("Enter Goal Point");
             if (!this.mapHolder.isPassable(coordinate)) return;
@@ -342,12 +346,12 @@ public class ApplicationController implements Initializable {
     }
 
 
-    private void initPreprocessRunMenuItem(){
+    private void initPreprocessRunMenuItem() {
         BooleanBinding proprocessingNeeded = aStarShortestPathMenuItem.selectedProperty().or(jpsShortestPathMenuItem.selectedProperty());
 
         runPreprocessMenuItem.disableProperty().bind(proprocessingNeeded.or(mapModified.not()));
 
-        runPreprocessMenuItem.setOnAction(event ->{
+        runPreprocessMenuItem.setOnAction(event -> {
             this.mapController.preprocessShortestPath();
             dialogExecuter.executeAlertDialog("Preprocessing", "You successfully completed the proprocessing computation.");
             this.mapHolder.setOnMouseClickedCallback(null);
@@ -356,10 +360,10 @@ public class ApplicationController implements Initializable {
     }
 
 
-    private void initRunShowResultsMenuItem(){
+    private void initRunShowResultsMenuItem() {
         runShowResultsMenuItem.disableProperty().bind(this.mapHolder.hasShortestPathResult.not());
 
-        runShowResultsMenuItem.setOnAction(event ->{
+        runShowResultsMenuItem.setOnAction(event -> {
             dialogExecuter.executeAlertDialog("Shortest Path Result", this.mapHolder.getShortestPathResult());
         });
     }

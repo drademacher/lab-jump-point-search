@@ -30,7 +30,7 @@ public class HeuristicStrategy {
      * @see Heuristic
      * @since 1.0
      */
-    public Heuristic getHeuristic(){
+    public Heuristic getHeuristic() {
         return this.heuristic;
     }
 
@@ -42,7 +42,7 @@ public class HeuristicStrategy {
      * @see Heuristic
      * @since 1.0
      */
-    public void setZeroHeuristic(){
+    public void setZeroHeuristic() {
         this.heuristic = new ZeroHeuristic();
     }
 
@@ -66,7 +66,7 @@ public class HeuristicStrategy {
      * @see Heuristic
      * @since 1.0
      */
-    public void setGridHeuristic(){
+    public void setGridHeuristic() {
         this.heuristic = new GridHeuristic();
     }
 
@@ -78,7 +78,7 @@ public class HeuristicStrategy {
      * @see Heuristic
      * @since 1.0
      */
-    public void setEuclideanHeuristic(){
+    public void setEuclideanHeuristic() {
         this.heuristic = new EuclideanHeuristic();
     }
 }

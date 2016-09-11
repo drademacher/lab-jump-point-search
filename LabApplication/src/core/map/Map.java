@@ -37,7 +37,7 @@ class Map implements MapFacade {
     /**
      * Initialisation of a Map instance of a given dimension and a default value.
      *
-     * @param dimension Dimension of the new Map
+     * @param dimension         Dimension of the new Map
      * @param areFieldsPassable Initial value for all points on the map.
      * @throws MapInitialisationException Thrown if the input dimension has negative values.
      * @see MapFactory
@@ -89,7 +89,7 @@ class Map implements MapFacade {
      * @since 1.0
      */
     @Override
-    public boolean isPassable(Vector coordinate){
+    public boolean isPassable(Vector coordinate) {
         try {
             isValideCoordinate(coordinate);
             return map[coordinate.getX()][coordinate.getY()];
@@ -123,7 +123,7 @@ class Map implements MapFacade {
      * @param file filename of the file the map should be saved. To generate a valid file it should be type .map.
      * @since 1.0
      */
-    void save(File file){
+    void save(File file) {
         ArrayList<String> lines = new ArrayList<>();
         lines.addAll(Arrays.asList("type octile", "height " + this.yDim, "width " + this.xDim, "map"));
         for (int y = 0; y < this.yDim; y++) {
@@ -143,6 +143,7 @@ class Map implements MapFacade {
     /* ------- Helper ------- */
 
     private void isValideCoordinate(Vector coordinate) throws InvalidCoordinateException {
-        if (coordinate.getX() < 0 || coordinate.getY() < 0 || coordinate.getX() >= this.xDim || coordinate.getY() >= this.yDim) throw new InvalidCoordinateException(coordinate);
+        if (coordinate.getX() < 0 || coordinate.getY() < 0 || coordinate.getX() >= this.xDim || coordinate.getY() >= this.yDim)
+            throw new InvalidCoordinateException(coordinate);
     }
 }

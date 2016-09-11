@@ -3,10 +3,10 @@ package core.util;
 /**
  * Tuple2 is a 2-Tuple of two mate values of generic attribute types.
  *
- * @author Patrick Loka
- * @version 1.0
  * @param <A> Attribute Type of Argument arg1.
  * @param <B> Attribute Type of Argument arg2.
+ * @author Patrick Loka
+ * @version 1.0
  * @since 1.0
  */
 public class Tuple2<A, B> {

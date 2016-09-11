@@ -15,8 +15,6 @@ import static javafxapplication.ApplicationConstants.*;
 import static javafxapplication.FieldVisualisation.*;
 
 /**
- *
- *
  * @author Danny Rademacher, Patrick Loka
  * @version 1.0
  * @since 1.0
@@ -83,6 +81,7 @@ public class MapHolder {
     public String getShortestPathResult() {
         return "The running time is " + shortestPathTime + " ms. \nThe cost of the shortest path are " + String.format("%1$,.2f ", shortestPathResult.getCost()) + ".";
     }
+
     void setMap(MapFacade map) {
         this.map = map;
         startPoint = null;
@@ -167,7 +166,8 @@ public class MapHolder {
 
     private void renderField(Canvas canvas, Vector coordinate, FieldVisualisation field) {
         coordinate = coordinate.sub(cameraPos);
-        if (coordinate.getX() < 0 || coordinate.getY() < 0 || cameraDim.getX() < coordinate.getX() || cameraDim.getY() < coordinate.getY()) return;
+        if (coordinate.getX() < 0 || coordinate.getY() < 0 || cameraDim.getX() < coordinate.getX() || cameraDim.getY() < coordinate.getY())
+            return;
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(field.getColor());

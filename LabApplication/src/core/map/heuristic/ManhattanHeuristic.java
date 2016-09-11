@@ -12,7 +12,7 @@ import core.util.Vector;
  * @see HeuristicStrategy
  * @since 1.0
  */
-class ManhattanHeuristic implements Heuristic{
+class ManhattanHeuristic implements Heuristic {
 
     /**
      * {@inheritDoc}
