@@ -145,7 +145,7 @@ public class Main {
 
                     if ((Math.abs(deviation) > 0.01) || noPath) {
                         System.out.print(startScenario + " " + goalScenario + " :\t");
-                        System.out.print(noPath ? "no path #\t" : String.format("cost: %1$,.2f", deviation));
+                        System.out.print(noPath ? "no path #\t" : String.format("div: %1$,.2f", deviation));
                         System.out.println();
                     }
 

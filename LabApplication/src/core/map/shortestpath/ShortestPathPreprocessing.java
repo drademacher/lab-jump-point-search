@@ -4,8 +4,23 @@ import core.map.MapFacade;
 import core.map.movingrule.MovingRule;
 
 /**
- * Created by paloka on 31.08.16.
+ * ShortestPathPreprocessing provides a method to call for preprocess finding shortest path on a grid.
+ *
+ * @author Patrick Loka
+ * @version 1.0
+ * @since 1.0
  */
 interface ShortestPathPreprocessing {
+
+    /**
+     * Preprocesses the input map considering the given moving rules. ShortestPath calls this method in preprocessing step.<br>
+     * <br>
+     * A valid implementation saves some precalculations and uses this information when searching a shortest path on the
+     * given map with the given moving rules later for efficiency at runtime.
+     *
+     * @param map Given grid map to preprocess.
+     * @param movingRule Allowed movements on the given grid map.
+     * @since 1.0
+     */
     void doPreprocessing(MapFacade map, MovingRule movingRule);
 }
