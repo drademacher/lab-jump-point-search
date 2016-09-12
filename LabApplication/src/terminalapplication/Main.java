@@ -7,14 +7,12 @@ import core.map.shortestpath.ShortestPathResult;
 import core.util.Tuple2;
 import core.util.Vector;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 /**
  * Alternative application which provides a nice way to benchmark every algorithm for given scenarios.
@@ -27,17 +25,41 @@ public class Main {
     private static HashMap<String, File> maps = new HashMap<>();
     private static HashMap<String, File> scenarios = new HashMap<>();
 
-    public static void main(String[] args) throws MapInitialisationException, NoPathFoundException {
+    public static void main(String[] args) throws MapInitialisationException, NoPathFoundException, FileNotFoundException, UnsupportedEncodingException {
         // System.out.println("Welcome to the terminal application of LabApplication:");
 
-        init("sc1");
+        init(args[0]);
 
         MapController controller = new MapController();
         controller.setUncutNeighborMovingRule();
         controller.setEuclideanHeuristic();
 
-        controller.loadMap(maps.get("Aurora"));
-        scenarioExecuter(controller);
+        switch (args[1]) {
+            case "astar":
+                controller.setAStarShortestPath();
+                break;
+            case "astarbb":
+                controller.setAStarBBShortestPath();
+                break;
+            case "jps":
+                controller.setJPSShortestPath();
+                break;
+            case "jpsbb":
+                controller.setJPSBBShortestPath();
+                break;
+            case "jps+":
+                controller.setJPSPlusShortestPath();
+                break;
+            case "jps+bb":
+                controller.setJPSPlusBBShortestPath();
+                break;
+            default:
+                throw new IllegalArgumentException("second argument is no known algorithm of the following: astar, astarbb, jps, jpsbb, jps+, jps+bb");
+        }
+
+
+
+        scenarioExecuter(args, controller);
     }
 
     private static void init(String dir) {
@@ -45,9 +67,7 @@ public class Main {
             Files.walk(Paths.get("maps/" + dir))
                     .filter(filePath -> Files.isRegularFile(filePath))
                     .filter(filePath -> filePath.toString().substring(filePath.toString().lastIndexOf(".")).equals(".map"))
-                    .forEach(filePath -> {
-                        maps.put(stripFileName(filePath.toString()), filePath.toFile());
-                    });
+                    .forEach(filePath -> maps.put(stripFileName(filePath.toString()), filePath.toFile()));
 
             Files.walk(Paths.get("scenarios/" + dir))
                     .filter(filePath -> Files.isRegularFile(filePath))
@@ -58,92 +78,86 @@ public class Main {
         }
     }
 
-    static void scenarioExecuter(MapController controller) throws NoPathFoundException {
-        int counterSucc = 0, counterTotal = 0;
-        Vector start;
-        Vector goal;
-
-        String scen = "Aurora";
-
-        BufferedReader br = null;
-        String currentLine = "";
-
-        try {
-            br = new BufferedReader(new FileReader(scenarios.get(scen)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        controller.setJPSPlusShortestPath();
-        controller.preprocessShortestPath();
-
-        System.out.println("Preprossesing finished");
+    static void scenarioExecuter(String[] args, MapController controller) throws NoPathFoundException, MapInitialisationException, FileNotFoundException, UnsupportedEncodingException {
 
 
-        for (int y = 0; ; y++) {
-            try {
-                currentLine = br.readLine();
+        for (String scenario : scenarios.keySet()) {
+            System.out.println("start benchmarking " + scenario);
+
+            controller.loadMap(maps.get(scenario));
+            long timePreprossessing = controller.preprocessShortestPath();
+
+
+            PrintWriter writer = new PrintWriter("benchmarking/" + args[0] + "/" + scenario + "_" + args[1] + ".txt", "UTF-8");
+
+            writer.println("type: " + args[0]);
+            writer.println("name: " + scenario);
+            writer.println("algorithm: " + args[1]);
+            writer.println("preprossessing [ms]: " + timePreprossessing);
+
+            writer.println("\n"
+                    + "start x\t"
+                    + "start y\t"
+                    + "goal x\t"
+                    + "goal y\t"
+                    + "deviation\t"
+                    + "origin cost\t"
+                    + "measured cost\t"
+                    + "processed points\t"
+                    + "measured time [ms]");
+
+            try (Stream<String> stream = Files.lines(scenarios.get(scenario).toPath())) {
+                stream.forEach(input -> {
+                    String data[] = input.split("\t");
+                    if (data.length != 9) return;
+
+                    // execute algorithm and benchmark it
+                    Vector startScenario = new Vector(Integer.parseInt(data[4]), Integer.parseInt(data[5]));
+                    Vector goalScenario = new Vector(Integer.parseInt(data[6]), Integer.parseInt(data[7]));
+                    double costScenario = Double.parseDouble(data[8]);
+
+
+                    Tuple2<ShortestPathResult, Long> result;
+                    double deviation = 0;
+                    boolean noPath;
+
+                    try {
+                        result = controller.runShortstPath(startScenario, goalScenario);
+                        deviation = result.getArg1().getCost() - costScenario;
+                        noPath = false;
+
+                        writer.println(startScenario.getX() + "\t"
+                                + startScenario.getY() + "\t"
+                                + goalScenario.getX() + "\t"
+                                + goalScenario.getY() + "\t"
+                                + String.format("%1$,.5f", deviation) + "\t"
+                                + String.format("%1$,.5f", costScenario) + "\t"
+                                + String.format("%1$,.5f", result.getArg1().getCost()) + "\t"
+                                + (result.getArg1().getOpenList().size() + result.getArg1().getClosedList().size()) + "\t"
+                                + result.getArg2() );
+                    } catch (NoPathFoundException e) {
+                        noPath = true;
+
+                        writer.println(startScenario + "\t"
+                                + goalScenario + "\t"
+                                + "no path found" );
+                    }
+
+                    if ((Math.abs(deviation) > 0.01) || noPath) {
+                        System.out.print(startScenario + " " + goalScenario + " :\t");
+                        System.out.print(noPath ? "no path #\t" : String.format("cost: %1$,.2f", deviation));
+                        System.out.println();
+                    }
+
+
+                });
             } catch (IOException e) {
-
+                e.printStackTrace();
+                continue;
             }
 
-            if (currentLine == null) break;
-            // System.out.print(currentLine);
-            String s[] = currentLine.split("\t");
-            if (s.length != 9) continue;
-
-
-
-
-            // execute algorithm and benchmark it
-            start = new Vector(Integer.parseInt(s[4]), Integer.parseInt(s[5]));
-            goal = new Vector(Integer.parseInt(s[6]), Integer.parseInt(s[7]));
-            double cost = Double.parseDouble(s[8]);
-
-
-            Tuple2<ShortestPathResult, Long> result1, result2;
-            double deviation1 = 0, deviation2 = 0;
-            boolean nopath1, nopath2;
-
-
-            // long preprocessingTime = controller.preprocessShortestPath();
-//            try {
-//                controller.setAStarShortestPath();
-//                result1 = controller.runShortstPath(start, goal);
-//                deviation1 = result1.getArg1().getCost() - cost;
-//                nopath1 = false;
-//
-//
-//            } catch (NoPathFoundException e) {
-//                nopath1 = true;
-//            }
-
-
-
-
-            try {
-
-                result2 = controller.runShortstPath(start, goal);
-                deviation2 = result2.getArg1().getCost() - cost;
-                nopath2 = false;
-
-
-            } catch (NoPathFoundException e) {
-                nopath2 = true;
-            }
-
-            if ( (Math.abs(deviation2) > 0.01) || nopath2 ) {
-                System.out.print(start + " " + goal + " :\t");
-                // System.out.print(nopath1 ? "no path #\t" : String.format("cost: %1$,.2f #\t", deviation1));
-                System.out.print(nopath2 ? "no path #\t" : String.format("cost: %1$,.2f #\t", deviation2));
-                System.out.println();
-            } else {
-                counterSucc += 1;
-            }
-            counterTotal += 1;
+            writer.close();
         }
-
-        System.out.println("counterSucc of sucessfull scenarios: " + counterSucc + " / " + counterTotal);
     }
 
     static String stripFileName(String in) {

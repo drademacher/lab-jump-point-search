@@ -42,7 +42,7 @@ class PreCalculatedShortestPath extends ShortestPath {
             if (steps > 0) {
                 Vector forcedPoint = currentPoint.add(direction.mult(steps));
                 if (forcedPoint.equals(goal))
-                    return new Tuple2<>(forcedPoint, cost + steps * Math.sqrt(Math.abs(direction.getX())) + Math.abs(direction.getY()));
+                    return new Tuple2<>(forcedPoint, cost + steps * Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY())));
                 for (Vector subordinatedDirection : movingRule.getSubordinatedDirections(direction)) {
                     Tuple2<Vector, Double> NextInDir = exploreStrategy(map, forcedPoint, subordinatedDirection, 0.0, goal, movingRule);
                     if (NextInDir != null && goal.equals(NextInDir.getArg1())) {

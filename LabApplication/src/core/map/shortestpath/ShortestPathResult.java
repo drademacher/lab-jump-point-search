@@ -54,8 +54,7 @@ public class ShortestPathResult {
     }
 
     public Collection<Vector> getOpenList() {
-        // return this.openList.stream().filter(p -> !pathPredecessors.keySet().contains(p)).collect(Collectors.toCollection(ArrayList::new));
-        return this.openList;
+        return this.openList.stream().filter(p -> !pathPredecessors.keySet().contains(p)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public double getCost() {
