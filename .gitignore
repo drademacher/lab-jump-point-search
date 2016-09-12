@@ -31,6 +31,7 @@ release.properties
 *.iws
 out/
 .idea_modules/
+javaDocs/
 
 ##########################
 ## Eclipse

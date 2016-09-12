@@ -12,6 +12,9 @@ import core.util.Vector;
  *
  * @author Patrick Loka
  * @version 1.0
+ * @see ShortestPathCalculator
+ * @see ShortestPathPreprocessing
+ * @see ShortestPathPruning
  * @since 1.0
  */
 public class ShortestPathCalculatorStrategy {
@@ -26,6 +29,7 @@ public class ShortestPathCalculatorStrategy {
      * @param map grid map, which should be preprocessed.
      * @param movingRule allowed moving rules on the map.
      * @return time [ms] needed for preprocessing.
+     * @see ShortestPathCalculator
      * @since 1.0
      */
     public long preprocess(MapFacade map, MovingRule movingRule) {
@@ -44,6 +48,7 @@ public class ShortestPathCalculatorStrategy {
      * @param movingRule allowed movements on the map.
      * @return &lt; Shortest Path between start and goal | time [ms] needed to find shortest path &gt;
      * @throws NoPathFoundException Thrown, if goal is not reachable from start point or if start or goal are unpassable.
+     * @see ShortestPathCalculator
      * @since 1.0
      */
     public Tuple2<ShortestPathResult, Long> run(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) throws NoPathFoundException {
@@ -60,6 +65,7 @@ public class ShortestPathCalculatorStrategy {
      * <br>
      * Uses AStar strategy only.
      *
+     * @see AStarShortestPathCalculator
      * @since 1.0
      */
     public void setAStarShortestPath() {
@@ -71,6 +77,7 @@ public class ShortestPathCalculatorStrategy {
      * <br>
      * Uses JPS strategy only.
      *
+     * @see JPSShortestPathCalculator
      * @since 1.0
      */
     public void setJPSShortestPath() {
@@ -84,6 +91,8 @@ public class ShortestPathCalculatorStrategy {
      * <br>
      * Preprocessing required: Calculates all jump points by JPS strategy and save them in a look up table to use it to find the shortest path without exploring the map in runtime.
      *
+     * @see PreCalculatedShortestPathCalculator
+     * @see JPSPreCalculationShortestPathPreprocessing
      * @since 1.0
      */
     public void setJPSPlusShortestPath() {
@@ -98,6 +107,9 @@ public class ShortestPathCalculatorStrategy {
      * Preprocessing required: Calculates all jump points by JPS strategy and save them in a look up table to use it to find the shortest path without exploring the map in runtime.
      * Calculates bounding boxes by JPS strategy to estimate whether a specific point is on the shortest path between start and goal for pruning if not.
      *
+     * @see PreCalculatedShortestPathCalculator
+     * @see JPSPreCalculationShortestPathPreprocessing
+     * @see JPSBoundingBoxesShortestPathPruning
      * @since 1.0
      */
     public void setJPSPlusBBShortestPath() {
@@ -111,6 +123,8 @@ public class ShortestPathCalculatorStrategy {
      * <br>
      * Preprocessing required: Calculates bounding boxes by AStar strategy to estimate whether a specific point is on the shortest path between start and goal for pruning if not.
      *
+     * @see AStarShortestPathCalculator
+     * @see AStarBoundingBoxesShortestPathPruning
      * @since 1.0
      */
     public void setAStarBBShortestPath() {
@@ -124,6 +138,8 @@ public class ShortestPathCalculatorStrategy {
      * <br>
      * Preprocessing required: Calculates bounding boxes by JPS strategy to estimate whether a specific point is on the shortest path between start and goal for pruning if not.
      *
+     * @see JPSShortestPathCalculator
+     * @see JPSBoundingBoxesShortestPathPruning
      * @since 1.0
      */
     public void setJPSBBShortestPath() {

@@ -55,7 +55,7 @@ abstract class ShortestPathCalculator implements ExploreStrategy {
      * @param candidate candidate for pruning.
      * @param direction incoming direction of candidate.
      * @param goal goal of the shortest path search
-     * @return
+     * @return true, if the given candidate should be pruned, else false
      * @since 1.0
      */
     protected boolean prune(Vector candidate, Vector direction, Vector goal) {

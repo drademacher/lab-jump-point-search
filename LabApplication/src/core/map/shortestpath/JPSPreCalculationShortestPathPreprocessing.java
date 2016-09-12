@@ -12,7 +12,7 @@ import java.util.Collection;
  * JPS implementation of PreCalculationShortestPathPreprocessing
  *
  * @author Parick Loka
- * @vesion 1.0
+ * @version 1.0
  * @since 1.0
  */
 class JPSPreCalculationShortestPathPreprocessing extends PreCalculationShortestPathPreprocessing {

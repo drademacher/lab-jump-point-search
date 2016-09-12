@@ -100,6 +100,7 @@ public class MapController {
      * Generates a maze Map instance containing rooms and takes control over it.
      *
      * @param dimension dimension of the new Map instance
+     * @param roomNumber Todo: Danny
      * @return generated Map instance as MapFacade
      * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @see MapFactory
