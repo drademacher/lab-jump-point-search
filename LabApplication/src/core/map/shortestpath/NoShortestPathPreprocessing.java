@@ -4,7 +4,11 @@ import core.map.MapFacade;
 import core.map.movingrule.MovingRule;
 
 /**
- * Created by paloka on 07.09.16.
+ * Implementation of ShortestPathPreprocessing if no Preprocessing is wanted.
+ *
+ * @author Patrick Loka
+ * @version 1.0
+ * @since 1.0
  */
 class NoShortestPathPreprocessing implements ShortestPathPreprocessing {
     @Override

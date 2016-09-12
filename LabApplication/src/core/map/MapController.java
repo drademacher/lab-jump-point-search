@@ -6,7 +6,7 @@ import core.exception.NoPathFoundException;
 import core.map.heuristic.HeuristicStrategy;
 import core.map.movingrule.MovingRuleStrategy;
 import core.map.shortestpath.ShortestPathResult;
-import core.map.shortestpath.ShortestPathStrategy;
+import core.map.shortestpath.ShortestPathCalculatorStrategy;
 import core.util.Tuple2;
 import core.util.Vector;
 
@@ -25,11 +25,11 @@ import java.io.File;
  * <br>
  * MapController is able to find the shortest path on the holden Map instance considering a chosen moving rule and heuristic with a preselected algorithm. For some selected algorithms a preprocessing is required.
  *
- * @author Patrick Loka
+ * @author Patrick Loka, Danny Rademacher
  * @version 1.0
  * @see Map
  * @see MapFactory
- * @see ShortestPathStrategy
+ * @see ShortestPathCalculatorStrategy
  * @see MovingRuleStrategy
  * @see HeuristicStrategy
  * @since 1.0
@@ -41,7 +41,7 @@ public class MapController {
     private MapFactory mapFactory = new MapFactory();
     private MovingRuleStrategy movingRuleStrategy = new MovingRuleStrategy();
     private HeuristicStrategy heuristicStrategy = new HeuristicStrategy();
-    private ShortestPathStrategy shortestPathStrategy = new ShortestPathStrategy();
+    private ShortestPathCalculatorStrategy shortestPathCalculatorStrategy = new ShortestPathCalculatorStrategy();
 
 
     //Todo: Wenn Danny die MapFactory mit JavaDocs versehen hat, soll er hier auch noch mal drübergucken! Ich weiß den Unterschied zwischen den einzeldenen Map Typen nicht wirklich. Bitte Beschreibungen zu allen Generierungsmethoden anpassen.
@@ -296,98 +296,98 @@ public class MapController {
     }
 
 
-    /* ------- ShortestPath Operations ------- */
+    /* ------- ShortestPathCalculator Operations ------- */
 
     /**
-     * Sets new used function to find the shortest path between two paints on a grid with passable and non passable points: AStar.<br>
+     * Sets new used function to find the shortest path between two points on a grid with passable and non passable points: AStar.<br>
      * <br>
      * Uses AStar strategy only.
      *
-     * @see ShortestPathStrategy
+     * @see ShortestPathCalculatorStrategy
      * @since 1.0
      */
     public void setAStarShortestPath() {
-        this.shortestPathStrategy.setAStarShortestPath();
+        this.shortestPathCalculatorStrategy.setAStarShortestPath();
     }
 
     /**
-     * Sets new used function to find the shortest path between two paints on a grid with passable and non passable points: Jump Point Search.<br>
+     * Sets new used function to find the shortest path between two points on a grid with passable and non passable points: Jump Point Search.<br>
      * <br>
      * Uses JPS strategy only.
      *
-     * @see ShortestPathStrategy
+     * @see ShortestPathCalculatorStrategy
      * @since 1.0
      */
     public void setJPSShortestPath() {
-        this.shortestPathStrategy.setJPSShortestPath();
+        this.shortestPathCalculatorStrategy.setJPSShortestPath();
     }
 
     /**
-     * Sets new used function to find the shortest path between two paints on a grid with passable and non passable points: JPS+.<br>
+     * Sets new used function to find the shortest path between two points on a grid with passable and non passable points: JPS+.<br>
      * <br>
      * Uses JPS lookup strategy and JPS bounding boxes as pruning strategy.<br>
      * <br>
      * Preprocessing required: Calculates all jump points by JPS strategy and save them in a look up table to use it to find the shortest path without exploring the map in runtime.
      *
-     * @see ShortestPathStrategy
+     * @see ShortestPathCalculatorStrategy
      * @since 1.0
      */
     public void setJPSPlusShortestPath() {
-        this.shortestPathStrategy.setJPSPlusShortestPath();
+        this.shortestPathCalculatorStrategy.setJPSPlusShortestPath();
     }
 
     /**
-     * Sets new used function to find the shortest path between two paints on a grid with passable and non passable points: JPS+BB.<br>
+     * Sets new used function to find the shortest path between two points on a grid with passable and non passable points: JPS+BB.<br>
      * <br>
      * Uses JPS lookup table strategy and JPS bounding boxes as pruning strategy.<br>
      * <br>
      * Preprocessing required: Calculates all jump points by JPS strategy and save them in a look up table to use it to find the shortest path without exploring the map in runtime.
      * Calculates bounding boxes by JPS strategy to estimate whether a specific point is on the shortest path between start and goal for pruning if not.
      *
-     * @see ShortestPathStrategy
+     * @see ShortestPathCalculatorStrategy
      * @since 1.0
      */
     public void setJPSPlusBBShortestPath() {
-        this.shortestPathStrategy.setJPSPlusBBShortestPath();
+        this.shortestPathCalculatorStrategy.setJPSPlusBBShortestPath();
     }
 
     /**
-     * Sets new used function to find the shortest path between two paints on a grid with passable and non passable points: AStarBB.<br>
+     * Sets new used function to find the shortest path between two points on a grid with passable and non passable points: AStarBB.<br>
      * <br>
      * Uses AStar strategy and AStar bounding boxes as pruning strategy.<br>
      * <br>
      * Preprocessing required: Calculates bounding boxes by AStar strategy to estimate whether a specific point is on the shortest path between start and goal for pruning if not.
      *
-     * @see ShortestPathStrategy
+     * @see ShortestPathCalculatorStrategy
      * @since 1.0
      */
     public void setAStarBBShortestPath() {
-        this.shortestPathStrategy.setAStarBBShortestPath();
+        this.shortestPathCalculatorStrategy.setAStarBBShortestPath();
     }
 
     /**
-     * Sets new used function to find the shortest path between two paints on a grid with passable and non passable points: JPSBB.<br>
+     * Sets new used function to find the shortest path between two points on a grid with passable and non passable points: JPSBB.<br>
      * <br>
      * Uses JPS strategy and JPS bounding boxes as pruning strategy.<br>
      * <br>
      * Preprocessing required: Calculates bounding boxes by JPS strategy to estimate whether a specific point is on the shortest path between start and goal for pruning if not.
      *
-     * @see ShortestPathStrategy
+     * @see ShortestPathCalculatorStrategy
      * @since 1.0
      */
     public void setJPSBBShortestPath() {
-        this.shortestPathStrategy.setJPSBBShortestPath();
+        this.shortestPathCalculatorStrategy.setJPSBBShortestPath();
     }
 
     /**
      * Does needed preprocessing considering the selected shortest path strategy and the selected moving rule.
      *
-     * @return time needed for preprocessing in milliseconds
-     * @see ShortestPathStrategy
+     * @return time [ms] needed for preprocessing.
+     * @see ShortestPathCalculatorStrategy
      * @since 1.0
      */
     public long preprocessShortestPath() {
-        return this.shortestPathStrategy.preprocess(this.map, this.movingRuleStrategy.getMovingRule());
+        return this.shortestPathCalculatorStrategy.preprocess(this.map, this.movingRuleStrategy.getMovingRule());
     }
 
     /**
@@ -395,13 +395,13 @@ public class MapController {
      *
      * @param start point on map to start
      * @param goal  point on map to reach
-     * @return &lt; Shortest Path between start and goal | time needed to find shortest path in milliseconds &gt;
-     * @throws NoPathFoundException Thrown, if goal is not reachable from start point or if start or goal are nonpassable.
-     * @see ShortestPathStrategy
+     * @return &lt; Shortest Path between start and goal | time [ms] needed to find shortest path &gt;
+     * @throws NoPathFoundException Thrown, if goal is not reachable from start point or if start or goal are unpassable.
+     * @see ShortestPathCalculatorStrategy
      * @see ShortestPathResult
      * @since 1.0
      */
     public Tuple2<ShortestPathResult, Long> runShortstPath(Vector start, Vector goal) throws NoPathFoundException {
-        return this.shortestPathStrategy.run(this.map, start, goal, this.heuristicStrategy.getHeuristic(), this.movingRuleStrategy.getMovingRule());
+        return this.shortestPathCalculatorStrategy.run(this.map, start, goal, this.heuristicStrategy.getHeuristic(), this.movingRuleStrategy.getMovingRule());
     }
 }

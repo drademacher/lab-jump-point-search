@@ -12,32 +12,71 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Created by paloka on 06.06.16.
+ * ShortestPathCalculator provides a way to find a shortest path on a grid map considering a preprocessing and a pruning strategy.
+ *
+ * @author Patrick Loka
+ * @version 1.0
+ * @since 1.0
  */
-abstract class ShortestPath implements ExploreStrategy {
+abstract class ShortestPathCalculator implements ExploreStrategy {
 
     private ShortestPathPreprocessing preprocessing = null;
     private ShortestPathPruning pruning = null;
 
-    protected ShortestPath(ShortestPathPreprocessing preprocessing, ShortestPathPruning pruning) {
+    /**
+     * Init a ShortestPathCalculator object with a specific preprocessing and pruning strategy.
+     *
+     * @param preprocessing ShortestPathPreprocessing Impl.
+     * @param pruning ShortestPathPruning Impl.
+     * @since 1.0
+     */
+    protected ShortestPathCalculator(ShortestPathPreprocessing preprocessing, ShortestPathPruning pruning) {
         this.preprocessing = preprocessing;
         this.pruning = pruning;
     }
 
     /* ------- Preprocessing ------- */
 
+    /**
+     * Does all the preprocessing the preprocessing and pruning attributes need.
+     *
+     * @param map given grid map for on which the shortest path seach should run.
+     * @param movingRule allowed movements on the map.
+     * @since 1.0
+     */
     protected void doPreprocessing(MapFacade map, MovingRule movingRule) {
         this.preprocessing.doPreprocessing(map, movingRule);
         this.pruning.doPreprocessing(map, movingRule);
     }
 
+    /**
+     * Decides whether a candidate is pruned or not considering the pruning attribute.
+     *
+     * @param candidate candidate for pruning.
+     * @param direction incoming direction of candidate.
+     * @param goal goal of the shortest path search
+     * @return
+     * @since 1.0
+     */
     protected boolean prune(Vector candidate, Vector direction, Vector goal) {
         return pruning.prune(candidate, direction, goal);
     }
 
 
-    /* ------- ShortestPath ------- */
+    /* ------- ShortestPathCalculator ------- */
 
+    /**
+     * Finds the shortest path between two points given points on a given map.
+     *
+     * @param map grid map.
+     * @param start startpoint on the map.
+     * @param goal goalpoint on the map.
+     * @param heuristic heuristic to estimate the distance between two points. This influences the order in which points are processed by exploring the map.
+     * @param movingRule allowed movements on the map.
+     * @return The Shortest Path, the processed points and the explored but not processed points als well as the costs of the path.
+     * @throws NoPathFoundException Thrown if there is no legal way between start and goal. This is also the case, iff one of the points is not passable.
+     * @since 1.0
+     */
     protected ShortestPathResult findShortestPath(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) throws NoPathFoundException {
         //Todo: System.out.println("start: "+start+"\t goal: "+goal);
         if (!map.isPassable(start) || !map.isPassable(goal)) throw new NoPathFoundException(start, goal);

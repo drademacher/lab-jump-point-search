@@ -5,7 +5,11 @@ import core.map.movingrule.MovingRule;
 import core.util.Vector;
 
 /**
- * Created by paloka on 07.09.16.
+ * Implementation of ShortestPathPruning if no pruning is wanted.
+ *
+ * @author Patrick Loka
+ * @version 1.0
+ * @since 1.0
  */
 class NoShortestPathPruning implements ShortestPathPruning {
     @Override

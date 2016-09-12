@@ -9,15 +9,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by paloka on 07.09.16.
+ * JPS implementation of ShortestPathCalculator
+ *
+ * @author Patrick Loka
+ * @version 1.0
+ * @since 1.0
  */
-class JPSShortestPath extends ShortestPath {
+class JPSShortestPathCalculator extends ShortestPathCalculator {
 
-    private ShortestPathStrategy shortestPathStrategy;
-
-    protected JPSShortestPath(ShortestPathStrategy shortestPathStrategy, ShortestPathPruning pruning) {
+    protected JPSShortestPathCalculator(ShortestPathPruning pruning) {
         super(new NoShortestPathPreprocessing(), pruning);
-        this.shortestPathStrategy = shortestPathStrategy;
     }
 
     @Override

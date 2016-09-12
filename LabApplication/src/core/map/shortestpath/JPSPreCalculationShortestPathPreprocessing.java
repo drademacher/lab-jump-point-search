@@ -9,14 +9,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by paloka on 07.09.16.
+ * JPS implementation of PreCalculationShortestPathPreprocessing
+ *
+ * @author Parick Loka
+ * @vesion 1.0
+ * @since 1.0
  */
 class JPSPreCalculationShortestPathPreprocessing extends PreCalculationShortestPathPreprocessing {
-    private ShortestPathStrategy shortestPathStrategy;
-
-    public JPSPreCalculationShortestPathPreprocessing(ShortestPathStrategy shortestPathStrategy) {
-        this.shortestPathStrategy = shortestPathStrategy;
-    }
 
     @Override
     public Collection<Vector> getDirectionsStrategy(MapFacade map, Vector currentPoint, Vector predecessor, MovingRule movingRule) {

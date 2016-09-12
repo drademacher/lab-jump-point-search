@@ -9,15 +9,16 @@ import core.util.Vector;
 import java.util.Collection;
 
 /**
- * Created by paloka on 07.09.16.
+ * AStar implementation of ShortestPathCalculator
+ *
+ * @author Patrick Loka
+ * @version 1.0
+ * @since 1.0
  */
-class AStarShortestPath extends ShortestPath {
+class AStarShortestPathCalculator extends ShortestPathCalculator {
 
-    private ShortestPathStrategy shortestPathStrategy;
-
-    protected AStarShortestPath(ShortestPathStrategy shortestPathStrategy, ShortestPathPruning pruning) {
+    protected AStarShortestPathCalculator(ShortestPathPruning pruning) {
         super(new NoShortestPathPreprocessing(), pruning);
-        this.shortestPathStrategy = shortestPathStrategy;
     }
 
     @Override

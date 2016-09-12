@@ -20,7 +20,7 @@ interface ExploreStrategy {
      * Defines one step in a grid map exploring strategy returning the next relevant reached point by running in a given direction.<br>
      * <br>
      * A valid implementation returns the next point to process by running from a given point in a given direction, making sure,
-     * that intermediate points are unimportant for reaching a given goal considering the implemented strategy.
+     * that intermediate points are unimportant for reaching a given goal considering the implemented strategy.<br>
      *
      * @param map grid map on which the shortest path search is running.
      * @param currentPoint currently processed point on the map.
@@ -36,7 +36,7 @@ interface ExploreStrategy {
     /**
      * Returns the moving directions to process for the given currentPoint.<br>
      * <br>
-     * A valid implementation returns all outgoing directions where the current point is possibly on the shortest path to the goal point.
+     * A valid implementation returns all outgoing directions where the current point is possibly on the shortest path to the goal point.<br>
      *
      * @param map grid map on which the shortest path search is running.
      * @param currentPoint currently processed point.

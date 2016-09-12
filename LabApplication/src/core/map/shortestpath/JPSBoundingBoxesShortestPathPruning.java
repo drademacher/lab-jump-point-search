@@ -9,7 +9,11 @@ import java.util.Collection;
 import java.util.HashMap;
 
 /**
- * Created by paloka on 07.09.16.
+ * JPS implementation of BoundingBoxesShortestPathPruning
+ *
+ * @author Patrick Loka
+ * @version 1.0
+ * @since 1.0
  */
 class JPSBoundingBoxesShortestPathPruning extends BoundingBoxesShortestPathPruning {
     @Override

@@ -9,13 +9,17 @@ import core.util.Vector;
 import java.util.Collection;
 
 /**
- * Created by paloka on 07.09.16.
+ * Implementation of ShortestPathCalculator based on precomputed data.
+ *
+ * @author Parick Loka
+ * @version 1.0
+ * @since 1.0
  */
-class PreCalculatedShortestPath extends ShortestPath {
+class PreCalculatedShortestPathCalculator extends ShortestPathCalculator {
 
     PreCalculationShortestPathPreprocessing preprocessing;
 
-    PreCalculatedShortestPath(PreCalculationShortestPathPreprocessing preprocessing, ShortestPathPruning pruning) {
+    PreCalculatedShortestPathCalculator(PreCalculationShortestPathPreprocessing preprocessing, ShortestPathPruning pruning) {
         super(preprocessing, pruning);
         this.preprocessing = preprocessing;
     }

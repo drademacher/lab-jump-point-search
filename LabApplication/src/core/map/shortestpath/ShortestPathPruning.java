@@ -14,7 +14,7 @@ interface ShortestPathPruning extends ShortestPathPreprocessing {
 
     /**
      * Decides whether it is possible for a certain point reached from a certain direction can be part of the sortest path
-     * to a given goal. If yes, keep the point and return false, if no, prune the point by returning true.
+     * to a given goal. If yes, keep the point and return false, if no, prune the point by returning true.<br>
      *
      * @param candidate Point on the map reached by a shortest path search.
      * @param direction Direction in which candidate is reached.

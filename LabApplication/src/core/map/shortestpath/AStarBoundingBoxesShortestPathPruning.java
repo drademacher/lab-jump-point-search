@@ -8,7 +8,11 @@ import core.util.Vector;
 import java.util.HashMap;
 
 /**
- * Created by paloka on 07.09.16.
+ * AStar implementation of BoundingBoxesShortestPathPruning
+ *
+ * @author Patrick Loka
+ * @version 1.0
+ * @since 1.0
  */
 class AStarBoundingBoxesShortestPathPruning extends BoundingBoxesShortestPathPruning {
     @Override
