@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -29,14 +30,13 @@ public class Main {
     public static void main(String[] args) throws MapInitialisationException, NoPathFoundException {
         // System.out.println("Welcome to the terminal application of LabApplication:");
 
-        init("wc3maps512");
+        init("sc1");
 
         MapController controller = new MapController();
         controller.setUncutNeighborMovingRule();
         controller.setEuclideanHeuristic();
-        controller.setAStarShortestPath();
 
-        controller.loadMap(maps.get("bootybay"));
+        controller.loadMap(maps.get("Aurora"));
         scenarioExecuter(controller);
     }
 
@@ -45,7 +45,9 @@ public class Main {
             Files.walk(Paths.get("maps/" + dir))
                     .filter(filePath -> Files.isRegularFile(filePath))
                     .filter(filePath -> filePath.toString().substring(filePath.toString().lastIndexOf(".")).equals(".map"))
-                    .forEach(filePath -> maps.put(stripFileName(filePath.toString()), filePath.toFile()));
+                    .forEach(filePath -> {
+                        maps.put(stripFileName(filePath.toString()), filePath.toFile());
+                    });
 
             Files.walk(Paths.get("scenarios/" + dir))
                     .filter(filePath -> Files.isRegularFile(filePath))
@@ -57,10 +59,11 @@ public class Main {
     }
 
     static void scenarioExecuter(MapController controller) throws NoPathFoundException {
+        int counterSucc = 0, counterTotal = 0;
         Vector start;
         Vector goal;
 
-        String scen = "bootybay";
+        String scen = "Aurora";
 
         BufferedReader br = null;
         String currentLine = "";
@@ -71,6 +74,11 @@ public class Main {
             e.printStackTrace();
         }
 
+        controller.setJPSPlusShortestPath();
+        controller.preprocessShortestPath();
+
+        System.out.println("Preprossesing finished");
+
 
         for (int y = 0; ; y++) {
             try {
@@ -79,12 +87,12 @@ public class Main {
 
             }
 
-            if (br == null) break;
-            String s[] = currentLine.split(" ");
+            if (currentLine == null) break;
+            // System.out.print(currentLine);
+            String s[] = currentLine.split("\t");
             if (s.length != 9) continue;
 
 
-            System.out.println();
 
 
             // execute algorithm and benchmark it
@@ -93,22 +101,53 @@ public class Main {
             double cost = Double.parseDouble(s[8]);
 
 
-            System.out.print(start + " " + goal + " - ");
-            long preprocessingTime = controller.preprocessShortestPath();
+            Tuple2<ShortestPathResult, Long> result1, result2;
+            double deviation1 = 0, deviation2 = 0;
+            boolean nopath1, nopath2;
+
+
+            // long preprocessingTime = controller.preprocessShortestPath();
+//            try {
+//                controller.setAStarShortestPath();
+//                result1 = controller.runShortstPath(start, goal);
+//                deviation1 = result1.getArg1().getCost() - cost;
+//                nopath1 = false;
+//
+//
+//            } catch (NoPathFoundException e) {
+//                nopath1 = true;
+//            }
+
+
+
+
             try {
-                Tuple2<ShortestPathResult, Long> result = controller.runShortstPath(start, goal);
-                double deviation = result.getArg1().getCost() - cost;
-                System.out.print(String.format("deviation: %1$,.2f", deviation));
+
+                result2 = controller.runShortstPath(start, goal);
+                deviation2 = result2.getArg1().getCost() - cost;
+                nopath2 = false;
+
+
             } catch (NoPathFoundException e) {
-                System.out.print("no path found");
+                nopath2 = true;
             }
 
-
+            if ( (Math.abs(deviation2) > 0.01) || nopath2 ) {
+                System.out.print(start + " " + goal + " :\t");
+                // System.out.print(nopath1 ? "no path #\t" : String.format("cost: %1$,.2f #\t", deviation1));
+                System.out.print(nopath2 ? "no path #\t" : String.format("cost: %1$,.2f #\t", deviation2));
+                System.out.println();
+            } else {
+                counterSucc += 1;
+            }
+            counterTotal += 1;
         }
+
+        System.out.println("counterSucc of sucessfull scenarios: " + counterSucc + " / " + counterTotal);
     }
 
     static String stripFileName(String in) {
-        String[] s = in.split("\\\\");
+        String[] s = in.split("/");
         String name = s[s.length - 1];
         name = name.substring(0, name.indexOf("."));
         return name;

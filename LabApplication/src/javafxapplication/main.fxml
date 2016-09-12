@@ -85,8 +85,8 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="View">
                     <items>
-                        <CheckMenuItem fx:id="viewOpenList" mnemonicParsing="false" selected="true" text="Closed List"/>
-                        <CheckMenuItem fx:id="viewClosedList" mnemonicParsing="false" selected="true" text="Open List"/>
+                        <CheckMenuItem fx:id="viewClosedList" mnemonicParsing="false" selected="true" text="Closed List"/>
+                        <CheckMenuItem fx:id="viewOpenList" mnemonicParsing="false" selected="true" text="Open List"/>
                         <CheckMenuItem fx:id="viewPath" mnemonicParsing="false" selected="true" text="Shortest Path"/>
                         <CheckMenuItem fx:id="viewDetails" mnemonicParsing="false" selected="true"
                                        text="Intermediate Points"/>

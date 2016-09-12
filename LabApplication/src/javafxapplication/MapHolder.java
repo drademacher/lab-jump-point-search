@@ -142,9 +142,9 @@ public class MapHolder {
 
         if (shortestPathResult != null) {
             for (Vector point : this.shortestPathResult.getClosedList())
-                renderField(closedListCanvas, point, JUMP_POINT);
+                renderField(closedListCanvas, point, CLOSED_LIST);
             for (Vector point : this.shortestPathResult.getOpenList())
-                renderField(openListCanvas, point, VISITED_POINT);
+                renderField(openListCanvas, point, OPEN_LIST);
             for (Tuple2<Vector, Boolean> pathPoint : this.shortestPathResult.getShortestPath())
                 renderField(pathPoint.getArg2() ? pathCanvas : detailsCanvas, pathPoint.getArg1(), PATH_POINT);
         } else {

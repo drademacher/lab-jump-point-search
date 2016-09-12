@@ -14,8 +14,8 @@ enum FieldVisualisation {
     GRID_POINT("#FFFFFF"),
     OBSTACLE_POINT("#A1A1A1"),
 
-    VISITED_POINT("#D9F0FF"),
-    JUMP_POINT("#2298E6"),
+    CLOSED_LIST("#D9F0FF"),
+    OPEN_LIST("#2298E6"),
 
     GOAL_POINT("#730B19"),
     START_POINT("#730B19"),

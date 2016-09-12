@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 public class ShortestPathResult {
 
     private Vector start, goal;
-    // TODO: die openlist scheint eigentlich die Liste der processed points zu speichern - WTF? (union von closedList und openList)
     private Collection<Vector> openList;
     private Map<Vector, Vector> pathPredecessors;
     private double cost;
@@ -51,11 +50,12 @@ public class ShortestPathResult {
     }
 
     public Collection<Vector> getClosedList() {
-        return this.openList.stream().filter(p -> !pathPredecessors.keySet().contains(p)).collect(Collectors.toCollection(ArrayList::new));
+        return pathPredecessors.keySet();
     }
 
     public Collection<Vector> getOpenList() {
-        return pathPredecessors.keySet();
+        // return this.openList.stream().filter(p -> !pathPredecessors.keySet().contains(p)).collect(Collectors.toCollection(ArrayList::new));
+        return this.openList;
     }
 
     public double getCost() {

@@ -331,7 +331,10 @@ public class ApplicationController implements Initializable {
     private void initRunEnterStartPointMenuItem() {
         runEnterStartMenuItem.setOnAction(event -> {
             Vector coordinate = dialogExecuter.executePositionDialog("Enter Start Point");
-            if (!this.mapHolder.isPassable(coordinate)) return;
+            if (!this.mapHolder.isPassable(coordinate)) {
+                dialogExecuter.executeAlertDialog("No valid point.", "This chosen point is invalid.");
+                return;
+            }
             this.mapHolder.setStartPoint(coordinate);
         });
     }
@@ -340,7 +343,10 @@ public class ApplicationController implements Initializable {
         runEnterGoalMenuItem.setOnAction(event -> {
             // TODO: abbrechen (X drücken) sollte keine Exception werfen
             Vector coordinate = dialogExecuter.executePositionDialog("Enter Goal Point");
-            if (!this.mapHolder.isPassable(coordinate)) return;
+            if (!this.mapHolder.isPassable(coordinate)) {
+                dialogExecuter.executeAlertDialog("No valid point.", "This chosen point is invalid.");
+                return;
+            }
             this.mapHolder.setGoalPoint(coordinate);
         });
     }
