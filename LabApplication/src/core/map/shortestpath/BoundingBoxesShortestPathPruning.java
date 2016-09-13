@@ -77,6 +77,7 @@ abstract class BoundingBoxesShortestPathPruning implements ShortestPathPruning {
                 Vector currentPoint = new Vector(x, y);
                 if (map.isPassable(currentPoint)) {
                     double[][] reachedPoints = new double[map.getXDim()][map.getYDim()];
+                    reachedPoints[x][y] = Double.NEGATIVE_INFINITY;
                     HashMap<Vector, BoundingBox> outgoingDirectionBoundingBoxes = new HashMap<>();
                     PriorityQueue<Tuple2<Tuple3<Vector, Vector, Double>, BoundingBox>> priorityQueue = new PriorityQueue<>((p, q) -> {
                         if (p.getArg1().getArg3() > q.getArg1().getArg3()) return 1;
@@ -96,8 +97,9 @@ abstract class BoundingBoxesShortestPathPruning implements ShortestPathPruning {
                         final Vector nextDirection  = nextEntry.getArg1().getArg2();
                         final double nextCost       = nextEntry.getArg1().getArg3();
                         final BoundingBox nextBoundingBox = nextEntry.getArg2();
-                        if (-nextCost>=reachedPoints[nextVector.getX()][nextVector.getY()]) {
-                            reachedPoints[nextVector.getX()][nextVector.getY()] = -nextCost;
+                        final double memorisedCost  = reachedPoints[nextVector.getX()][nextVector.getY()];
+                        if (memorisedCost == 0.0 || nextCost<=memorisedCost) {
+                            reachedPoints[nextVector.getX()][nextVector.getY()] = nextCost;
                             nextBoundingBox.add(nextVector);
                             priorityQueue.addAll(explore(map, nextVector, nextDirection, nextCost, nextBoundingBox, movingRule));
                         }
