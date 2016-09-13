@@ -44,7 +44,6 @@ public class MapController {
     private ShortestPathCalculatorStrategy shortestPathCalculatorStrategy = new ShortestPathCalculatorStrategy();
 
 
-    //Todo: Wenn Danny die MapFactory mit JavaDocs versehen hat, soll er hier auch noch mal drübergucken! Ich weiß den Unterschied zwischen den einzeldenen Map Typen nicht wirklich. Bitte Beschreibungen zu allen Generierungsmethoden anpassen.
     /* ------- MapFactory Operations ------- */
 
     /**
@@ -67,7 +66,7 @@ public class MapController {
      * Generates a Map instance with uniform distributed obstacles and takes control over it.
      *
      * @param dimension dimension of the new Map instance
-     * @param pPassable amount of passable fields on the new Map instance. Valid values betrween 0.0 and 1.0
+     * @param pPassable amount of passable fields on the new Map instance. Valid values between 0.0 and 1.0
      * @return generated Map instance as MapFacade
      * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @see MapFactory
@@ -100,7 +99,7 @@ public class MapController {
      * Generates a maze Map instance containing rooms and takes control over it.
      *
      * @param dimension dimension of the new Map instance
-     * @param roomNumber Todo: Danny
+     * @param roomNumber The number of rooms to be added.
      * @return generated Map instance as MapFacade
      * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @see MapFactory
@@ -182,7 +181,7 @@ public class MapController {
 
     /**
      * Switches the passable state on the controlled Map instance of a given point.
-     * After running this method, a given passable field on the controlled Map instance becomes unpassable and an given unpassable field becomes passable.
+     * After running this method, a given passable field on the controlled Map instance becomes impassable and an given impassable field becomes passable.
      *
      * @param coordinate Point where passable state should be switched.
      * @throws InvalidCoordinateException Thrown if coordinate is no Point on the controlled Map instance.
@@ -397,7 +396,7 @@ public class MapController {
      * @param start point on map to start
      * @param goal  point on map to reach
      * @return &lt; Shortest Path between start and goal | time [ms] needed to find shortest path &gt;
-     * @throws NoPathFoundException Thrown, if goal is not reachable from start point or if start or goal are unpassable.
+     * @throws NoPathFoundException Thrown, if goal is not reachable from start point or if start or goal are impassable.
      * @see ShortestPathCalculatorStrategy
      * @see ShortestPathResult
      * @since 1.0

@@ -27,7 +27,7 @@ class MapFactory {
      *
      * @param dimension The vector which defines the size of the map to be created.
      * @return A map with no obstacles at all.
-     * @throws MapInitialisationException if the dimension entries are not &gt; 0.
+     * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @since 1.0
      */
     Map createEmptyMap(Vector dimension) throws MapInitialisationException {
@@ -40,7 +40,7 @@ class MapFactory {
      * @param dimension The vector which defines the size of the map to be created.
      * @param pPassable The probability that a single cell field is passable.
      * @return A map with obstacles by random choice.
-     * @throws MapInitialisationException if the dimension entries are not &gt; 0.
+     * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @since 1.0
      */
     Map createRandomMap(Vector dimension, double pPassable) throws MapInitialisationException {
@@ -65,7 +65,7 @@ class MapFactory {
      *
      * @param dimension The vector which defines the size of the map to be created.
      * @return A map of a perfect maze.
-     * @throws MapInitialisationException if the dimension entries are not &gt; 0.
+     * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @since 1.0
      */
     Map createMazeMap(Vector dimension) throws MapInitialisationException {
@@ -84,7 +84,7 @@ class MapFactory {
      * @param dimension  The vector which defines the size of the map to be created.
      * @param roomNumber The number of rooms to be added.
      * @return A map
-     * @throws MapInitialisationException if the dimension entries are not &gt; 0.
+     * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @since 1.0
      */
     Map createMazeRoomMap(Vector dimension, int roomNumber) throws MapInitialisationException {
@@ -104,7 +104,7 @@ class MapFactory {
      *
      * @param dimension The vector which defines the size of the map to be created.
      * @return A room with a loot of rooms where each rooms is connected to another room in exactly one way.
-     * @throws MapInitialisationException if the dimension entries are not &gt; 0.
+     * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @since 1.0
      */
     Map createSingleRoomMap(Vector dimension) throws MapInitialisationException {
@@ -127,7 +127,7 @@ class MapFactory {
      *
      * @param dimension The vector which defines the size of the map to be created.
      * @return A room with a loot of rooms where each rooms is connected to at least two other rooms.
-     * @throws MapInitialisationException if the dimension entries are not &gt; 0.
+     * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @since 1.0
      */
     Map createDoubleRoomMap(Vector dimension) throws MapInitialisationException {
@@ -155,7 +155,7 @@ class MapFactory {
      *
      * @param dimension The vector which defines the size of the map to be created.
      * @return A map with a lot of rooms where most rooms have two connections.
-     * @throws MapInitialisationException if the dimension entries are not &gt; 0.
+     * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @since 1.0
      */
     Map createLoopRoomMap(Vector dimension) throws MapInitialisationException {
@@ -185,7 +185,7 @@ class MapFactory {
      *
      * @param file Map file with special encoding.
      * @return A map which is loaded from a file.
-     * @throws MapInitialisationException if the dimension entries are not &gt; 0.
+     * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @since 1.0
      */
     Map loadMap(File file) throws MapInitialisationException {
@@ -243,7 +243,7 @@ class MapFactory {
      * @param map       An internal map.
      * @param dimension The vector which defines the size of the map to be created.
      * @return A map from the internal structure.
-     * @throws MapInitialisationException if the dimension entries are not &gt; 0.
+     * @throws MapInitialisationException Thrown, if dimension input contains a non positive value.
      * @since 1.0
      */
     private Map close(CellType[][] map, Vector dimension) throws MapInitialisationException {
