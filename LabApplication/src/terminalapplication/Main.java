@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
@@ -47,14 +48,14 @@ public class Main {
             case "jpsbb":
                 controller.setJPSBBShortestPath();
                 break;
-            case "jps+":
+            case "jpsplus":
                 controller.setJPSPlusShortestPath();
                 break;
-            case "jps+bb":
+            case "jpsplusbb":
                 controller.setJPSPlusBBShortestPath();
                 break;
             default:
-                throw new IllegalArgumentException("second argument is no known algorithm of the following: astar, astarbb, jps, jpsbb, jps+, jps+bb");
+                throw new IllegalArgumentException("second argument is no known algorithm of the following: astar, astarbb, jps, jpsbb, jpsplus, jpsplusbb");
         }
 
 
@@ -64,12 +65,12 @@ public class Main {
 
     private static void init(String dir) {
         try {
-            Files.walk(Paths.get("maps/" + dir))
+            Files.walk(Paths.get("maps" + File.separator + dir))
                     .filter(filePath -> Files.isRegularFile(filePath))
                     .filter(filePath -> filePath.toString().substring(filePath.toString().lastIndexOf(".")).equals(".map"))
                     .forEach(filePath -> maps.put(stripFileName(filePath.toString()), filePath.toFile()));
 
-            Files.walk(Paths.get("scenarios/" + dir))
+            Files.walk(Paths.get("scenarios" + File.separator + dir))
                     .filter(filePath -> Files.isRegularFile(filePath))
                     .filter(filePath -> filePath.toString().substring(filePath.toString().lastIndexOf(".")).equals(".scen"))
                     .forEach(filePath -> scenarios.put(stripFileName(filePath.toString()), filePath.toFile()));
@@ -88,7 +89,7 @@ public class Main {
             long timePreprossessing = controller.preprocessShortestPath();
 
 
-            PrintWriter writer = new PrintWriter("benchmarking/" + args[0] + "/" + scenario + "_" + args[1] + ".txt", "UTF-8");
+            PrintWriter writer = new PrintWriter("benchmarking" + File.separator + args[0] + File.separator + scenario + "_" + args[1] + ".txt", "UTF-8");
 
             writer.println("type: " + args[0]);
             writer.println("name: " + scenario);
@@ -119,12 +120,10 @@ public class Main {
 
                     Tuple2<ShortestPathResult, Long> result;
                     double deviation = 0;
-                    boolean noPath;
 
                     try {
                         result = controller.runShortstPath(startScenario, goalScenario);
                         deviation = result.getArg1().getCost() - costScenario;
-                        noPath = false;
 
                         writer.println(startScenario.getX() + "\t"
                                 + startScenario.getY() + "\t"
@@ -135,18 +134,20 @@ public class Main {
                                 + String.format("%1$,.5f", result.getArg1().getCost()) + "\t"
                                 + (result.getArg1().getOpenList().size() + result.getArg1().getClosedList().size()) + "\t"
                                 + result.getArg2() );
-                    } catch (NoPathFoundException e) {
-                        noPath = true;
 
+                        // console error logging
+                        if ((Math.abs(deviation) > 0.01)) {
+                            System.out.print(startScenario + " " + goalScenario + " : \t");
+                            System.out.println(String.format("div: %1$,.2f", deviation));
+                        }
+                    } catch (NoPathFoundException e) {
                         writer.println(startScenario + "\t"
                                 + goalScenario + "\t"
                                 + "no path found" );
-                    }
 
-                    if ((Math.abs(deviation) > 0.01) || noPath) {
-                        System.out.print(startScenario + " " + goalScenario + " :\t");
-                        System.out.print(noPath ? "no path #\t" : String.format("div: %1$,.2f", deviation));
-                        System.out.println();
+                        // console error logging
+                        System.out.print(startScenario + " " + goalScenario + " : \t");
+                        System.out.println("no path #\t");
                     }
 
 
@@ -161,7 +162,7 @@ public class Main {
     }
 
     static String stripFileName(String in) {
-        String[] s = in.split("/");
+        String[] s = in.split(Pattern.quote(File.separator));
         String name = s[s.length - 1];
         name = name.substring(0, name.indexOf("."));
         return name;
