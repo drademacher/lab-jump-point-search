@@ -65,12 +65,12 @@ public class Main {
 
     private static void init(String dir) {
         try {
-            Files.walk(Paths.get("maps" + File.separator + dir))
+            Files.walk(Paths.get("benchmarking/maps" + File.separator + dir))
                     .filter(filePath -> Files.isRegularFile(filePath))
                     .filter(filePath -> filePath.toString().substring(filePath.toString().lastIndexOf(".")).equals(".map"))
                     .forEach(filePath -> maps.put(stripFileName(filePath.toString()), filePath.toFile()));
 
-            Files.walk(Paths.get("scenarios" + File.separator + dir))
+            Files.walk(Paths.get("benchmarking/scenarios" + File.separator + dir))
                     .filter(filePath -> Files.isRegularFile(filePath))
                     .filter(filePath -> filePath.toString().substring(filePath.toString().lastIndexOf(".")).equals(".scen"))
                     .forEach(filePath -> scenarios.put(stripFileName(filePath.toString()), filePath.toFile()));
@@ -89,7 +89,7 @@ public class Main {
             long timePreprossessing = controller.preprocessShortestPath();
 
 
-            PrintWriter writer = new PrintWriter("benchmarking" + File.separator + args[0] + File.separator + scenario + "_" + args[1] + ".txt", "UTF-8");
+            PrintWriter writer = new PrintWriter("benchmarking/results" + File.separator + args[0] + File.separator + scenario + "_" + args[1] + ".txt", "UTF-8");
 
             writer.println("type: " + args[0]);
             writer.println("name: " + scenario);
