@@ -141,13 +141,30 @@ public class Main {
                             System.out.println(String.format("div: %1$,.2f", deviation));
                         }
                     } catch (NoPathFoundException e) {
-                        writer.println(startScenario + "\t"
-                                + goalScenario + "\t"
-                                + "no path found" );
-
-                        // console error logging
-                        System.out.print(startScenario + " " + goalScenario + " : \t");
-                        System.out.println("no path #\t");
+                        if(costScenario==0) {
+                            writer.println(startScenario.getX() + "\t"
+                                    + startScenario.getY() + "\t"
+                                    + goalScenario.getX() + "\t"
+                                    + goalScenario.getY() + "\t"
+                                    + "TRUE" + "\t"
+                                    + "No" + "\t"
+                                    + "Path" + "\t"
+                                    + "Exists" + "\t"
+                                    + e.getTime());
+                        }else {
+                            writer.println(startScenario.getX() + "\t"
+                                    + startScenario.getY() + "\t"
+                                    + goalScenario.getX() + "\t"
+                                    + goalScenario.getY() + "\t"
+                                    + "FAIL" + "\t"
+                                    + "No" + "\t"
+                                    + "Path" + "\t"
+                                    + "Exists" + "\t"
+                                    + e.getTime());
+                            // console error logging
+                            System.out.print(startScenario + " " + goalScenario + " : \t");
+                            System.out.println("no path #\t");
+                        }
                     }
 
 

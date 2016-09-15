@@ -53,7 +53,13 @@ public class ShortestPathCalculatorStrategy {
      */
     public Tuple2<ShortestPathResult, Long> run(MapFacade map, Vector start, Vector goal, Heuristic heuristic, MovingRule movingRule) throws NoPathFoundException {
         long starttime = -System.currentTimeMillis();
-        ShortestPathResult result = this.shortestPathCalculator.findShortestPath(map, start, goal, heuristic, movingRule);
+        ShortestPathResult result = null;
+        try {
+            result = this.shortestPathCalculator.findShortestPath(map, start, goal, heuristic, movingRule);
+        } catch (NoPathFoundException e) {
+            e.addTime(starttime+System.currentTimeMillis());
+            throw e;
+        }
         return new Tuple2<>(result, starttime + System.currentTimeMillis());
     }
 

@@ -11,6 +11,8 @@ import core.util.Vector;
  */
 public class NoPathFoundException extends Exception {
 
+    private long time;
+
     /**
      * Init MapInitialisationException considering the given start and gold point of the required path causing the Exception.
      *
@@ -20,5 +22,13 @@ public class NoPathFoundException extends Exception {
      */
     public NoPathFoundException(Vector start, Vector goal) {
         super("No path found between " + start + " and " + goal);
+    }
+
+    public void addTime(long l) {
+        this.time   = l;
+    }
+
+    public long getTime(){
+        return time;
     }
 }
