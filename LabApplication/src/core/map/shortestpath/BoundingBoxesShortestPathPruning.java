@@ -53,10 +53,10 @@ abstract class BoundingBoxesShortestPathPruning implements ShortestPathPruning {
     @Override
     public boolean prune(Vector candidate, Vector direction, Vector goal) {
         if (this.boundingBoxes.get(candidate) == null || this.boundingBoxes.get(candidate).get(direction) == null) {
-            //Todo: System.out.println("candidate: "+candidate+"\t direction: "+direction+"\t No BoundingBox found");
+            /*Todo: System.out.println("candidate: "+candidate+"\t direction: "+direction+"\t No BoundingBox found");*/
             return false;
         }
-        //Todo: System.out.println("\t candidate: "+candidate+"\t direction: "+direction+"\t BoundingBox: "+this.boundingBoxes.get(candidate).get(direction)+"\t"+this.boundingBoxes.get(candidate).get(direction).isInBoundingBox(goal));
+        /*Todo: System.out.println("\t candidate: "+candidate+"\t direction: "+direction+"\t BoundingBox: "+this.boundingBoxes.get(candidate).get(direction)+"\t"+this.boundingBoxes.get(candidate).get(direction).isInBoundingBox(goal));*/
         return !this.boundingBoxes.get(candidate).get(direction).isInBoundingBox(goal);
     }
 
@@ -87,7 +87,7 @@ abstract class BoundingBoxesShortestPathPruning implements ShortestPathPruning {
                         BoundingBox boundingBox = new BoundingBox(currentPoint);
                         Vector candidate = currentPoint.add(direction);
                         outgoingDirectionBoundingBoxes.put(direction, boundingBox);
-                        if (map.isPassable(candidate))
+                        if (map.isPassable(candidate) && !movingRule.isCornerCut(map,currentPoint,direction))
                             priorityQueue.add(new Tuple2<>(new Tuple3<>(candidate, direction, Math.sqrt(Math.abs(direction.getX()) + Math.abs(direction.getY()))), boundingBox));
                     }
 

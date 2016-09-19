@@ -10,7 +10,6 @@ import core.util.Vector;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
