@@ -1,0 +1,28 @@
+# terminal settings
+reset
+set terminal png
+set output 'preprocessing_jpsplusbb.png'
+
+# style options
+set key default
+set key box
+set key ins vert
+set key right top
+
+set sample 10000
+set grid
+set bars 2.0
+set style fill empty
+
+# set border 3
+set xtics nomirror
+set ytics nomirror
+set xrange[-0.5:3.5]
+
+
+set ylabel 'time [min]'
+set xlabel 'algorithm'
+
+
+plot 'preprocessing_jpsplusbb.dat' using 1:3:2:6:5:7:xticlabels(8) with candlesticks lc 8 title 'Quartile' whiskerbars, \
+    ''         using 1:4:4:4:4 with candlesticks lt -1  lc 8 notitle

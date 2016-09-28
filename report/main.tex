@@ -73,7 +73,7 @@
 
     The goal of the lab \textit{Efficient Algorithms and Selected Problems} was to engage with a given problem and state-of-the-art algorithms which solve them really well. The problem we are given was path finding on grid graphs and the main algorithm was jump point search with the pruning technique bounding boxes.
 
-    We wrote an implementation of this algorithms and some similar ones which are frequently used to compare them amongst themselves. The similar algorithms are different variants of jump point search and the well known A star algorithm. On top of implementing the algorithm we have added some tools to visualize the algorithms and to benchmark our algorithm variants. Our actual implementation is independent from the visualization so that the algorithm is also applicable outside of the visualization environment. The purpose of the visualization environment is to help others understand the algorithm.
+    We wrote an implementation of this algorithm and some similar ones which are frequently used to compare them amongst themselves. The similar algorithms are different variants of jump point search and the well known A star algorithm. On top of implementing the algorithm we have added some tools to visualize the algorithms and to benchmark our algorithm variants. Our actual implementation is independent from the visualization so that the algorithm is also applicable outside of the visualization environment. The purpose of the visualization environment is to help to understand the algorithm.
 
     The source code of the implementation will be available at \url{https://github.com/dhaunac/lab-jump-point-search} after the final presentation as all our other work relating to the lab.
 
@@ -83,7 +83,7 @@
 
     Our problem setting is to find the shortest path on a grid graph $G$. The drawing of a grid graph forms a regular tiling in the Euclidean space. Each tile which touches another one in the drawing is connected in the graph trough an edge. We refer to the missing tiles in the drawing as obstacles. The cost of each edge is determined only by the direction. An orthogonal edge has cost of $1$ and a diagonal edge has cost of $\sqrt{2}$.
 
-    For that cost function on Euclidean grids there are a number of so called heuristic functions. The heuristic function estimates the cost of the total way between two vertices. The existence of such a function helps our algorithms to decide whether a walked path has led to a good or bad vertex. Formal speaking a heuristic function is a function $h : G \times G \rightarrow \mathbb{R}$. The constraint any heuristic function has to fulfill is the admissibility. A admissible heuristic is never overestimating the cost between two points, i.e. for all $a, b \in G$ it holds $h(a, b) \leq c(a,b)$. The other constraint is consistency which says that the heuristic cost between two points is not higher that the heuristic from $a$ to a neighbor of $b$ and the cost from that neighbor to $b$, i.e. $\forall a, b, c: h(a, b) \leq h(a, c) + c(c, b)$. A consistent heuristic is also admissible. If we would use a heuristic which is not admissible then all of our algorithms would not return a correct shortest path. A consistent heuristic improves our running time. All the heuristics we regarded are admissible.
+    For that cost function on Euclidean grids there are a number of so called heuristic functions. The heuristic function estimates the cost of the total way between two vertices. The existence of such a function helps our algorithms to decide whether a walked path has led to a good or bad vertex. Formal speaking a heuristic function is a function $h : V \times V \rightarrow \mathbb{R}$. The constraint any heuristic function has to fulfill is the admissibility. A admissible heuristic is never overestimating the cost between two points, i.e. for all $a, b \in G$ it holds $h(a, b) \leq c(a,b)$. The other constraint is consistency which says that the heuristic cost between two points is not higher that the heuristic from $a$ to a neighbor of $b$ and the cost from that neighbor to $b$, i.e. $\forall a, b, c: h(a, b) \leq h(a, c) + c(c, b)$. A consistent heuristic is also admissible. If we would use a heuristic which is not admissible then all of our algorithms would not return a correct shortest path. A consistent heuristic improves our running time. All the heuristics we regarded are admissible.
 
     Every problem instance has given two additional points. One of it is the start point and the other the goal point of that instance. This now yields a 4-tuple of grid graph $G$, start point $s$, goal point $g$ and heuristic function $h$. Now the algorithm has to determine the shortest path from start to goal point~\cite{DBLP:conf/aaai/HaraborG11}.
 
@@ -92,13 +92,13 @@
     \section{Algorithms}
     \label{sec:algorithms}
 
-    The implementation of the following algorithms was the main aspect of the lab task. At first we show an outline of the algorithms so that the reader is familiar with those before discussing implementation issues.
+    The implementation of the following algorithms was the main aspect of the lab task. At first we give an outline of the algorithms so that the reader is familiar with those before discussing implementation issues.
 
     \subsection{A star search $A^\star$ }
 
-    In this section we will discuss the $A^\star$ search algorithm~\cite{Astar}. The algorithm is basically a natural extension of the Dijkstra algorithm. It consist of an open list of next candidate vertices and a closed list of already processes processes vertices. The open list is usually some kind of priority queue and the closed list is a set.
+    In this section we will discuss the $A^\star$ search algorithm~\cite{Astar}. The algorithm is basically a natural extension of the Dijkstra algorithm. It consist of an open list of next candidate vertices and a closed list of already processed vertices. The open list is usually some kind of priority queue and the closed list is a set.
 
-    The algorithm then gets a graph, a cost function and an admissible heuristic function as input. It starts with adding the start node into the open list and then processes a main loop. The main loop extracts the vertex $v$ of the open list with minimum cost and expands all its adjacent vertices. The expansion step check whether the vertices are not in the closed list and if so adds it to the open list with a cost value of the sum from the cost to $v$ and the cost from $v$ to the expanded point. After that add $v$ to the closed list and repeat the main loop. The minimum cost is the sum of the cost value and the heuristic from that point to the goal node. So while progressing closer to the goal point the minimum cost might decrease.
+    The algorithm then gets a graph, a cost function and an admissible heuristic function as input. It starts with adding the start node into the open list and then processes a main loop. The main loop extracts the vertex $v$ of the open list with minimum cost and expands all its adjacent vertices. The expansion step checks whether the vertices are not in the closed list and if so adds it to the open list with a cost value of the sum from the cost to $v$ and the cost from $v$ to the expanded point. After that add $v$ to the closed list and repeat the main loop. The minimum cost is the sum of the cost value and the heuristic from that point to the goal node. So while progressing closer to the goal point the minimum cost might decrease.
 
     \subsection{Jump point search $JPS$}
 
@@ -107,7 +107,7 @@
     \begin{figure}[!htb]
         \centering
         \includegraphics{figures/symmetricpath.png}
-        \caption{Different possiblities for the shortest path in $A^\star$ \cite{JPSexplained}}
+        \caption{Different possibilities for the shortest path in $A^\star$ \cite{JPSexplained}}
         \label{fig:symmetricpath}
     \end{figure}
 
@@ -144,7 +144,10 @@
 
     \subsection{Jump point search Improvements $JPS^+$}
 
-    There is an improvement of $JPS$ called $JPS^+$~\cite{DBLP:conf/aips/HaraborG14}.
+    There is an improvement of $JPS$ called $JPS^+$~\cite{DBLP:conf/aips/HaraborG14}. Its a preprocessing technique to reduce the work of $JPS$ during run.
+
+    Preprocssing
+    Explore Schritt von JPS in einer lookup table
 
 
 
@@ -152,7 +155,7 @@
 
     Bounding boxes is a pruning technique that can be applied to lot of different path finding algorithms~\cite{DBLP:conf/aaai/RabinS16}. The pruning requires some preprocessing which can be done offline, i.e. before the actual start and goal point are known.
 
-    For each pair of points and direction we have a dedicated bounding box. This box consists of all points which are can be reached optimally on a path from that given point. The box itself is the smallest geometric container, in this case a square, to have every of those points inside. This implies that any point outside the box will be pruned since they will not help finding an optimal path.
+    For each pair of points and direction we have a dedicated bounding box. This box consists of all points which are can be reached optimally on a path from that given point. The box itself is the smallest geometric container, in this case a rectangle, to have every of those points inside. This implies that any point outside the box will be pruned since they will not help finding an optimal path.
 
     The bounding depends on the underlying algorithms, in case of $A^\star$ and $JPS$ it is sufficient to have minimum and maximum values for the X and Y coordinates. For $A^\star$ we can determine a predecessor $p$ for the point $v$ by inverting the direction. Then the bounding box of the point consists of all points which have a shortest path from $p$ to those points using $v$ as intermediate point. For $JPS$ we can go even further and use the knowledge of our jump points and natural ordering. Here the pruning will be even more effective which can be observed in our visualization of the algorithm.
 
@@ -175,7 +178,7 @@
 
     \subsection{Visualization and user interface}
 
-    The visualization is the was the second substantial aspect of our work. To begin we will explain the basic working of the user interface. At first one can use the \textit{File} menu to load any map. There are a number of different possibilities to create a random map satisfying a specific layout, for example perfect mazes or random rooms connected in a selected way. The next menu is \textit{Edit} where one choose to edit the map or the algorithm settings. We offer $A^\star$, $JPS$, $JPS^+$ and each of them with additional $BB$ pruning. Those algorithms are explained in section~\ref{sec:algorithms}. On top of that one can modify each of those algorithms by choosing a heuristic and a moving rule. The heuristic modification leads into situations where different candidates of the open list will be explored. The change in the moving rule offers interesting observations when used with some kinds of jump point search and shows also the limits of jump point search. Then the user is supposed to pick locations for the start and goal point. Then the algorithm can be run after some prepossessing if necessary. We have separate steps for those actions, so one can easily modify the algorithm settings and see the changes after running the other algorithm settings.
+    The visualization is the second substantial aspect of our work. To begin we will explain the basic working of the user interface. At first one can use the \textit{File} menu to load any map. There are a number of different possibilities to create a random map satisfying a specific layout, for example perfect mazes or random rooms connected in a selected way. The next menu is \textit{Edit} where the user can edit the map or change the algorithm settings. We offer $A^\star$, $JPS$, $JPS^+$ and each of them with additional $BB$ pruning. Those algorithms are explained in section~\ref{sec:algorithms}. On top of that one can modify each of those algorithms by choosing a heuristic and a moving rule. The heuristic modification leads into situations where different candidates of the open list will be explored. The change in the moving rule offers interesting observations when used with some kinds of jump point search and shows also the limits of jump point search. Then the user is supposed to pick locations for the start and goal point. Then the algorithm can be run after some prepossessing if necessary. We have separate steps for those actions, so one can easily modify the algorithm settings and see the changes after running the other algorithm settings.
 
     The visualization will show the result of the algorithms. The red line between the chosen start and goal point indicates the shortest path. We have different colors for points which are in the open list or closed list. Every type of points can be shown or hidden by using the \textit{View} menu.
 
@@ -207,6 +210,7 @@
 
     \section{Results}
     \label{sec:results}
+
     TODO: Hier könnten ein paar Plots stehen aus den benchmark Ergebnissen, die wir haben (?)
 
     \cite{sturtevant2012benchmarks}
