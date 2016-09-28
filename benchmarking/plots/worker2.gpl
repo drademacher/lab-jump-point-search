@@ -1,0 +1,18 @@
+# terminal settings
+reset
+set terminal png
+set output 'mazes_logscale.png'
+
+set xtics nomirror
+set ytics nomirror
+set xrange[0:35]
+set yrange[0.1:400]
+set logscale y 2
+set style data linespoints
+
+set ylabel 'time [ms]'
+set xlabel 'maze-width'
+
+
+plot 'mazes.dat' using 1:2 t 'astar' lt rgb "red", 'mazes.dat' using 1:3 t 'astarbb' lt rgb "0x8B0000", 'mazes.dat' using 1:4 t 'jps' lt rgb "blue", 'mazes.dat' using 1:5 t 'jpsbb' lt rgb "0x00008B", 'mazes.dat' using 1:6 t 'jpsplus' lt rgb "green", 'mazes.dat' using 1:7 t 'jpsplusbb' lt rgb "0x006400"
+
