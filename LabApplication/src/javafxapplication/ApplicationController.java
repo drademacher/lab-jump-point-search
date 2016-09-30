@@ -402,12 +402,13 @@ public class ApplicationController implements Initializable {
             try {
                 this.mapController.switchPassable(coordinate);
                 this.mapHolder.updateField(coordinate);
-                // mapModified.set(true);
+                mapModified.set(true);
             } catch (InvalidCoordinateException e) {
                 e.printStackTrace();
                 //Todo: setEditMapMode.mapConroller.updateField - InvalidCoordinateException
             }
         });
+        mapModified.set(true);
         this.mapHolder.refreshMap();
     }
 

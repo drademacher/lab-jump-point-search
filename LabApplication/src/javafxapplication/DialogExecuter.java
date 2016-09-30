@@ -73,7 +73,7 @@ public class DialogExecuter {
             if (dialogButton == confirmButton) {
                 return new Tuple2<>(
                         new Vector(Integer.valueOf(fields.get("xDim").getText()), Integer.valueOf(fields.get("yDim").getText())),
-                        Integer.valueOf(fields.get("pPas").getText()));
+                        Integer.valueOf(fields.get("max number of rooms").getText()));
             }
             return null;
         });
